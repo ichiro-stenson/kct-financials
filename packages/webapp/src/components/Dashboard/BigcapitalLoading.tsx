@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
-import { Icon } from '@/components';
+import { BigcapitalAlt } from '@/components/Icons/BigcapitalAlt';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 import '@/style/components/BigcapitalLoading.scss';
@@ -10,7 +10,7 @@ interface BigcapitalLoadingProps {
 }
 
 /**
- * Bigcapital logo loading.
+ * KCT Financials logo loading screen.
  */
 export default function BigcapitalLoading({
   className,
@@ -20,17 +20,12 @@ export default function BigcapitalLoading({
   return (
     <div className={classNames('bigcapital-loading', className)}>
       <div className="center">
-        {isDarkmode ? (
-          <Icon
-            icon="bigcapital-alt"
-            height={37}
-            width={228}
-            color="#fff"
-            className="bigcapital-logo"
-          />
-        ) : (
-          <Icon icon="bigcapital" height={37} width={228} />
-        )}
+        <BigcapitalAlt
+          height={37}
+          width={228}
+          color={isDarkmode ? '#fff' : undefined}
+          className="bigcapital-logo"
+        />
       </div>
     </div>
   );
