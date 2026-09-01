@@ -5,8 +5,7 @@ interface IProps {
   className?: string;
 }
 export interface BoxProps
-  extends
-    SystemProps,
+  extends SystemProps,
     IProps,
     Omit<React.HTMLProps<HTMLDivElement>, "color" | "as"> {}
 

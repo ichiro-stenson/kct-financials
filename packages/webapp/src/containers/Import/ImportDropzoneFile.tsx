@@ -1,8 +1,8 @@
 import { Button, Intent } from '@blueprintjs/core';
 import clsx from 'classnames';
-import type { ComponentType, PropsWithChildren, ReactNode } from 'react';
 import { useRef } from 'react';
 import styles from './ImportDropzone.module.css';
+import type { ComponentType, PropsWithChildren, ReactNode } from 'react';
 import { Box, Icon, Stack } from '@/components';
 import { Dropzone, DropzoneProps } from '@/components/Dropzone';
 import { MIME_TYPES } from '@/components/Dropzone/mine-types';

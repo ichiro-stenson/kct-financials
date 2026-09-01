@@ -3,8 +3,8 @@ import { Popover2 } from '@blueprintjs/popover2';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useJournalIsForeign, type MakeJournalFormValues } from './utils';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
+import { useJournalIsForeign, type MakeJournalFormValues } from './utils';
 import {
   ExchangeRateInputGroup,
   Icon,
@@ -227,11 +227,14 @@ export const JournalSyncIncrementSettingsToForm = () => {
   const { manualJournalsSettings } = useMakeJournalFormContext();
 
   const journalAutoIncrement = manualJournalsSettings?.autoIncrement as
-    boolean | undefined;
+    | boolean
+    | undefined;
   const journalNextNumber = manualJournalsSettings?.nextNumber as
-    number | undefined;
+    | number
+    | undefined;
   const journalNumberPrefix = manualJournalsSettings?.numberPrefix as
-    string | undefined;
+    | string
+    | undefined;
 
   useUpdateEffect(() => {
     // Do not update if the journal auto-increment mode is disabled.

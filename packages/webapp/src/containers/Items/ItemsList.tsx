@@ -1,8 +1,7 @@
+/* eslint-disable import/order */
 import React from 'react';
 import { compose } from '@/utils';
-
 import '@/style/pages/Items/List.scss';
-
 import { ItemsActionsBar } from './ItemsActionsBar';
 import { ItemsDataTable } from './ItemsDataTable';
 import { ItemsListDialogs } from './ItemsListDialogs';

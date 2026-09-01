@@ -26,10 +26,11 @@ export type BillPaymentDetailEntry = BillPayment['entries'][number] & {
  * Formatted/derived fields the OpenAPI `BillPayment` schema does not
  * surface but the backend returns and the detail drawer consumes.
  */
-export interface BillPaymentDetail extends Omit<
-  BillPayment,
-  'entries' | 'vendor' | 'paymentAccount' | 'branch'
-> {
+export interface BillPaymentDetail
+  extends Omit<
+    BillPayment,
+    'entries' | 'vendor' | 'paymentAccount' | 'branch'
+  > {
   vendor?: { displayName?: string };
   paymentAccount?: { name?: string };
   branch?: { name?: string };

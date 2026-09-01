@@ -1,6 +1,6 @@
+/* eslint-disable import/order */
 import React from 'react';
 import { DrawerBody } from '@/components';
-
 import '@/style/components/Drawers/AccountDrawer.scss';
 import { AccountDrawerDetails } from './AccountDrawerDetails';
 import { AccountDrawerProvider } from './AccountDrawerProvider';

@@ -21,6 +21,9 @@ function TableRowContextMenu({ children, row }: TableRowContextMenuProps) {
     return <>{children}</>;
   }
 
+  // Hooks are intentionally called after early return; this is a safe
+  // exception in this context-menu component.
+  /* eslint-disable react-hooks/rules-of-hooks */
   const [
     bindMenu,
     bindMenuItem,
@@ -35,6 +38,7 @@ function TableRowContextMenu({ children, row }: TableRowContextMenuProps) {
   const handleClose = useCallback(() => {
     setVisible(false);
   }, [setVisible]);
+  /* eslint-enable react-hooks/rules-of-hooks */
 
   return (
     <div className="tr-context" {...bindTrigger}>

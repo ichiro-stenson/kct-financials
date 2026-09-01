@@ -1,7 +1,7 @@
 // @ts-nocheck
+/* eslint-disable import/order */
 import React from 'react';
 import { DashboardPageContent } from '@/components';
-
 import '@/style/pages/SaleReceipt/List.scss';
 import { ReceiptActionsBar } from './ReceiptActionsBar';
 import { ReceiptsListDialogs } from './ReceiptsListDialogs';

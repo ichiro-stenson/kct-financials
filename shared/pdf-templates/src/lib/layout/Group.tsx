@@ -13,7 +13,8 @@ export const GROUP_POSITIONS = {
 };
 
 export interface GroupProps
-  extends SystemProps, Omit<React.ComponentPropsWithoutRef<"div">, "color"> {
+  extends SystemProps,
+    Omit<React.ComponentPropsWithoutRef<"div">, "color"> {
   /** Defines justify-content property */
   position?: GroupPosition;
 

@@ -7,9 +7,9 @@ import {
   Alignment,
 } from '@blueprintjs/core';
 import React from 'react';
+import { useProjectsListContext } from './ProjectsListProvider';
 import { withProjects } from './withProjects';
 import { withProjectsActions } from './withProjectsActions';
-import { useProjectsListContext } from './ProjectsListProvider';
 import {
   Icon,
   Can,

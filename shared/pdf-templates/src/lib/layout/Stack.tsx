@@ -2,7 +2,8 @@ import React from "react";
 import { x, SystemProps } from "@xstyled/emotion";
 
 export interface StackProps
-  extends SystemProps, Omit<React.ComponentPropsWithoutRef<"div">, "color"> {
+  extends SystemProps,
+    Omit<React.ComponentPropsWithoutRef<"div">, "color"> {
   /** Key of theme.spacing or number to set gap in px */
   spacing?: number;
 
