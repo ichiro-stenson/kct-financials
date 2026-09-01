@@ -252,14 +252,7 @@ function SidebarHeadJSX({
         </span>
       </div>
 
-      <div className="sidebar__head-logo">
-        <Icon
-          icon={'mini-bigcapital'}
-          width={28}
-          height={28}
-          className="bigcapital--alt"
-        />
-      </div>
+
     </div>
   );
 }

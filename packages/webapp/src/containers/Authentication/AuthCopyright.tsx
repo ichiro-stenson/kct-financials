@@ -1,5 +1,7 @@
-import { Icon } from '@/components/Icon';
-
 export function AuthCopyright() {
-  return <Icon width={122} height={22} icon={'bigcapital'} />;
+  return (
+    <span style={{ fontSize: 13, fontWeight: 600, opacity: 0.5, letterSpacing: '-0.2px' }}>
+      KCT Financials
+    </span>
+  );
 }
