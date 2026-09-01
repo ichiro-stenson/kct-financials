@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
+import { useProjectDetailContext } from '../ProjectDetailProvider';
 import { ActionsMenu } from './components';
 import { useProjectTimesheetColumns } from './hooks';
 import { useProjectTimesheetContext } from './ProjectTimesheetsProvider';
@@ -14,7 +15,6 @@ import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { useProjectDetailContext } from '../ProjectDetailProvider';
 import { compose } from '@/utils';
 
 /**

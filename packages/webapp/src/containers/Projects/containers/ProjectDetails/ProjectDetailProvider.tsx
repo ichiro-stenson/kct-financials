@@ -1,13 +1,13 @@
 // @ts-nocheck
 import React from 'react';
 import { useProject } from '../../hooks';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components';
 import {
   useSettingsProjects,
   useSettingsProjectTasks,
   useSettingsTimesheets,
 } from '@/hooks/query';
-import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 const ProjectDetailContext = React.createContext();
 

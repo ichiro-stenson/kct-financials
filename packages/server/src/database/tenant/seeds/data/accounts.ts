@@ -434,7 +434,8 @@ export const AccountsData = [
     slug: 'credit-cards-payable',
     account_type: 'credit-card',
     code: '2300',
-    description: 'Company credit card balance (track individual cards as sub-accounts)',
+    description:
+      'Company credit card balance (track individual cards as sub-accounts)',
     parent_account_id: null,
     active: 1,
     index: 1,
@@ -478,7 +479,8 @@ export const AccountsData = [
     slug: 'vehicle-loans',
     account_type: 'long-term-liability',
     code: '2500',
-    description: 'All vehicle financing notes — track individual loans as sub-accounts or in a loan schedule',
+    description:
+      'All vehicle financing notes — track individual loans as sub-accounts or in a loan schedule',
     parent_account_id: null,
     active: 1,
     index: 1,
@@ -551,7 +553,7 @@ export const AccountsData = [
     predefined: 0,
   },
   {
-    name: 'Owner\'s Equity / Capital',
+    name: "Owner's Equity / Capital",
     slug: 'owner-s-equity-capital',
     account_type: 'equity',
     code: '3000',
@@ -925,7 +927,7 @@ export const AccountsData = [
     predefined: 0,
   },
   {
-    name: 'Workers\' Compensation Insurance',
+    name: "Workers' Compensation Insurance",
     slug: 'workers-compensation-insurance',
     account_type: 'expense',
     code: '6080',
@@ -1882,7 +1884,7 @@ export const AccountsData = [
     predefined: 0,
   },
   {
-    name: 'Workers\' Comp Refund',
+    name: "Workers' Comp Refund",
     slug: 'workers-comp-refund',
     account_type: 'other-income',
     code: '8040',
@@ -1919,7 +1921,8 @@ export const AccountsData = [
     slug: 'loan-principal-payments',
     account_type: 'other-expense',
     code: '9000',
-    description: 'Principal portion of vehicle/equipment loan payments (non-P&L, reduces liability)',
+    description:
+      'Principal portion of vehicle/equipment loan payments (non-P&L, reduces liability)',
     parent_account_id: null,
     active: 1,
     index: 1,
@@ -1935,6 +1938,64 @@ export const AccountsData = [
     active: 1,
     index: 1,
     predefined: 0,
+  },
+
+  // ── Standard accounts required by E2E tests ────────────────────────────
+  // These accounts must exist with these exact names for the Playwright
+  // test suite to function. Do not remove or rename them.
+  {
+    name: 'Petty Cash',
+    slug: 'petty-cash',
+    account_type: 'cash',
+    code: '0001',
+    description: '',
+    active: 1,
+    index: 1,
+    predefined: 0,
+  },
+  {
+    name: 'Rent',
+    slug: 'rent',
+    account_type: 'expense',
+    parent_account_id: null,
+    code: '0002',
+    description: '',
+    active: 1,
+    index: 1,
+    predefined: 0,
+  },
+  {
+    name: 'Sales of Product Income',
+    slug: 'sales-of-product-income',
+    account_type: 'income',
+    predefined: 0,
+    parent_account_id: null,
+    code: '0003',
+    description: '',
+    active: 1,
+    index: 1,
+  },
+  {
+    name: 'Cost of Goods Sold',
+    slug: 'cost-of-goods-sold',
+    account_type: 'cost-of-goods-sold',
+    parent_account_id: null,
+    code: '0004',
+    description: 'Tracks the direct cost of the goods sold.',
+    active: 1,
+    index: 1,
+    predefined: 0,
+  },
+  {
+    name: 'Inventory Asset',
+    slug: 'inventory-asset',
+    code: '0005',
+    account_type: 'inventory',
+    predefined: 0,
+    parent_account_id: null,
+    description: '',
+    active: 1,
+    index: 1,
   },
 
   // ── BigCapital system accounts (GL / tax / discount engine) ──────────────

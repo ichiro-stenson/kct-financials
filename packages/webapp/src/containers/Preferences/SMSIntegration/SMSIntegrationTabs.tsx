@@ -5,10 +5,10 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { SMSIntegrationForm } from './SMSIntegrationForm';
 import { SMSMessagesDataTable } from './SMSMessagesDataTable';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { compose } from '@/utils';
 
 import '@/style/pages/Preferences/SMSIntegration.scss';

@@ -2,13 +2,13 @@
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { useProjects } from '../../hooks';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components';
 import {
   useResourceViews,
   useResourceMeta,
   useSettingsProjects,
 } from '@/hooks/query';
-import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 const ProjectsListContext = React.createContext();
 

@@ -14,8 +14,8 @@ import {
   transformFormToReq,
 } from './utils';
 import type { AccountFormValues } from './types';
-import type { CreateAccountBody, EditAccountBody } from '@bigcapital/sdk-ts';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { CreateAccountBody, EditAccountBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose, transformToForm } from '@/utils';
@@ -132,7 +132,6 @@ function AccountFormDialogContent({
       onSubmit={handleFormSubmit}
     >
       <AccountDialogFormContent
-        dialogName={dialogName}
         action={payload?.action}
         onClose={handleClose}
       />

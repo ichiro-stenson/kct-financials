@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React from 'react';
+import { useProjectDetailContext } from '../ProjectDetailProvider';
 import { ActionMenu } from './components';
 import { useProjectSalesColumns } from './hooks';
 import {
@@ -9,7 +10,6 @@ import {
 } from '@/components';
 import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { useProjectDetailContext } from '../ProjectDetailProvider';
 
 /**
  * Porject sales datatable.

@@ -1,13 +1,13 @@
-import isEmpty from 'lodash/isEmpty';
-import { Box } from '../lib/layout/Box';
-import { Text } from '../lib/text/Text';
-import { Stack } from '../lib/layout/Stack';
-import { Group } from '../lib/layout/Group';
+import isEmpty from "lodash/isEmpty";
+import { Box } from "../lib/layout/Box";
+import { Text } from "../lib/text/Text";
+import { Stack } from "../lib/layout/Stack";
+import { Group } from "../lib/layout/Group";
 import {
   PaperTemplate,
   PaperTemplateProps,
   PaperTemplateTotalBorder,
-} from './PaperTemplate';
+} from "./PaperTemplate";
 import {
   DefaultPdfTemplateTerms,
   DefaultPdfTemplateItemDescription,
@@ -15,8 +15,8 @@ import {
   DefaultPdfTemplateItemName,
   DefaultPdfTemplateAddressBilledTo,
   DefaultPdfTemplateAddressBilledFrom,
-} from './_constants';
-import { theme } from '../constants';
+} from "./_constants";
+import { theme } from "../constants";
 
 export interface ReceiptPaperTemplateProps extends PaperTemplateProps {
   // # Company logo
@@ -105,9 +105,6 @@ export function ReceiptPaperTemplate({
   showCompanyLogo = true,
   companyLogoUri,
 
-  // # Company name
-  companyName = 'Bigcapital Technology, Inc.',
-
   // # Address
   showCustomerAddress = true,
   customerAddress = DefaultPdfTemplateAddressBilledTo,
@@ -115,72 +112,72 @@ export function ReceiptPaperTemplate({
   showCompanyAddress = true,
   companyAddress = DefaultPdfTemplateAddressBilledFrom,
 
-  billedToLabel = 'Billed To',
+  billedToLabel = "Billed To",
 
   // # Total
-  total = '$1000.00',
-  totalLabel = 'Total',
+  total = "$1000.00",
+  totalLabel = "Total",
   showTotal = true,
 
   // # Discount
-  discount = '',
-  discountLabel = 'Discount',
+  discount = "",
+  discountLabel = "Discount",
   showDiscount = true,
 
   // # Adjustment
-  adjustment = '',
-  adjustmentLabel = 'Adjustment',
+  adjustment = "",
+  adjustmentLabel = "Adjustment",
   showAdjustment = true,
 
   // # Subtotal
-  subtotal = '1000/00',
-  subtotalLabel = 'Subtotal',
+  subtotal = "1000/00",
+  subtotalLabel = "Subtotal",
   showSubtotal = true,
 
   showCustomerNote = true,
-  customerNoteLabel = 'Customer Note',
+  customerNoteLabel = "Customer Note",
   customerNote = DefaultPdfTemplateStatement,
 
   showTermsConditions = true,
-  termsConditionsLabel = 'Terms & Conditions',
+  termsConditionsLabel = "Terms & Conditions",
   termsConditions = DefaultPdfTemplateTerms,
 
   lines = [
     {
       item: DefaultPdfTemplateItemName,
       description: DefaultPdfTemplateItemDescription,
-      rate: '1',
-      quantity: '1000',
-      total: '$1000.00',
+      rate: "1",
+      quantity: "1000",
+      total: "$1000.00",
     },
   ],
 
   // Receipt Number
   showReceiptNumber = true,
-  receiptNumberLabel = 'Receipt Number',
-  receiptNumebr = '346D3D40-0001',
+  receiptNumberLabel = "Receipt Number",
+  receiptNumebr = "346D3D40-0001",
 
   // Receipt Date
-  receiptDate = 'September 3, 2024',
+  receiptDate = "September 3, 2024",
   showReceiptDate = true,
-  receiptDateLabel = 'Receipt Date',
+  receiptDateLabel = "Receipt Date",
 
   // Entries
-  lineItemLabel = 'Item',
-  lineQuantityLabel = 'Qty',
-  lineRateLabel = 'Rate',
-  lineTotalLabel = 'Total',
+  lineItemLabel = "Item",
+  lineQuantityLabel = "Qty",
+  lineRateLabel = "Rate",
+  lineTotalLabel = "Total",
 
   // # Line Discount
-  lineDiscountLabel = 'Discount',
+  lineDiscountLabel = "Discount",
   showLineDiscount = false,
 }: ReceiptPaperTemplateProps) {
   return (
     <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
       <Stack spacing={24}>
-        <Group align={'start'} spacing={10}>
+        <Group align={"start"} spacing={10}>
           <Stack flex={1}>
-            <PaperTemplate.BigTitle title={'Receipt'} />
+            <PaperTemplate.BigTitle title={"Receipt"} />
 
             <PaperTemplate.TermsList>
               {showReceiptNumber && (
@@ -225,24 +222,24 @@ export function ReceiptPaperTemplate({
                   <Stack spacing={2}>
                     <Text>{data.item}</Text>
                     <Text
-                      fontSize={'12px'}
-                      color={theme.colors['cool-gray-500']}
+                      fontSize={"12px"}
+                      color={theme.colors["cool-gray-500"]}
                     >
                       {data.description}
                     </Text>
                   </Stack>
                 ),
-                thStyle: { width: '60%' },
+                thStyle: { width: "60%" },
               },
-              { label: lineQuantityLabel, accessor: 'quantity' },
-              { label: lineRateLabel, accessor: 'rate', align: 'right' },
+              { label: lineQuantityLabel, accessor: "quantity" },
+              { label: lineRateLabel, accessor: "rate", align: "right" },
               {
                 label: lineDiscountLabel,
-                accessor: 'discount',
-                align: 'right',
+                accessor: "discount",
+                align: "right",
                 visible: showLineDiscount,
               },
-              { label: lineTotalLabel, accessor: 'total', align: 'right' },
+              { label: lineTotalLabel, accessor: "total", align: "right" },
             ]}
             data={lines}
           />

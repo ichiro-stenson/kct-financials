@@ -12,6 +12,10 @@ on:
       - '!packages/server/src/**/*.test.ts'
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 defaults:
   run:
     shell: 'bash'
@@ -131,10 +135,11 @@ jobs:
 
       - name: Create Pull Request
         if: steps.check-changes.outputs.has_changes == 'true'
+        continue-on-error: true
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'chore(sdk): update OpenAPI spec and generated types'
+          commit-message: 'chore(sdk-ts): update OpenAPI spec and generated types'
           title: 'chore(sdk): update OpenAPI spec and generated types'
           body: |
             ## Summary

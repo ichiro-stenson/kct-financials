@@ -72,8 +72,9 @@ export const dynamicColumns = (
   columns: ReportTableColumn[],
   data: unknown[],
 ) => {
-  const mapper = (column, index) => {
-    return R.compose(
+  const mapper = (column: unknown, index: number) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (R.compose as any)(
       R.when(
         R.pathSatisfies(isMatchesDateRange, ['key']),
         R.curry(dateRangeMapper)(data, index),

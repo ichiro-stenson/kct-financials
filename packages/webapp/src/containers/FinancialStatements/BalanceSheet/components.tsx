@@ -81,7 +81,8 @@ export const useBalanceSheetColumns = () => {
   return React.useMemo(
     () =>
       dynamicColumns(
-        balanceSheet?.table?.columns ?? [],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (balanceSheet?.table?.columns ?? []) as any[],
         balanceSheet?.table?.rows ?? [],
       ),
     [balanceSheet?.table],

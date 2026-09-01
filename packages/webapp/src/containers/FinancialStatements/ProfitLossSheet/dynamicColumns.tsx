@@ -332,8 +332,11 @@ const accountNameColumn = R.curry((data, column) => {
  * @param {*} column
  * @returns
  */
-const dateRangeSoloColumnAttrs = (data, column) => {
-  const accessor = getTableCellValueAccessor(column.cellIndex);
+const dateRangeSoloColumnAttrs = (
+  data: unknown[],
+  column: Record<string, unknown>,
+) => {
+  const accessor = getTableCellValueAccessor(column.cellIndex as number);
 
   return {
     accessor,
@@ -355,12 +358,14 @@ const dateRangeColumn = R.curry((data, column) => {
     align: isDateColumnHasColumns ? Align.Center : Align.Right,
     money: true,
   };
-  return R.compose(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (R.compose as any)(
     R.when(
       R.always(isDateColumnHasColumns),
       assocColumnsToTotalColumn(data, column),
     ),
-    R.when(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (R.when as any)(
       R.always(!isDateColumnHasColumns),
       R.mergeLeft(dateRangeSoloColumnAttrs(data, column)),
     ),

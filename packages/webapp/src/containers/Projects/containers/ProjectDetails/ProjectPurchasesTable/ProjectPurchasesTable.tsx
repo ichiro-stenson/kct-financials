@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
+import { useProjectDetailContext } from '../ProjectDetailProvider';
 import { ActionMenu } from './components';
 import { useProjectPurchasesColumns } from './hooks';
 import {
@@ -10,7 +11,6 @@ import {
 } from '@/components';
 import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { useProjectDetailContext } from '../ProjectDetailProvider';
 
 /**
  * Project Purchases DataTable.

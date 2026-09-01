@@ -1,20 +1,20 @@
-import React from 'react';
-import { SystemProps } from '@xstyled/emotion';
-import { Box } from './Box';
-import { filterFalsyChildren } from './utils';
+import React from "react";
+import { SystemProps } from "@xstyled/emotion";
+import { Box } from "./Box";
+import { filterFalsyChildren } from "./utils";
 
-export type GroupPosition = 'right' | 'center' | 'left' | 'apart';
+export type GroupPosition = "right" | "center" | "left" | "apart";
 
 export const GROUP_POSITIONS = {
-  left: 'flex-start',
-  center: 'center',
-  right: 'flex-end',
-  apart: 'space-between',
+  left: "flex-start",
+  center: "center",
+  right: "flex-end",
+  apart: "space-between",
 };
 
 export interface GroupProps
   extends SystemProps,
-  Omit<React.ComponentPropsWithoutRef<'div'>, 'color'> {
+    Omit<React.ComponentPropsWithoutRef<"div">, "color"> {
   /** Defines justify-content property */
   position?: GroupPosition;
 
@@ -28,13 +28,13 @@ export interface GroupProps
   spacing?: number;
 
   /** Defines align-items css property */
-  align?: React.CSSProperties['alignItems'];
+  align?: React.CSSProperties["alignItems"];
 }
 
 export function Group({
-  position = 'left',
+  position = "left",
   spacing = 20,
-  align = 'center',
+  align = "center",
   noWrap,
   children,
   ...props
@@ -43,11 +43,11 @@ export function Group({
 
   return (
     <Box
-      boxSizing={'border-box'}
-      display={'flex'}
-      flexDirection={'row'}
+      boxSizing={"border-box"}
+      display={"flex"}
+      flexDirection={"row"}
       alignItems={align}
-      flexWrap={noWrap ? 'nowrap' : 'wrap'}
+      flexWrap={noWrap ? "nowrap" : "wrap"}
       justifyContent={GROUP_POSITIONS[position]}
       gap={`${spacing}px`}
       {...props}

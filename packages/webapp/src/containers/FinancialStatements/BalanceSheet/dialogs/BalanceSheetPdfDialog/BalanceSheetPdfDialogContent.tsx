@@ -9,7 +9,9 @@ import { useBalanceSheetPdf } from '@/hooks/query';
 
 export function BalanceSheetPdfDialogContent() {
   const { httpQuery } = useBalanceSheetContext();
-  const { isLoading, isLoaded, pdfUrl } = useBalanceSheetPdf({ ...httpQuery });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { isLoading, pdfUrl } = useBalanceSheetPdf(httpQuery as any);
+  const isLoaded = !isLoading && !!pdfUrl;
 
   return (
     <DialogContent>
