@@ -1,11 +1,11 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from "@storybook/react";
 import {
   PaymentReceivedEmailTemplateProps,
   PaymentReceivedEmailTemplate,
-} from './PaymentReceivedEmailTemplate';
+} from "./PaymentReceivedEmailTemplate";
 
 export default {
-  title: 'Email/PaymentReceivedEmailTemplate',
+  title: "Email/PaymentReceivedEmailTemplate",
   component: PaymentReceivedEmailTemplate,
 } as Meta;
 
@@ -14,9 +14,7 @@ const Template: StoryFn<PaymentReceivedEmailTemplateProps> = (args) => (
 );
 
 export const Default: StoryFn<PaymentReceivedEmailTemplateProps> =
-  Template.bind({
-
-  });
+  Template.bind({});
 
 Default.args = {
   message: `Hi Ahmed Bouhuolia,
@@ -31,5 +29,5 @@ If you have any questions, please let us know.
 
 Thanks,
 Bigcapital`,
-  items: [{ label: 'INV-00001', total: '$1000.00' }]
+  items: [{ label: "INV-00001", total: "$1000.00" }],
 };

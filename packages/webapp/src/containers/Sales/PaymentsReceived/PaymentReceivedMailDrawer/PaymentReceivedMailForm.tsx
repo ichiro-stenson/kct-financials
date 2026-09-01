@@ -62,7 +62,7 @@ export function PaymentReceivedSendMailForm({
   };
 
   return (
-    <Formik
+    <Formik<PaymentReceivedSendMailFormValues>
       initialValues={_initialValues}
       validationSchema={PaymentReceivedSendMailFormSchema}
       onSubmit={handleSubmit}

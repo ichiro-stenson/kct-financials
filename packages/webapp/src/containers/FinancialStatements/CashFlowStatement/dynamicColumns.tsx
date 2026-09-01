@@ -72,7 +72,7 @@ export const dynamicColumns = (
   columns: ReportTableColumn[],
   data: unknown[],
 ) => {
-  const mapper = (column, index) => {
+  const mapper = (column: unknown, index: number) => {
     return R.compose(
       R.when(
         R.pathSatisfies(isMatchesDateRange, ['key']),
@@ -80,7 +80,8 @@ export const dynamicColumns = (
       ),
       R.when(isColumnKey('name'), accountNameMapper),
       R.when(isColumnKey('total'), R.curry(totalMapper)(data, index)),
-    )(column);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    )(column) as any;
   };
   return columns.map(mapper);
 };

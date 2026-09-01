@@ -332,7 +332,7 @@ const accountNameColumn = R.curry((data, column) => {
  * @param {*} column
  * @returns
  */
-const dateRangeSoloColumnAttrs = (data, column) => {
+const dateRangeSoloColumnAttrs = (data: unknown[], column: unknown) => {
   const accessor = getTableCellValueAccessor(column.cellIndex);
 
   return {
@@ -364,7 +364,8 @@ const dateRangeColumn = R.curry((data, column) => {
       R.always(!isDateColumnHasColumns),
       R.mergeLeft(dateRangeSoloColumnAttrs(data, column)),
     ),
-  )(columnAccessor);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  )(columnAccessor) as any;
 });
 
 /**

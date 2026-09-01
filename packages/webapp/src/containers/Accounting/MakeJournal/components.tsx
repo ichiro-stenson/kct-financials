@@ -38,7 +38,6 @@ export function ContactHeaderCell() {
     <>
       <T id={'contact'} />
       <Hint
-        // @ts-expect-error Hint.content is typed as string but renders ReactNode via Tooltip
         content={<T id={'contact_column_hint'} />}
         position={Position.LEFT_BOTTOM}
       />
@@ -228,14 +227,11 @@ export const JournalSyncIncrementSettingsToForm = () => {
   const { manualJournalsSettings } = useMakeJournalFormContext();
 
   const journalAutoIncrement = manualJournalsSettings?.autoIncrement as
-    | boolean
-    | undefined;
+    boolean | undefined;
   const journalNextNumber = manualJournalsSettings?.nextNumber as
-    | number
-    | undefined;
+    number | undefined;
   const journalNumberPrefix = manualJournalsSettings?.numberPrefix as
-    | string
-    | undefined;
+    string | undefined;
 
   useUpdateEffect(() => {
     // Do not update if the journal auto-increment mode is disabled.

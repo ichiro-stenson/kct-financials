@@ -1,4 +1,4 @@
-import { SystemProps, x } from '@xstyled/emotion';
+import { SystemProps, x } from "@xstyled/emotion";
 
 export interface TextProps extends SystemProps {
   children?: React.ReactNode;

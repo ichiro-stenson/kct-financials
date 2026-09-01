@@ -1,8 +1,8 @@
-import isEmpty from 'lodash/isEmpty';
-import { Box } from '../lib/layout/Box';
-import { Text } from '../lib/text/Text';
-import { Stack } from '../lib/layout/Stack';
-import { Group } from '../lib/layout/Group';
+import isEmpty from "lodash/isEmpty";
+import { Box } from "../lib/layout/Box";
+import { Text } from "../lib/text/Text";
+import { Stack } from "../lib/layout/Stack";
+import { Group } from "../lib/layout/Group";
 import {
   DefaultPdfTemplateTerms,
   DefaultPdfTemplateItemDescription,
@@ -10,13 +10,13 @@ import {
   DefaultPdfTemplateItemName,
   DefaultPdfTemplateAddressBilledTo,
   DefaultPdfTemplateAddressBilledFrom,
-} from './_constants';
+} from "./_constants";
 import {
   PaperTemplate,
   PaperTemplateProps,
   PaperTemplateTotalBorder,
-} from './PaperTemplate';
-import { theme } from '../constants';
+} from "./PaperTemplate";
+import { theme } from "../constants";
 
 export interface EstimatePaperTemplateProps extends PaperTemplateProps {
   // # Company
@@ -104,9 +104,9 @@ export function EstimatePaperTemplate({
 
   // # Company logo
   showCompanyLogo = true,
-  companyLogoUri = '',
+  companyLogoUri = "",
 
-  companyName,
+  companyName: _companyName,
 
   // # Company address
   companyAddress = DefaultPdfTemplateAddressBilledFrom,
@@ -115,79 +115,79 @@ export function EstimatePaperTemplate({
   // # Customer address
   customerAddress = DefaultPdfTemplateAddressBilledTo,
   showCustomerAddress = true,
-  billedToLabel = 'Billed To',
+  billedToLabel = "Billed To",
 
   // # Total
-  total = '$1000.00',
-  totalLabel = 'Total',
+  total = "$1000.00",
+  totalLabel = "Total",
   showTotal = true,
 
   // # Discount
-  discount = '0.00',
-  discountLabel = 'Discount',
+  discount = "0.00",
+  discountLabel = "Discount",
   showDiscount = true,
 
   // # Subtotal
-  subtotal = '1000/00',
-  subtotalLabel = 'Subtotal',
+  subtotal = "1000/00",
+  subtotalLabel = "Subtotal",
   showSubtotal = true,
 
   // # Adjustment
-  adjustment = '',
+  adjustment = "",
   showAdjustment = true,
-  adjustmentLabel = 'Adjustment',
+  adjustmentLabel = "Adjustment",
 
   // # Customer Note
   showCustomerNote = true,
   customerNote = DefaultPdfTemplateStatement,
-  customerNoteLabel = 'Customer Note',
+  customerNoteLabel = "Customer Note",
 
   // # Terms & Conditions
   showTermsConditions = true,
   termsConditions = DefaultPdfTemplateTerms,
-  termsConditionsLabel = 'Terms & Conditions',
+  termsConditionsLabel = "Terms & Conditions",
 
   lines = [
     {
       item: DefaultPdfTemplateItemName,
       description: DefaultPdfTemplateItemDescription,
-      rate: '1',
-      quantity: '1000',
-      total: '$1000.00',
+      rate: "1",
+      quantity: "1000",
+      total: "$1000.00",
     },
   ],
 
   // Estimate number
   showEstimateNumber = true,
-  estimateNumberLabel = 'Estimate Number',
-  estimateNumebr = '346D3D40-0001',
+  estimateNumberLabel = "Estimate Number",
+  estimateNumebr = "346D3D40-0001",
 
   // Estimate date
-  estimateDate = 'September 3, 2024',
+  estimateDate = "September 3, 2024",
   showEstimateDate = true,
-  estimateDateLabel = 'Estimate Date',
+  estimateDateLabel = "Estimate Date",
 
   // Expiration date
-  expirationDateLabel = 'Expiration Date',
+  expirationDateLabel = "Expiration Date",
   showExpirationDate = true,
-  expirationDate = 'September 3, 2024',
+  expirationDate = "September 3, 2024",
 
   // Entries
-  lineItemLabel = 'Item',
-  lineQuantityLabel = 'Qty',
-  lineRateLabel = 'Rate',
-  lineTotalLabel = 'Total',
+  lineItemLabel = "Item",
+  lineQuantityLabel = "Qty",
+  lineRateLabel = "Rate",
+  lineTotalLabel = "Total",
 
   // # Line Discount
-  lineDiscountLabel = 'Discount',
+  lineDiscountLabel = "Discount",
   showLineDiscount = false,
 }: EstimatePaperTemplateProps) {
   return (
     <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
       <Stack spacing={24}>
-        <Group align={'start'} spacing={10}>
+        <Group align={"start"} spacing={10}>
           <Stack flex={1}>
-            <PaperTemplate.BigTitle title={'Estimate'} />
+            <PaperTemplate.BigTitle title={"Estimate"} />
 
             <PaperTemplate.TermsList>
               {showEstimateNumber && (
@@ -236,24 +236,24 @@ export function EstimatePaperTemplate({
                   <Stack spacing={2}>
                     <Text>{data.item}</Text>
                     <Text
-                      fontSize={'12px'}
-                      color={theme.colors['cool-gray-500']}
+                      fontSize={"12px"}
+                      color={theme.colors["cool-gray-500"]}
                     >
                       {data.description}
                     </Text>
                   </Stack>
                 ),
-                thStyle: { width: '60%' },
+                thStyle: { width: "60%" },
               },
-              { label: lineQuantityLabel, accessor: 'quantity' },
-              { label: lineRateLabel, accessor: 'rate', align: 'right' },
+              { label: lineQuantityLabel, accessor: "quantity" },
+              { label: lineRateLabel, accessor: "rate", align: "right" },
               {
                 label: lineDiscountLabel,
-                accessor: 'discount',
-                align: 'right',
+                accessor: "discount",
+                align: "right",
                 visible: showLineDiscount,
               },
-              { label: lineTotalLabel, accessor: 'total', align: 'right' },
+              { label: lineTotalLabel, accessor: "total", align: "right" },
             ]}
             data={lines}
           />

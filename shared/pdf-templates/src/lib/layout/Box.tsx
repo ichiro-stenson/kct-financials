@@ -1,13 +1,14 @@
-import React, { forwardRef, Ref } from 'react';
-import { SystemProps, x } from '@xstyled/emotion';
+import React, { forwardRef, Ref } from "react";
+import { SystemProps, x } from "@xstyled/emotion";
 
 interface IProps {
   className?: string;
 }
 export interface BoxProps
-  extends SystemProps,
-  IProps,
-  Omit<React.HTMLProps<HTMLDivElement>, 'color' | 'as'> { }
+  extends
+    SystemProps,
+    IProps,
+    Omit<React.HTMLProps<HTMLDivElement>, "color" | "as"> {}
 
 export const Box = forwardRef(
   ({ className, ...rest }: BoxProps, ref: Ref<HTMLDivElement>) => {
@@ -16,4 +17,4 @@ export const Box = forwardRef(
     return <Element className={className} ref={ref} {...rest} />;
   },
 );
-Box.displayName = '@bigcapital/Box';
+Box.displayName = "@bigcapital/Box";

@@ -1,5 +1,5 @@
-import { Container, Section } from '@react-email/components';
-import { CSSProperties } from 'react';
+import { Container, Section } from "@react-email/components";
+import { CSSProperties } from "react";
 
 interface EmailTemplateProps {
   children: React.ReactNode;
@@ -22,26 +22,26 @@ EmailTemplate.CompanyLogo = ({ src }: { src: string }) => {
 };
 
 const containerStyle: CSSProperties = {
-  backgroundColor: '#fff',
-  width: '100%',
-  maxWidth: '500px',
-  padding: '30px 20px',
-  color: '#000',
+  backgroundColor: "#fff",
+  width: "100%",
+  maxWidth: "500px",
+  padding: "30px 20px",
+  color: "#000",
 };
 
 const companyLogoStyle = {
   height: 90,
   width: 90,
-  borderRadius: '3px',
-  marginLeft: 'auto',
-  marginRight: 'auto',
-  textIndent: '-999999px',
-  overflow: 'hidden',
-  backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'center center',
-  backgroundSize: 'contain',
+  borderRadius: "3px",
+  marginLeft: "auto",
+  marginRight: "auto",
+  textIndent: "-999999px",
+  overflow: "hidden",
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "center center",
+  backgroundSize: "contain",
 };
 
 const logoSectionStyle = {
-  marginBottom: '15px',
+  marginBottom: "15px",
 };

@@ -12,8 +12,9 @@ interface FinancialReportPageProps {
 
 export function FinancialReportPage(props: FinancialReportPageProps) {
   return (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <FinancialReportPageRoot
-      {...props}
+      {...(props as any)}
       className={classNames(CLASSES.FINANCIAL_REPORT_INSIDER, props.className)}
     />
   );

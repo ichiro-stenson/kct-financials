@@ -83,7 +83,8 @@ const dynamicColumnMapper = R.curry(
       R.when(isColumnKey('customer_name'), customerNameAccessorColumn),
       R.when(isColumnKey('vendor_name'), customerNameAccessorColumn),
       R.when(isColumnKey('aging_period'), agingPeriodAccessorColumn),
-    )(column);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    )(column) as any;
   },
 );
 

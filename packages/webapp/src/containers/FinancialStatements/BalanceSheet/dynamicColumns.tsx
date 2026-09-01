@@ -4,6 +4,8 @@ import type { BalanceSheetColumnKey } from '@bigcapital/sdk-ts';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
 
+type AlignValue = (typeof Align)[keyof typeof Align];
+
 interface ReportTableColumn {
   key: string;
   label: string;
@@ -18,8 +20,8 @@ interface TableColumn {
   className?: string;
   textOverview?: boolean;
   width?: number;
-  sticky?: Align;
-  align?: Align;
+  sticky?: AlignValue;
+  align?: AlignValue;
   disableSortBy?: boolean;
   money?: boolean;
   columns?: TableColumn[];
@@ -108,7 +110,7 @@ const totalMapper = R.curry(
     };
     return R.compose(
       R.when(R.always(hasChildren), assocColumnsToTotalColumn(data, column)),
-    )(columnAccessor);
+    )(columnAccessor) as TableColumn;
   },
 );
 
@@ -316,7 +318,7 @@ const totalColumnsMapper = R.curry(
         isColumnKey('previous_period_percentage'),
         previousPeriodPercentageAccessor(data),
       ),
-    )(column);
+    )(column) as TableColumn;
   },
 );
 
@@ -367,7 +369,7 @@ const dateRangeMapper = R.curry(
         R.always(!isDateColumnHasColumns),
         R.mergeLeft(dateRangeSoloColumnAttrs(data, column)),
       ),
-    )(columnAccessor);
+    )(columnAccessor) as TableColumn;
   },
 );
 
@@ -393,7 +395,7 @@ const dynamicColumnMapper = R.curry(
       ),
       R.when(isColumnKey('name'), indexAccountNameMapper),
       R.when(isColumnKey('total'), indexTotalMapper),
-    )(column);
+    )(column) as TableColumn;
   },
 );
 

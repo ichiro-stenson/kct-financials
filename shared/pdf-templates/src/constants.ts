@@ -8,4 +8,4 @@ export const OpenSansFontLink = `
 
 export const theme = {
   ...defaultTheme,
-}
+};

@@ -17,28 +17,29 @@ interface FormSetFieldValue {
  * Retrieves the default balance sheet query.
  * @returns {}
  */
-export const getDefaultBalanceSheetQuery = (): BalanceSheetTableQuery => ({
-  fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-  toDate: moment().format('YYYY-MM-DD'),
-  basis: 'cash',
-  displayColumnsType: 'total',
-  filterByOption: 'without-zero-balance',
+export const getDefaultBalanceSheetQuery = (): BalanceSheetTableQuery =>
+  ({
+    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
+    toDate: moment().format('YYYY-MM-DD'),
+    basis: 'cash',
+    displayColumnsType: 'total',
+    filterByOption: 'without-zero-balance',
 
-  previousYear: false,
-  previousYearAmountChange: false,
-  previousYearPercentageChange: false,
+    previousYear: false,
+    previousYearAmountChange: false,
+    previousYearPercentageChange: false,
 
-  previousPeriod: false,
-  previousPeriodAmountChange: false,
-  previousPeriodPercentageChange: false,
+    previousPeriod: false,
+    previousPeriodAmountChange: false,
+    previousPeriodPercentageChange: false,
 
-  // Percentage columns.
-  percentageOfColumn: false,
-  percentageOfRow: false,
+    // Percentage columns.
+    percentageOfColumn: false,
+    percentageOfRow: false,
 
-  branchesIds: [],
-  numberFormat: {},
-});
+    branchesIds: [],
+    numberFormat: {},
+  }) as BalanceSheetTableQuery;
 
 const parseBalanceSheetQuery = (
   locationQuery: Record<string, unknown>,
