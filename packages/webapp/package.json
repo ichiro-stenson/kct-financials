@@ -1,5 +1,5 @@
 {
-  "name": "@bigcapital/webapp",
+  "name": "@kct-financials/webapp",
   "version": "0.10.2",
   "private": true,
   "dependencies": {

@@ -1,5 +1,5 @@
 {
-  "name": "bigcapital-monorepo",
+  "name": "kct-financials-monorepo",
   "private": true,
   "scripts": {
     "dev": "lerna run dev",
