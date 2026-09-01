@@ -39,7 +39,7 @@ export const getDefaultBalanceSheetQuery = (): BalanceSheetTableQuery =>
 
     branchesIds: [],
     numberFormat: {},
-  }) as BalanceSheetTableQuery;
+  }) as unknown as BalanceSheetTableQuery;
 
 const parseBalanceSheetQuery = (
   locationQuery: Record<string, unknown>,

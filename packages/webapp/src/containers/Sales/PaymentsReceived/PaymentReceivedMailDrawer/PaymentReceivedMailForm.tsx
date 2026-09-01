@@ -62,8 +62,9 @@ export function PaymentReceivedSendMailForm({
   };
 
   return (
-    <Formik<PaymentReceivedSendMailFormValues>
-      initialValues={_initialValues}
+    <Formik
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      initialValues={_initialValues as any}
       validationSchema={PaymentReceivedSendMailFormSchema}
       onSubmit={handleSubmit}
     >

@@ -332,7 +332,10 @@ const accountNameColumn = R.curry((data, column) => {
  * @param {*} column
  * @returns
  */
-const dateRangeSoloColumnAttrs = (data: unknown[], column: unknown) => {
+const dateRangeSoloColumnAttrs = (
+  data: unknown[],
+  column: Record<string, unknown>,
+) => {
   const accessor = getTableCellValueAccessor(column.cellIndex);
 
   return {

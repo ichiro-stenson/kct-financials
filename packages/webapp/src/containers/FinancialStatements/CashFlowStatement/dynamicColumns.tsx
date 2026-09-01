@@ -73,15 +73,15 @@ export const dynamicColumns = (
   data: unknown[],
 ) => {
   const mapper = (column: unknown, index: number) => {
-    return R.compose(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (R.compose as any)(
       R.when(
         R.pathSatisfies(isMatchesDateRange, ['key']),
         R.curry(dateRangeMapper)(data, index),
       ),
       R.when(isColumnKey('name'), accountNameMapper),
       R.when(isColumnKey('total'), R.curry(totalMapper)(data, index)),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    )(column) as any;
+    )(column);
   };
   return columns.map(mapper);
 };

@@ -110,7 +110,7 @@ const totalMapper = R.curry(
     };
     return R.compose(
       R.when(R.always(hasChildren), assocColumnsToTotalColumn(data, column)),
-    )(columnAccessor) as TableColumn;
+    )(columnAccessor) as unknown as TableColumn;
   },
 );
 
@@ -318,7 +318,7 @@ const totalColumnsMapper = R.curry(
         isColumnKey('previous_period_percentage'),
         previousPeriodPercentageAccessor(data),
       ),
-    )(column) as TableColumn;
+    )(column) as unknown as TableColumn;
   },
 );
 
@@ -360,7 +360,8 @@ const dateRangeMapper = R.curry(
       money: true,
       align: isDateColumnHasColumns ? Align.Center : Align.Right,
     };
-    return R.compose(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (R.compose as any)(
       R.when(
         R.always(isDateColumnHasColumns),
         assocColumnsToTotalColumn(data, column),
@@ -369,7 +370,7 @@ const dateRangeMapper = R.curry(
         R.always(!isDateColumnHasColumns),
         R.mergeLeft(dateRangeSoloColumnAttrs(data, column)),
       ),
-    )(columnAccessor) as TableColumn;
+    )(columnAccessor) as unknown as TableColumn;
   },
 );
 
@@ -388,14 +389,15 @@ const dynamicColumnMapper = R.curry(
     const indexAccountNameMapper = accountNameMapper(data);
     const indexDatePeriodMapper = dateRangeMapper(data);
 
-    return R.compose(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (R.compose as any)(
       R.when(
         R.pathSatisfies(isMatchesDateRange, ['key']),
         indexDatePeriodMapper,
       ),
       R.when(isColumnKey('name'), indexAccountNameMapper),
       R.when(isColumnKey('total'), indexTotalMapper),
-    )(column) as TableColumn;
+    )(column) as unknown as TableColumn;
   },
 );
 
