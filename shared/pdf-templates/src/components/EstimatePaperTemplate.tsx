@@ -106,8 +106,6 @@ export function EstimatePaperTemplate({
   showCompanyLogo = true,
   companyLogoUri = "",
 
-  companyName: _companyName,
-
   // # Company address
   companyAddress = DefaultPdfTemplateAddressBilledFrom,
   showCompanyAddress = true,
