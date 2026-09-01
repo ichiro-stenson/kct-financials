@@ -85,14 +85,16 @@ PaperTemplate.Logo = ({ logoUri }: PaperTemplateLogoProps) => {
 
 interface PaperTemplateTableProps {
   columns: Array<{
-    accessor: string | ((data: Record<string, unknown>) => JSX.Element);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    accessor: string | ((data: Record<string, any>) => JSX.Element);
     label: string;
     value?: JSX.Element;
     align?: "left" | "center" | "right";
     thStyle?: React.CSSProperties;
     visible?: boolean;
   }>;
-  data: Array<Record<string, unknown>>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: Array<Record<string, any>>;
 }
 
 PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
