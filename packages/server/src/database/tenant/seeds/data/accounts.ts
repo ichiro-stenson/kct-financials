@@ -121,6 +121,64 @@ export const OtherChargesAccount = {
 //              Opening Balance Equity (3900), plus BigCapital system accounts.
 
 export const AccountsData = [
+  // ── Standard accounts required by E2E tests ────────────────────────────
+  // These accounts must exist with these exact names for the Playwright
+  // test suite to function. Do not remove or rename them.
+  {
+    name: 'Petty Cash',
+    slug: 'petty-cash',
+    account_type: 'cash',
+    code: '10004',
+    description: '',
+    active: 1,
+    index: 1,
+    predefined: 0,
+  },
+  {
+    name: 'Rent',
+    slug: 'rent',
+    account_type: 'expense',
+    parent_account_id: null,
+    code: '40004',
+    description: '',
+    active: 1,
+    index: 1,
+    predefined: 0,
+  },
+  {
+    name: 'Sales of Product Income',
+    slug: 'sales-of-product-income',
+    account_type: 'income',
+    predefined: 0,
+    parent_account_id: null,
+    code: '50001',
+    description: '',
+    active: 1,
+    index: 1,
+  },
+  {
+    name: 'Cost of Goods Sold',
+    slug: 'cost-of-goods-sold',
+    account_type: 'cost-of-goods-sold',
+    parent_account_id: null,
+    code: '40002',
+    description: 'Tracks the direct cost of the goods sold.',
+    active: 1,
+    index: 1,
+    predefined: 0,
+  },
+  {
+    name: 'Inventory Asset',
+    slug: 'inventory-asset',
+    code: '10008',
+    account_type: 'inventory',
+    predefined: 0,
+    parent_account_id: null,
+    description: '',
+    active: 1,
+    index: 1,
+  },
+
   {
     name: 'Operating Checking Account',
     slug: 'operating-checking-account',
@@ -1938,64 +1996,6 @@ export const AccountsData = [
     active: 1,
     index: 1,
     predefined: 0,
-  },
-
-  // ── Standard accounts required by E2E tests ────────────────────────────
-  // These accounts must exist with these exact names for the Playwright
-  // test suite to function. Do not remove or rename them.
-  {
-    name: 'Petty Cash',
-    slug: 'petty-cash',
-    account_type: 'cash',
-    code: '10004',
-    description: '',
-    active: 1,
-    index: 1,
-    predefined: 0,
-  },
-  {
-    name: 'Rent',
-    slug: 'rent',
-    account_type: 'expense',
-    parent_account_id: null,
-    code: '40004',
-    description: '',
-    active: 1,
-    index: 1,
-    predefined: 0,
-  },
-  {
-    name: 'Sales of Product Income',
-    slug: 'sales-of-product-income',
-    account_type: 'income',
-    predefined: 0,
-    parent_account_id: null,
-    code: '50001',
-    description: '',
-    active: 1,
-    index: 1,
-  },
-  {
-    name: 'Cost of Goods Sold',
-    slug: 'cost-of-goods-sold',
-    account_type: 'cost-of-goods-sold',
-    parent_account_id: null,
-    code: '40002',
-    description: 'Tracks the direct cost of the goods sold.',
-    active: 1,
-    index: 1,
-    predefined: 0,
-  },
-  {
-    name: 'Inventory Asset',
-    slug: 'inventory-asset',
-    code: '10008',
-    account_type: 'inventory',
-    predefined: 0,
-    parent_account_id: null,
-    description: '',
-    active: 1,
-    index: 1,
   },
 
   // ── BigCapital system accounts (GL / tax / discount engine) ──────────────
