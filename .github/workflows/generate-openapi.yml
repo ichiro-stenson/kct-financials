@@ -134,7 +134,7 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'chore(sdk): update OpenAPI spec and generated types'
+          commit-message: 'chore(sdk-ts): update OpenAPI spec and generated types'
           title: 'chore(sdk): update OpenAPI spec and generated types'
           body: |
             ## Summary

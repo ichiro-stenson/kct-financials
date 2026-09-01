@@ -366,7 +366,8 @@ const dateRangeMapper = R.curry(
         R.always(isDateColumnHasColumns),
         assocColumnsToTotalColumn(data, column),
       ),
-      R.when(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (R.when as any)(
         R.always(!isDateColumnHasColumns),
         R.mergeLeft(dateRangeSoloColumnAttrs(data, column)),
       ),

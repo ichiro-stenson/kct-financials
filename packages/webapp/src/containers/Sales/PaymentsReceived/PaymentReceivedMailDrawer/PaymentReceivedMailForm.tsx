@@ -1,6 +1,8 @@
 import { Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
-import { Form, Formik, FormikHelpers } from 'formik';
+import { Form, Formik as FormikBase, FormikHelpers } from 'formik';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Formik = FormikBase as any;
 import { PaymentReceivedSendMailFormSchema } from './_types';
 import { PaymentReceivedSendMailFormValues } from './_types';
 import { usePaymentReceivedSendMailBoot } from './PaymentReceivedMailBoot';
@@ -63,8 +65,7 @@ export function PaymentReceivedSendMailForm({
 
   return (
     <Formik
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      initialValues={_initialValues as any}
+      initialValues={_initialValues}
       validationSchema={PaymentReceivedSendMailFormSchema}
       onSubmit={handleSubmit}
     >
