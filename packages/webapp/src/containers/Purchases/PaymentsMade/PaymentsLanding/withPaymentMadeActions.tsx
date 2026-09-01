@@ -1,14 +1,32 @@
-// @ts-nocheck
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import type { TableQuery } from '@/store/store.types';
 import {
   setPaymentMadesTableState,
   resetPaymentMadesTableState,
-} from '@/store/PaymentMades/paymentMades.actions';
+  setPaymentMadesSelectedRows,
+  resetPaymentMadesSelectedRows,
+} from '@/store/payment-mades/payment-mades.actions';
 
-const mapDispatchToProps = (dispatch) => ({
-  setPaymentMadesTableState: (state) =>
+export interface WithPaymentMadeActionsProps {
+  setPaymentMadesTableState: (state: Partial<TableQuery>) => void;
+  resetPaymentMadesTableState: () => void;
+  setPaymentMadesSelectedRows: (selectedRows: number[]) => void;
+  resetPaymentMadesSelectedRows: () => void;
+}
+
+export const mapDispatchToProps = (
+  dispatch: Dispatch,
+): WithPaymentMadeActionsProps => ({
+  setPaymentMadesTableState: (state: Partial<TableQuery>) =>
     dispatch(setPaymentMadesTableState(state)),
 
   resetPaymentMadesTableState: () => dispatch(resetPaymentMadesTableState()),
+
+  setPaymentMadesSelectedRows: (selectedRows: number[]) =>
+    dispatch(setPaymentMadesSelectedRows(selectedRows)),
+
+  resetPaymentMadesSelectedRows: () =>
+    dispatch(resetPaymentMadesSelectedRows()),
 });
 export const withPaymentMadeActions = connect(null, mapDispatchToProps);

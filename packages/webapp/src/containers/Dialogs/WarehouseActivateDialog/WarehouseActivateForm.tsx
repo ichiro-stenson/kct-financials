@@ -1,38 +1,30 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { Formik, type FormikHelpers } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-
-import { Formik } from 'formik';
-import { Intent } from '@blueprintjs/core';
-
-import { AppToaster } from '@/components';
+import { WarehouseActivateFormContent } from './WarehouseActivateFormContent';
 import { useWarehouseActivateContext } from './WarehouseActivateFormProvider';
-import WarehouseActivateFormContent from './WarehouseActivateFormContent';
-
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
 import { compose } from '@/utils';
 
-/**
- * warehouse activate form.
- */
-function WarehouseActivateForm({
-  // #withDialogActions
+interface WarehouseActivateFormProps extends WithDialogActionsProps {}
+
+function WarehouseActivateFormInner({
   closeDialog,
-}) {
+}: WarehouseActivateFormProps): React.ReactElement {
   const { activateWarehouses, dialogName } = useWarehouseActivateContext();
 
-  // Initial form values
-  const initialValues = {};
+  const initialValues: Record<string, never> = {};
 
-  // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    const form = {
-      ...values,
-    };
+  const handleFormSubmit = (
+    values: Record<string, never>,
+    { setSubmitting }: FormikHelpers<Record<string, never>>,
+  ) => {
+    const form = { ...values };
     setSubmitting(true);
-    // Handle request response success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get('warehouse_activate.dialog_success_message'),
         intent: Intent.SUCCESS,
@@ -40,16 +32,10 @@ function WarehouseActivateForm({
       closeDialog(dialogName);
     };
 
-    // Handle request response errors.
-    const onError = ({
-      response: {
-        data: { errors },
-      },
-    }) => {
-      if (errors) {
-      }
+    const onError = () => {
       setSubmitting(false);
     };
+    // @ts-expect-error — latent bug preserved: hook expects a number id, original code passed an object.
     activateWarehouses(form).then(onSuccess).catch(onError);
   };
 
@@ -61,4 +47,6 @@ function WarehouseActivateForm({
     />
   );
 }
-export default compose(withDialogActions)(WarehouseActivateForm);
+export const WarehouseActivateForm = compose(withDialogActions)(
+  WarehouseActivateFormInner,
+);

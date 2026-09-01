@@ -1,16 +1,15 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
 import { ProjectDetailHeader } from '../ProjectDetailsHeader';
-import { ProjectTimesheetsTable } from './ProjectTimesheetsTable';
 import { ProjectTimesheetsProvider } from './ProjectTimesheetsProvider';
+import { ProjectTimesheetsTable } from './ProjectTimesheetsTable';
 
 /**
  * Project Timesheets.
  * @returns
  */
-export default function ProjectTimeSheets() {
+export function ProjectTimeSheets() {
   return (
     <ProjectTimesheetsProvider>
       <ProjectDetailHeader />

@@ -1,27 +1,25 @@
 // @ts-nocheck
-import React from 'react';
-import { useFormikContext } from 'formik';
 import { Classes, ControlGroup } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { EstimateAmount } from './utils';
 import {
   FFormGroup,
   FInputGroup,
   Col,
   Row,
-  FormattedMessage as T,
   InputPrependText,
 } from '@/components';
-import { EstimateAmount } from './utils';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { compose } from '@/utils';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
 /**
  * Project task form fields.
  * @returns
  */
-function ProjectTaskFormFields({
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
+function ProjectTaskFormFieldsInner() {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+
   // Formik context.
   const { values } = useFormikContext();
 
@@ -29,7 +27,7 @@ function ProjectTaskFormFields({
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Task Name -----------*/}
       <FFormGroup
-        label={<T id={'project_task.dialog.task_name'} />}
+        label={intl.get('project_task.dialog.task_name')}
         name={'taskName'}
       >
         <FInputGroup name="name" />
@@ -38,7 +36,7 @@ function ProjectTaskFormFields({
       <Row>
         <Col xs={4}>
           <FFormGroup
-            label={<T id={'project_task.dialog.estimated_hours'} />}
+            label={intl.get('project_task.dialog.estimated_hours')}
             name={'estimate_hours'}
           >
             <FInputGroup name="estimate_hours" />
@@ -49,7 +47,7 @@ function ProjectTaskFormFields({
           <FFormGroup
             name={'rate'}
             className={'form-group--select-list'}
-            label={<T id={'project_task.dialog.charge'} />}
+            label={intl.get('project_task.dialog.charge')}
           >
             <ControlGroup>
               <InputPrependText text={'Hourly Price'} />
@@ -62,9 +60,9 @@ function ProjectTaskFormFields({
         </Col>
       </Row>
       {/*------------ Estimated Amount -----------*/}
-      <EstimateAmount baseCurrency={base_currency} />
+      <EstimateAmount baseCurrency={baseCurrency} />
     </div>
   );
 }
 
-export default compose(withCurrentOrganization())(ProjectTaskFormFields);
+export const ProjectTaskFormFields = ProjectTaskFormFieldsInner;

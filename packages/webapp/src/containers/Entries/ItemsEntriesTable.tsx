@@ -1,21 +1,19 @@
 // @ts-nocheck
-import React, { useCallback } from 'react';
 import classNames from 'classnames';
-
-import { CLASSES } from '@/constants/classes';
-import { DataTableEditable } from '@/components';
-
+import React, { useCallback } from 'react';
 import { useEditableItemsEntriesColumns } from './components';
+import {
+  ItemEntriesTableProvider,
+  useItemEntriesTableContext,
+} from './ItemEntriesTableProvider';
 import {
   useFetchItemRow,
   useComposeRowsOnEditTableCell,
   useComposeRowsOnRemoveTableRow,
   useComposeRowsOnNewRow,
 } from './utils';
-import {
-  ItemEntriesTableProvider,
-  useItemEntriesTableContext,
-} from './ItemEntriesTableProvider';
+import { DataTableEditable } from '@/components';
+import { CLASSES } from '@/constants/classes';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 import { ItemEntry } from '@/interfaces/ItemEntries';
 
@@ -26,12 +24,19 @@ interface ItemsEntriesTableProps {
   taxRates?: any[];
   minLinesNumber?: number;
   enableTaxRates?: boolean;
+  items?: unknown[];
+  itemType?: string;
+  errors?: unknown;
+  linesNumber?: number;
+  currencyCode?: string;
+  isInclusiveTax?: boolean;
+  landedCost?: boolean;
 }
 
 /**
  * Items entries table.
  */
-function ItemsEntriesTable(props: ItemsEntriesTableProps) {
+export function ItemsEntriesTable(props: ItemsEntriesTableProps) {
   const { value, initialValue, onChange } = props;
 
   const [localValue, handleChange] = useUncontrolled({
@@ -84,7 +89,7 @@ function ItemEntriesTableRoot() {
   // Handles the editor data update.
   const handleUpdateData = useCallback(
     (rowIndex, columnId, value) => {
-      if (columnId === 'item_id') {
+      if (columnId === 'itemId') {
         setItemRow({ rowIndex, columnId, itemId: value });
       }
       const newRows = composeRowsOnEditCell(rowIndex, columnId, value);
@@ -114,7 +119,7 @@ function ItemEntriesTableRoot() {
         errors: errors || [],
         updateData: handleUpdateData,
         removeRow: handleRemoveRow,
-        autoFocus: ['item_id', 0],
+        autoFocus: ['itemId', 0],
         currencyCode,
       }}
     />
@@ -124,7 +129,7 @@ function ItemEntriesTableRoot() {
 ItemsEntriesTable.defaultProps = {
   defaultEntry: {
     index: 0,
-    item_id: '',
+    itemId: '',
     description: '',
     quantity: '',
     rate: '',
@@ -137,5 +142,3 @@ ItemsEntriesTable.defaultProps = {
   minLinesNumber: 1,
   enableTaxRates: true,
 };
-
-export default ItemsEntriesTable;

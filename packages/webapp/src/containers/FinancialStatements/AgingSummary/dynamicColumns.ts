@@ -1,40 +1,52 @@
-// @ts-nocheck
 import * as R from 'ramda';
-import { getColumnWidth } from '@/utils';
+import type { AgingSummaryColumnKey } from '@bigcapital/sdk-ts';
 import { Align } from '@/constants';
+import { getColumnWidth } from '@/utils';
 
-const getTableCellValueAccessor = (index) => `cells[${index}].value`;
+const isColumnKey = (key: AgingSummaryColumnKey) => R.pathEq(['key'], key);
 
-const contactNameAccessor = R.curry((data, column) => ({
-  key: column.key,
-  Header: column.label,
-  accessor: getTableCellValueAccessor(column.cell_index),
-  sticky: 'left',
-  width: 240,
-  textOverview: true,
-}));
+interface AgingSummaryColumn {
+  key: string;
+  label: string;
+  cellIndex?: number;
+}
 
-const currentAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+const getTableCellValueAccessor = (index: number) => `cells[${index}].value`;
 
-  return {
+const contactNameAccessor = R.curry(
+  (data: unknown[], column: AgingSummaryColumn) => ({
     key: column.key,
     Header: column.label,
-    accessor,
-    className: column.id,
-    width: getColumnWidth(data, accessor, { minWidth: 120 }),
-    align: Align.Right,
-    money: true,
-  };
-});
+    accessor: getTableCellValueAccessor(column.cellIndex!),
+    sticky: 'left',
+    width: 240,
+    textOverview: true,
+  }),
+);
 
-const totalAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+const currentAccessor = R.curry(
+  (data: unknown[], column: AgingSummaryColumn) => {
+    const accessor = getTableCellValueAccessor(column.cellIndex!);
+
+    return {
+      key: column.key,
+      Header: column.label,
+      accessor,
+      className: column.key,
+      width: getColumnWidth(data, accessor, { minWidth: 120 }),
+      align: Align.Right,
+      money: true,
+    };
+  },
+);
+
+const totalAccessor = R.curry((data: unknown[], column: AgingSummaryColumn) => {
+  const accessor = getTableCellValueAccessor(column.cellIndex!);
 
   return {
     Header: column.label,
     id: column.key,
-    accessor: getTableCellValueAccessor(column.cell_index),
+    accessor: getTableCellValueAccessor(column.cellIndex!),
     className: column.key,
     width: getColumnWidth(data, accessor, { minWidth: 120 }),
     align: Align.Right,
@@ -42,35 +54,42 @@ const totalAccessor = R.curry((data, column) => {
   };
 });
 
-const agingPeriodAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+const agingPeriodAccessor = R.curry(
+  (data: unknown[], column: AgingSummaryColumn) => {
+    const accessor = getTableCellValueAccessor(column.cellIndex!);
 
-  return {
-    Header: column.label,
-    id: `${column.key}-${column.cell_index}`,
-    accessor,
-    className: column.key,
-    width: getColumnWidth(data, accessor, { minWidth: 120 }),
-    align: Align.Right,
-    money: true,
-  };
-});
+    return {
+      Header: column.label,
+      id: `${column.key}-${column.cellIndex}`,
+      accessor,
+      className: column.key,
+      width: getColumnWidth(data, accessor, { minWidth: 120 }),
+      align: Align.Right,
+      money: true,
+    };
+  },
+);
 
-const dynamicColumnMapper = R.curry((data, column) => {
-  const totalAccessorColumn = totalAccessor(data);
-  const currentAccessorColumn = currentAccessor(data);
-  const customerNameAccessorColumn = contactNameAccessor(data);
-  const agingPeriodAccessorColumn = agingPeriodAccessor(data);
+const dynamicColumnMapper = R.curry(
+  (data: unknown[], column: AgingSummaryColumn) => {
+    const totalAccessorColumn = totalAccessor(data);
+    const currentAccessorColumn = currentAccessor(data);
+    const customerNameAccessorColumn = contactNameAccessor(data);
+    const agingPeriodAccessorColumn = agingPeriodAccessor(data);
 
-  return R.compose(
-    R.when(R.pathEq(['key'], 'total'), totalAccessorColumn),
-    R.when(R.pathEq(['key'], 'current'), currentAccessorColumn),
-    R.when(R.pathEq(['key'], 'customer_name'), customerNameAccessorColumn),
-    R.when(R.pathEq(['key'], 'vendor_name'), customerNameAccessorColumn),
-    R.when(R.pathEq(['key'], 'aging_period'), agingPeriodAccessorColumn),
-  )(column);
-});
+    return R.compose(
+      R.when(isColumnKey('total'), totalAccessorColumn),
+      R.when(isColumnKey('current'), currentAccessorColumn),
+      R.when(isColumnKey('customer_name'), customerNameAccessorColumn),
+      R.when(isColumnKey('vendor_name'), customerNameAccessorColumn),
+      R.when(isColumnKey('aging_period'), agingPeriodAccessorColumn),
+    )(column);
+  },
+);
 
-export const agingSummaryDynamicColumns = (columns, data) => {
+export const agingSummaryDynamicColumns = (
+  columns: AgingSummaryColumn[],
+  data: unknown[],
+) => {
   return R.map(dynamicColumnMapper(data), columns);
 };

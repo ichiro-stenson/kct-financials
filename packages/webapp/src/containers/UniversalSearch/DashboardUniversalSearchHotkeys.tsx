@@ -1,15 +1,12 @@
 // @ts-nocheck
 import * as R from 'ramda';
 import { useHotkeys } from 'react-hotkeys-hook';
-
 import { withUniversalSearchActions } from './withUniversalSearchActions';
 
 /**
  * Universal search hotkey.
  */
-function DashboardUniversalSearchHotkey({
-  openGlobalSearch,
-}) {
+function DashboardUniversalSearchHotkey({ openGlobalSearch }) {
   useHotkeys('shift+p', (event, handle) => {
     openGlobalSearch();
   });
@@ -17,6 +14,6 @@ function DashboardUniversalSearchHotkey({
   return null;
 }
 
-export default R.compose(
-  withUniversalSearchActions
+export const DashboardUniversalSearchHotkeys = R.compose(
+  withUniversalSearchActions,
 )(DashboardUniversalSearchHotkey);

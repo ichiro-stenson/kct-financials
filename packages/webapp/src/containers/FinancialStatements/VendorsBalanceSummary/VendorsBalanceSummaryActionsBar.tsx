@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   NavbarDivider,
   NavbarGroup,
@@ -9,24 +7,42 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { DashboardActionsBar, Icon, FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
-import { withVendorsBalanceSummary } from './withVendorsBalanceSummary';
-import { withVendorsBalanceSummaryActions } from './withVendorsBalanceSummaryActions';
-import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
-
-import { saveInvoke, compose } from '@/utils';
+import React from 'react';
 import { VendorSummarySheetExportMenu } from './components';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
+import { withVendorsBalanceSummary } from './withVendorsBalanceSummary';
+import {
+  withVendorsBalanceSummaryActions,
+  WithVendorsBalanceSummaryActionsProps,
+} from './withVendorsBalanceSummaryActions';
+import { DashboardActionsBar, Icon, FormattedMessage as T } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { DialogsName } from '@/constants/dialogs';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import { saveInvoke, compose } from '@/utils';
+
+interface VendorsBalanceSummaryActionsBarOwnProps {
+  numberFormat: Record<string, unknown>;
+  onNumberFormatSubmit: (values: Record<string, unknown>) => void;
+}
+
+type VendorsBalanceSummaryActionsBarProps = {
+  isFilterDrawerOpen: boolean;
+} & Pick<
+  WithVendorsBalanceSummaryActionsProps,
+  'toggleVendorSummaryFilterDrawer'
+> &
+  WithDialogActionsProps &
+  VendorsBalanceSummaryActionsBarOwnProps;
 
 /**
  * Vendors balance summary action bar.
  */
-function VendorsBalanceSummaryActionsBar({
+function VendorsBalanceSummaryActionsBarInner({
   //#ownProps
   numberFormat,
   onNumberFormatSubmit,
@@ -39,7 +55,7 @@ function VendorsBalanceSummaryActionsBar({
 
   // #withDialogActions
   openDialog,
-}) {
+}: VendorsBalanceSummaryActionsBarProps) {
   const { isVendorsBalanceLoading, refetch } =
     useVendorsBalanceSummaryContext();
 
@@ -53,7 +69,7 @@ function VendorsBalanceSummaryActionsBar({
   };
 
   // handle number format submit.
-  const handleNumberFormatSubmit = (numberFormat) => {
+  const handleNumberFormatSubmit = (numberFormat: Record<string, unknown>) => {
     saveInvoke(onNumberFormatSubmit, numberFormat);
   };
 
@@ -129,10 +145,10 @@ function VendorsBalanceSummaryActionsBar({
     </DashboardActionsBar>
   );
 }
-export default compose(
+export const VendorsBalanceSummaryActionsBar = compose(
   withVendorsBalanceSummaryActions,
   withVendorsBalanceSummary(({ VendorsSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: VendorsSummaryFilterDrawer,
   })),
   withDialogActions,
-)(VendorsBalanceSummaryActionsBar);
+)(VendorsBalanceSummaryActionsBarInner);

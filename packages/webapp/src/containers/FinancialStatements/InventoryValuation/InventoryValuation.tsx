@@ -1,43 +1,47 @@
-// @ts-nocheck
-import { useEffect, useCallback } from 'react';
 import moment from 'moment';
-
-import { DashboardPageContent } from '@/components';
-import InventoryValuationActionsBar from './InventoryValuationActionsBar';
-import InventoryValuationHeader from './InventoryValuationHeader';
-
-import { InventoryValuationProvider } from './InventoryValuationProvider';
-import { InventoryValuationBody } from './InventoryValuationBody';
+import React, { useEffect, useCallback } from 'react';
 import { InventoryValuationLoadingBar } from './components';
+import { InventoryValuationActionsBar } from './InventoryValuationActionsBar';
+import { InventoryValuationBody } from './InventoryValuationBody';
+import { InventoryValuationDialogs } from './InventoryValuationDialogs';
+import { InventoryValuationHeader } from './InventoryValuationHeader';
+import { InventoryValuationProvider } from './InventoryValuationProvider';
 import { useInventoryValuationQuery } from './utils';
+import {
+  withInventoryValuationActions,
+  WithInventoryValuationActionsProps,
+} from './withInventoryValuationActions';
+import { DashboardPageContent } from '@/components';
+import { useCurrentOrganizationName } from '@/hooks/query';
 import { compose } from '@/utils';
 
-import { withInventoryValuationActions } from './withInventoryValuationActions';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { InventoryValuationDialogs } from './InventoryValuationDialogs';
+interface InventoryValuationProps {
+  toggleInventoryValuationFilterDrawer: WithInventoryValuationActionsProps['toggleInventoryValuationFilterDrawer'];
+}
 
 /**
  * Inventory valuation.
  */
-function InventoryValuation({
+function InventoryValuationInner({
   // #withInventoryValuationActions
   toggleInventoryValuationFilterDrawer,
-}) {
+}: InventoryValuationProps) {
+  const organizationName = useCurrentOrganizationName();
   const { query, setLocationQuery } = useInventoryValuationQuery();
 
   // Handle filter form submit.
   const handleFilterSubmit = useCallback(
-    (filter) => {
+    (filter: Record<string, unknown>) => {
       const newFilter = {
         ...filter,
-        asDate: moment(filter.asDate).format('YYYY-MM-DD'),
+        asDate: moment(filter.asDate as string).format('YYYY-MM-DD'),
       };
       setLocationQuery(newFilter);
     },
     [setLocationQuery],
   );
   // Handle number format form submit.
-  const handleNumberFormatSubmit = (numberFormat) => {
+  const handleNumberFormatSubmit = (numberFormat: Record<string, unknown>) => {
     setLocationQuery({
       ...query,
       numberFormat,
@@ -72,9 +76,6 @@ function InventoryValuation({
   );
 }
 
-export default compose(
-  withInventoryValuationActions,
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(InventoryValuation);
+export const InventoryValuation = compose(withInventoryValuationActions)(
+  InventoryValuationInner,
+);

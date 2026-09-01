@@ -1,21 +1,19 @@
 // @ts-nocheck
+import { Intent, Alert } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
 import { useDeleteProjectTask } from '../../hooks';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
+import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { compose } from '@/utils';
 
 /**
  * Project tasks delete alert.
  * @returns
  */
-function ProjectTaskDeleteAlert({
+function ProjectTaskDeleteAlertInner({
   name,
 
   // #withAlertStoreConnect
@@ -42,13 +40,7 @@ function ProjectTaskDeleteAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {},
-      )
+      .catch(({ data: { errors } }) => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -66,13 +58,15 @@ function ProjectTaskDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage id={'project_task.alert.once_delete_this_project'} />
+        <FormattedHTMLMessage
+          id={'project_task.alert.once_delete_this_project'}
+        />
       </p>
     </Alert>
   );
 }
 
-export default compose(
+export const ProjectTaskDeleteAlert = compose(
   withAlertStoreConnect(),
   withAlertActions,
-)(ProjectTaskDeleteAlert);
+)(ProjectTaskDeleteAlertInner);

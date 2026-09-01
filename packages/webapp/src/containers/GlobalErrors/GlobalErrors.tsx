@@ -1,17 +1,16 @@
 // @ts-nocheck
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { AppToaster } from '@/components';
-
 import { withGlobalErrors } from './withGlobalErrors';
 import { withGlobalErrorsActions } from './withGlobalErrorsActions';
+import { AppToaster } from '@/components';
 import { compose } from '@/utils';
 
 let toastKeySessionExpired;
 let toastKeySomethingWrong;
 let toastTooManyRequests;
 
-function GlobalErrors({
+function GlobalErrorsInner({
   // #withGlobalErrors
   globalErrors,
 
@@ -57,7 +56,9 @@ function GlobalErrors({
   if (globalErrors.access_denied) {
     toastKeySomethingWrong = AppToaster.show(
       {
-        message: globalErrors.access_denied.message || intl.get('global_error.you_dont_have_permissions'),
+        message:
+          globalErrors.access_denied.message ||
+          intl.get('global_error.you_dont_have_permissions'),
         intent: Intent.DANGER,
         onDismiss: () => {
           globalErrorsSet({ access_denied: false });
@@ -98,4 +99,7 @@ function GlobalErrors({
   return null;
 }
 
-export default compose(withGlobalErrors, withGlobalErrorsActions)(GlobalErrors);
+export const GlobalErrors = compose(
+  withGlobalErrors,
+  withGlobalErrorsActions,
+)(GlobalErrorsInner);

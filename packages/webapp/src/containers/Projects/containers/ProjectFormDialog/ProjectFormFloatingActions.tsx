@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React from 'react';
-import { useFormikContext } from 'formik';
 import { Intent, Button, Classes } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
+import { useFormikContext } from 'formik';
+import React from 'react';
 import { useProjectFormContext } from './ProjectFormProvider';
+import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
@@ -11,7 +11,7 @@ import { compose } from '@/utils';
  * Project form floating actions.
  * @returns
  */
-function ProjectFormFloatingActions({
+function ProjectFormFloatingActionsInner({
   // #withDialogActions
   closeDialog,
 }) {
@@ -34,4 +34,6 @@ function ProjectFormFloatingActions({
   );
 }
 
-export default compose(withDialogActions)(ProjectFormFloatingActions);
+export const ProjectFormFloatingActions = compose(withDialogActions)(
+  ProjectFormFloatingActionsInner,
+);

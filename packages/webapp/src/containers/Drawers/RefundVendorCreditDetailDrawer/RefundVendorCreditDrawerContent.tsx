@@ -1,17 +1,14 @@
 // @ts-nocheck
 import React from 'react';
-
-import { DrawerBody } from '@/components';
+import { RefundVendorCreditDetail } from './RefundVendorCreditDetail';
 import { RefundVendorCreditDrawerProvider } from './RefundVendorCreditDrawerProvider';
-import RefundVendorCreditDetail from './RefundVendorCreditDetail';
+import { DrawerBody } from '@/components';
 
 /**
  * Refund vendor credit drawer content.
  * @returns
  */
-export default function RefundVendorCreditDrawerContent({
-  refundTransactionId,
-}) {
+export function RefundVendorCreditDrawerContent({ refundTransactionId }) {
   return (
     <RefundVendorCreditDrawerProvider refundTransactionId={refundTransactionId}>
       <DrawerBody>

@@ -2,11 +2,12 @@
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
-
 import { compose } from '@/utils';
 
 const ContactDetailDrawerContent = React.lazy(() =>
-  import('./ContactDetailDrawerContent'),
+  import('./ContactDetailDrawerContent').then((m) => ({
+    default: m.ContactDetailDrawerContent,
+  })),
 );
 
 /**
@@ -28,4 +29,4 @@ function ContactDetailDrawer({
   );
 }
 
-export default compose(withDrawers())(ContactDetailDrawer);
+export const index = compose(withDrawers())(ContactDetailDrawer);

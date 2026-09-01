@@ -1,21 +1,19 @@
 // @ts-nocheck
+import { Callout, Classes, Intent } from '@blueprintjs/core';
+import { Formik, Form, useFormikContext } from 'formik';
+import { castArray, includes } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { castArray, includes } from 'lodash';
-import { Formik, Form, useFormikContext } from 'formik';
 import styled from 'styled-components';
-import { Callout, Classes, Intent } from '@blueprintjs/core';
 
 import '@/style/pages/NotifyConactViaSMS/NotifyConactViaSMSDialog.scss';
 
 import { CreateNotifyViaSMSFormSchema } from './NotifyViaSMSForm.schema';
-import NotifyViaSMSFormFields from './NotifyViaSMSFormFields';
-import NotifyViaSMSFormFloatingActions from './NotifyViaSMSFormFloatingActions';
-import { FormObserver, SMSMessagePreview } from '@/components';
-
-import { transformToForm, safeInvoke } from '@/utils';
+import { NotifyViaSMSFormFields } from './NotifyViaSMSFormFields';
+import { NotifyViaSMSFormFloatingActions } from './NotifyViaSMSFormFloatingActions';
 import { getSMSUnits } from './utils';
-
+import { FormObserver, SMSMessagePreview } from '@/components';
+import { transformToForm, safeInvoke } from '@/utils';
 
 const defaultInitialValues = {
   notification_key: '',
@@ -53,7 +51,7 @@ function SMSMessagePreviewSection() {
 /**
  * Notify Via SMS Form.
  */
-function NotifyViaSMSForm({
+export function NotifyViaSMSForm({
   initialValues: initialValuesComponent,
   notificationTypes,
   onSubmit,
@@ -131,9 +129,6 @@ function NotifyViaSMSAlerts({ calloutCodes }) {
     ),
   ];
 }
-
-export default NotifyViaSMSForm;
-
 const NotifyContent = styled.div`
   display: flex;
 `;

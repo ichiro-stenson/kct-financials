@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import {
   Button,
   Classes,
@@ -7,6 +6,8 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
+import React from 'react';
+import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 import {
   Can,
   FormattedMessage as T,
@@ -14,15 +15,14 @@ import {
   Icon,
   If,
 } from '@/components';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { compose } from '@/utils';
 
 /**
  * Cashflow transaction drawer action bar.
  */
-function CashflowTransactionDrawerActionBar({
+function CashflowTransactionDrawerActionBarInner({
   // #withAlertsDialog
   openAlert,
 }) {
@@ -67,4 +67,6 @@ function CashflowTransactionDrawerActionBar({
   );
 }
 
-export default compose(withAlertActions)(CashflowTransactionDrawerActionBar);
+export const CashflowTransactionDrawerActionBar = compose(withAlertActions)(
+  CashflowTransactionDrawerActionBarInner,
+);

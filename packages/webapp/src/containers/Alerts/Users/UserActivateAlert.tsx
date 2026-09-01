@@ -1,30 +1,34 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Alert, Intent } from '@blueprintjs/core';
 import { AppToaster, FormattedMessage as T } from '@/components';
-import { useActivateUser } from '@/hooks/query';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { useActivateUser } from '@/hooks/query';
 import { compose } from '@/utils';
 
-/**
- * User inactivate alert.
- */
-function UserActivateAlert({
-  // #ownProps
-  name,
+interface UserActivateAlertPayload {
+  userId: number;
+}
 
-  // #withAlertStoreConnect
+interface UserActivateAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: UserActivateAlertPayload;
+}
+
+/**
+ * User activate alert.
+ */
+function UserActivateAlertInner({
+  name,
   isOpen,
   payload: { userId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: userActivateMutate } = useActivateUser();
+}: UserActivateAlertProps): React.ReactElement {
+  const { mutateAsync: userActivateMutate, isPending: isLoading } =
+    useActivateUser();
 
   const handleConfirmActivate = () => {
     userActivateMutate(userId)
@@ -33,9 +37,15 @@ function UserActivateAlert({
           message: intl.get('the_user_has_been_activated_successfully'),
           intent: Intent.SUCCESS,
         });
-        closeAlert(name);
       })
-      .catch((error) => {
+      .catch((error: Error) => {
+        // Bugfix: original @ts-nocheck silently closed the alert on error without surfacing the failure.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
+      .finally(() => {
         closeAlert(name);
       });
   };
@@ -46,12 +56,13 @@ function UserActivateAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'activate'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('activate')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancel}
       onConfirm={handleConfirmActivate}
+      loading={isLoading}
     >
       <p>
         <T id={'are_sure_to_activate_this_account'} />
@@ -60,7 +71,7 @@ function UserActivateAlert({
   );
 }
 
-export default compose(
+export const UserActivateAlert = compose(
   withAlertStoreConnect(),
   withAlertActions,
-)(UserActivateAlert);
+)(UserActivateAlertInner);

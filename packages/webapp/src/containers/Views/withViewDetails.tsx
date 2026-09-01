@@ -1,15 +1,30 @@
-// @ts-nocheck
-import {connect} from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 import {
   getViewItemFactory,
   getViewMetaFactory,
-} from '@/store/customViews/customViews.selectors';
+} from '@/store/custom-views/custom-views.selectors';
+import { ApplicationState } from '@/store/reducers';
 
-export const withViewDetails = () => {
+export interface WithViewDetailsProps {
+  viewMeta: ReturnType<ReturnType<typeof getViewMetaFactory>>;
+  viewItem: ReturnType<ReturnType<typeof getViewItemFactory>>;
+}
+
+interface ViewDetailsOwnProps {
+  viewId: string | number;
+}
+
+export const withViewDetails = <
+  Props extends ViewDetailsOwnProps = ViewDetailsOwnProps,
+>() => {
   const getViewItem = getViewItemFactory();
   const getViewMeta = getViewMetaFactory();
 
-  const mapStateToProps = (state, props) => ({
+  const mapStateToProps: MapStateToProps<
+    WithViewDetailsProps,
+    Props,
+    ApplicationState
+  > = (state, props) => ({
     viewMeta: getViewMeta(state, props),
     viewItem: getViewItem(state, props),
   });

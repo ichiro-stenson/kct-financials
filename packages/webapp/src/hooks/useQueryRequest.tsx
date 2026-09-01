@@ -1,37 +1,51 @@
-// @ts-nocheck
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { castArray, defaultTo } from 'lodash';
+import { useRef } from 'react';
+import { normalizeApiPath } from '../utils';
 import { useAuthOrganizationId } from './state';
 import useApiRequest from './useRequest';
-import { normalizeApiPath } from '../utils';
-import { useRef } from 'react';
+import type { QueryFunction, QueryKey } from '@tanstack/react-query';
+import type { AxiosRequestConfig } from 'axios';
 
 /**
  * Query for tenant requests.
  */
-export function useQueryTenant(query, callback, props) {
+export function useQueryTenant<TData = unknown>(
+  query: QueryKey | unknown,
+  callback: QueryFunction<TData>,
+  props?: Record<string, unknown>,
+) {
   const organizationId = useAuthOrganizationId();
 
-  return useQuery([...castArray(query), organizationId], callback, props);
+  return useQuery({
+    queryKey: [...castArray(query), organizationId],
+    queryFn: callback,
+    ...(props as object),
+  } as any);
 }
 
-export function useRequestQuery(query, axios, props) {
+export function useRequestQuery<TData = any>(
+  query: QueryKey | unknown,
+  axios: { url: string } & AxiosRequestConfig,
+  props?: { defaultData?: unknown } & Record<string, unknown>,
+) {
   const apiRequest = useApiRequest();
+  const { defaultData: defaultDataProp, ...restProps } = props || {};
 
-  const states = useQuery(
-    query,
-    () =>
+  const states = useQuery({
+    queryKey: castArray(query) as QueryKey,
+    queryFn: () =>
       apiRequest.http({
         ...axios,
         url: `/api/${normalizeApiPath(axios.url)}`,
-      }),
-    props,
-  );
-  // Momerize the default data.
-  const defaultData = useRef(props.defaultData || undefined);
+      }) as Promise<TData>,
+    placeholderData: defaultDataProp,
+    ...(restProps as object),
+  } as any);
+  const defaultData = useRef(defaultDataProp ?? undefined);
 
   return {
     ...states,
-    data: defaultTo(states.data, defaultData.current),
+    data: defaultTo(states.data, defaultData.current) as TData | undefined,
   };
 }

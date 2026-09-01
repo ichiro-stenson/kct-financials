@@ -61,12 +61,12 @@ export class GetCustomers {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Retrieves the transformed customers.
-    const customers = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new CustomerTransfromer(),
     );
     return {
-      customers,
+      data,
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };

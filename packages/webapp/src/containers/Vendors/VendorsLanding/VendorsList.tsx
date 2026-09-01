@@ -1,23 +1,29 @@
-// @ts-nocheck
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import '@/style/pages/Vendors/List.scss';
 
-import { DashboardPageContent } from '@/components';
-
+import { VendorActionsBar } from './VendorActionsBar';
+import { VendorsListDialogs } from './VendorsListDialogs';
 import { VendorsListProvider } from './VendorsListProvider';
-import VendorActionsBar from './VendorActionsBar';
-import VendorsTable from './VendorsTable';
-
+import { VendorsTable } from './VendorsTable';
 import { withVendors } from './withVendors';
+import type { WithVendorsProps } from './withVendors';
 import { withVendorsActions } from './withVendorsActions';
-
+import type { WithVendorsActionsProps } from './withVendorsActions';
+import { DashboardPageContent } from '@/components';
 import { compose } from '@/utils';
+
+interface VendorsListInnerProps
+  extends Pick<
+      WithVendorsProps,
+      'vendorsTableState' | 'vendorsTableStateChanged'
+    >,
+    WithVendorsActionsProps {}
 
 /**
  * Vendors list page.
  */
-function VendorsList({
+function VendorsListInner({
   // #withVendors
   vendorsTableState,
   vendorsTableStateChanged,
@@ -25,7 +31,7 @@ function VendorsList({
   // #withVendorsActions
   resetVendorsTableState,
   resetVendorsSelectedRows,
-}) {
+}: VendorsListInnerProps) {
   // Resets the vendors table state once the page unmount.
   useEffect(
     () => () => {
@@ -41,6 +47,7 @@ function VendorsList({
       tableStateChanged={vendorsTableStateChanged}
     >
       <VendorActionsBar />
+      <VendorsListDialogs />
 
       <DashboardPageContent>
         <VendorsTable />
@@ -49,10 +56,10 @@ function VendorsList({
   );
 }
 
-export default compose(
+export const VendorsList = compose(
   withVendors(({ vendorsTableState, vendorsTableStateChanged }) => ({
     vendorsTableState,
     vendorsTableStateChanged,
   })),
   withVendorsActions,
-)(VendorsList);
+)(VendorsListInner);

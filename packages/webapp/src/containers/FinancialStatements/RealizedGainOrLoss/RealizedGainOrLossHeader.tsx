@@ -1,51 +1,52 @@
-// @ts-nocheck
-import React from 'react';
-import moment from 'moment';
-import * as Yup from 'yup';
-import intl from 'react-intl-universal';
-import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
-
-import FinancialStatementHeader from '../FinancialStatementHeader';
-import RealizedGainOrLossGeneralPanel from './RealizedGainOrLossGeneralPanel';
-
+import { Formik, Form } from 'formik';
+import moment from 'moment';
+import React from 'react';
+import intl from 'react-intl-universal';
+import * as Yup from 'yup';
+import { FinancialStatementHeader } from '../FinancialStatementHeader';
+import { RealizedGainOrLossGeneralPanel } from './RealizedGainOrLossGeneralPanel';
 import { withRealizedGainOrLoss } from './withRealizedGainOrLoss';
-import { withRealizedGainOrLossActions } from './withRealizedGainOrLossActions';
-
+import {
+  withRealizedGainOrLossActions,
+  WithRealizedGainOrLossActionsProps,
+} from './withRealizedGainOrLossActions';
+import type { FormikHelpers } from 'formik';
+import { FormattedMessage as T } from '@/components';
 import { compose, transformToForm } from '@/utils';
 
-/**
- * Realized Gain or Loss.header.
- */
-function RealizedGainOrLossHeader({
-  // #ownProps
+interface RealizedGainOrLossHeaderOwnProps {
+  onSubmitFilter: (values: Record<string, unknown>) => void;
+  pageFilter: Record<string, unknown>;
+}
+
+type RealizedGainOrLossHeaderProps = RealizedGainOrLossHeaderOwnProps & {
+  isFilterDrawerOpen: boolean;
+} & Pick<
+    WithRealizedGainOrLossActionsProps,
+    'toggleRealizedGainOrLossFilterDrawer'
+  >;
+
+function RealizedGainOrLossHeaderInner({
   onSubmitFilter,
   pageFilter,
-
-  //#withRealizedGainOrLoss
   isFilterDrawerOpen,
-
-  //#withRealizedGainOrLossActions
   toggleRealizedGainOrLossFilterDrawer,
-}) {
-  // Filter form default values.
+}: RealizedGainOrLossHeaderProps) {
   const defaultValues = {
     fromDate: moment().toDate(),
     toDate: moment().toDate(),
   };
 
-  // Initial form values.
   const initialValues = transformToForm(
     {
       ...pageFilter,
-      fromDate: moment(pageFilter.fromDate).toDate(),
-      toDate: moment(pageFilter.toDate).toDate(),
+      fromDate: moment(pageFilter.fromDate as string).toDate(),
+      toDate: moment(pageFilter.toDate as string).toDate(),
     },
     defaultValues,
   );
 
-  // Validation schema.
   const validationSchema = Yup.object().shape({
     dateRange: Yup.string().optional(),
     fromDate: Yup.date().required().label(intl.get('fromDate')),
@@ -56,14 +57,15 @@ function RealizedGainOrLossHeader({
     displayColumnsType: Yup.string(),
   });
 
-  // Handle form submit.
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = (
+    values: Record<string, unknown>,
+    { setSubmitting }: FormikHelpers<Record<string, unknown>>,
+  ) => {
     onSubmitFilter(values);
     toggleRealizedGainOrLossFilterDrawer(false);
     setSubmitting(false);
   };
 
-  // Handle drawer close action.
   const handleDrawerClose = () => {
     toggleRealizedGainOrLossFilterDrawer(false);
   };
@@ -87,7 +89,7 @@ function RealizedGainOrLossHeader({
             />
           </Tabs>
 
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>
@@ -101,9 +103,9 @@ function RealizedGainOrLossHeader({
   );
 }
 
-export default compose(
+export const RealizedGainOrLossHeader = compose(
   withRealizedGainOrLoss(({ realizedGainOrLossDrawerFilter }) => ({
     isFilterDrawerOpen: realizedGainOrLossDrawerFilter,
   })),
   withRealizedGainOrLossActions,
-)(RealizedGainOrLossHeader);
+)(RealizedGainOrLossHeaderInner);

@@ -33,6 +33,6 @@ export class BillsExportable extends Exportable {
 
     return this.billsApplication
       .getBills(parsedQuery)
-      .then((output) => output.bills);
+      .then((output) => output.data);
   }
 }

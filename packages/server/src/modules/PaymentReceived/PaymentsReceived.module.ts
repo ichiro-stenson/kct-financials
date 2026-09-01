@@ -13,7 +13,7 @@ import { GetPaymentReceivedInvoices } from './queries/GetPaymentReceivedInvoices
 import { GetPaymentReceivedPdfService } from './queries/GetPaymentReceivedPdf.service';
 import { PaymentReceivedValidators } from './commands/PaymentReceivedValidators.service';
 import { PaymentReceiveDTOTransformer } from './commands/PaymentReceivedDTOTransformer';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
 import { TemplateInjectableModule } from '../TemplateInjectable/TemplateInjectable.module';
 import { PaymentReceivedBrandingTemplate } from './queries/PaymentReceivedBrandingTemplate.service';
@@ -23,6 +23,7 @@ import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
 import { PaymentReceivedAutoIncrementSubscriber } from './subscribers/PaymentReceivedAutoIncrementSubscriber';
+import { PaymentReceivedSmsNotificationSubscriber } from './subscribers/PaymentReceivedSmsNotificationSubscriber';
 import { PaymentReceivedGLEntriesSubscriber } from './subscribers/PaymentReceivedGLEntriesSubscriber';
 import { PaymentReceivedGLEntries } from './commands/PaymentReceivedGLEntries';
 import { PaymentReceivedSyncInvoicesSubscriber } from './subscribers/PaymentReceivedSyncInvoices';
@@ -34,8 +35,11 @@ import { GetPaymentsReceivedService } from './queries/GetPaymentsReceived.servic
 import { MailNotificationModule } from '../MailNotification/MailNotification.module';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { MailModule } from '../Mail/Mail.module';
+import { SMSModule } from '../SMS/SMS.module';
 import { SendPaymentReceivedMailProcessor } from './processors/PaymentReceivedMailNotification.processor';
+import { PaymentReceivedSmsNotification } from './PaymentReceivedSmsNotification';
 import { SEND_PAYMENT_RECEIVED_MAIL_QUEUE } from './constants';
+import { SMS_QUEUE } from '../SMS/SMS.constants';
 import { PaymentsReceivedExportable } from './commands/PaymentsReceivedExportable';
 import { PaymentsReceivedImportable } from './commands/PaymentsReceivedImportable';
 import { PaymentsReceivedPagesService } from './queries/PaymentsReceivedPages.service';
@@ -48,6 +52,7 @@ import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePa
   controllers: [PaymentReceivesController],
   providers: [
     PaymentReceivesApplication,
+    PaymentReceivedSmsNotification,
     CreatePaymentReceivedService,
     DeletePaymentReceivedService,
     EditPaymentReceivedService,
@@ -60,9 +65,9 @@ import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePa
     PaymentReceivedBrandingTemplate,
     PaymentReceivedIncrement,
     PaymentReceivedGLEntries,
-    TenancyContext,
     PaymentReceivedInvoiceSync,
     PaymentReceivedAutoIncrementSubscriber,
+    PaymentReceivedSmsNotificationSubscriber,
     PaymentReceivedGLEntriesSubscriber,
     PaymentReceivedSyncInvoicesSubscriber,
     GetPaymentsReceivedService,
@@ -85,6 +90,7 @@ import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePa
     PaymentReceivedValidators,
   ],
   imports: [
+    TenancyModule,
     ChromiumlyTenancyModule,
     TemplateInjectableModule,
     BranchesModule,
@@ -96,6 +102,8 @@ import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePa
     MailNotificationModule,
     DynamicListModule,
     MailModule,
+    SMSModule,
+    BullModule.registerQueue({ name: SMS_QUEUE }),
     BullModule.registerQueue({ name: SEND_PAYMENT_RECEIVED_MAIL_QUEUE }),
     BullBoardModule.forFeature({
       name: SEND_PAYMENT_RECEIVED_MAIL_QUEUE,

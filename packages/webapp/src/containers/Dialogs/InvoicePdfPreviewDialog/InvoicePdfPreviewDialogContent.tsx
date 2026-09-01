@@ -1,26 +1,29 @@
-// @ts-nocheck
-import React from 'react';
 import { AnchorButton } from '@blueprintjs/core';
-
+import React from 'react';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DialogContent, PdfDocumentPreview, T } from '@/components';
-import { usePdfInvoice } from '@/hooks/query';
-
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { usePdfInvoice } from '@/hooks/query';
 import { compose } from '@/utils';
 
-function InvoicePdfPreviewDialogContent({
+interface InvoicePdfPreviewDialogContentProps extends WithDialogActionsProps {
+  subscriptionForm: { invoiceId: number | null };
+  dialogName?: string;
+}
+
+function InvoicePdfPreviewDialogContentInner({
   subscriptionForm: { invoiceId },
-  // #withDialog
-  closeDialog,
-}) {
-  const { isLoading, pdfUrl, filename } = usePdfInvoice(invoiceId);
+}: InvoicePdfPreviewDialogContentProps): React.ReactElement {
+  const { isLoading, isError, pdfUrl, filename } = usePdfInvoice(
+    invoiceId as number,
+  );
 
   return (
     <DialogContent>
-      <div class="dialog__header-actions">
+      <div className="dialog__header-actions">
         <AnchorButton
           href={pdfUrl}
-          target={'__blank'}
+          target="_blank"
           minimal={true}
           outlined={true}
         >
@@ -41,10 +44,13 @@ function InvoicePdfPreviewDialogContent({
         height={760}
         width={1000}
         isLoading={isLoading}
+        isError={isError}
         url={pdfUrl}
       />
     </DialogContent>
   );
 }
 
-export default compose(withDialogActions)(InvoicePdfPreviewDialogContent);
+export const InvoicePdfPreviewDialogContent = compose(withDialogActions)(
+  InvoicePdfPreviewDialogContentInner,
+);

@@ -1,7 +1,4 @@
 // @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import { useHistory } from 'react-router-dom';
 import {
   Button,
   NavbarGroup,
@@ -9,17 +6,16 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-
+import React from 'react';
+import intl from 'react-intl-universal';
+import { useHistory } from 'react-router-dom';
 import { useContactDetailDrawerContext } from './ContactDetailDrawerProvider';
-
+import { DrawerActionsBar, Icon, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
-import { DrawerActionsBar, Icon, FormattedMessage as T } from '@/components';
-
 import { safeCallback, compose } from '@/utils';
 
-function ContactDetailActionsBar({
+function ContactDetailActionsBarInner({
   // #withAlertActions
   openAlert,
 
@@ -67,7 +63,7 @@ function ContactDetailActionsBar({
   );
 }
 
-export default compose(
+export const ContactDetailActionsBar = compose(
   withDrawerActions,
   withAlertActions,
-)(ContactDetailActionsBar);
+)(ContactDetailActionsBarInner);

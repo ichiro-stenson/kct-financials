@@ -1,8 +1,7 @@
 // @ts-nocheck
-import React from 'react';
-import { useFormikContext } from 'formik';
 import { Intent, Button } from '@blueprintjs/core';
-
+import { useFormikContext } from 'formik';
+import React from 'react';
 import {
   DialogFooter,
   DialogFooterActions,
@@ -12,7 +11,7 @@ import {
 /**
  *
  */
-export default function NotifyViaSMSFormFloatingActions({ onCancel }) {
+export function NotifyViaSMSFormFloatingActions({ onCancel }) {
   // Formik context.
   const { isSubmitting } = useFormikContext();
 

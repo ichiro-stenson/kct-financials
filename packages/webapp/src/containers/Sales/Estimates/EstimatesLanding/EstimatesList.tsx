@@ -1,35 +1,41 @@
-// @ts-nocheck
 import React from 'react';
 import { DashboardPageContent } from '@/components';
 
 import '@/style/pages/SaleEstimate/List.scss';
-
-import EstimatesActionsBar from './EstimatesActionsBar';
-import EstimatesDataTable from './EstimatesDataTable';
-
+import { EstimatesActionsBar } from './EstimatesActionsBar';
+import { EstimatesDataTable } from './EstimatesDataTable';
+import { EstimatesListDialogs } from './EstimatesListDialogs';
+import { EstimatesListDrawers } from './EstimatesListDrawers';
+import { EstimatesListProvider } from './EstimatesListProvider';
 import { withEstimates } from './withEstimates';
 import { withEstimatesActions } from './withEstimatesActions';
-
-import { EstimatesListProvider } from './EstimatesListProvider';
+import type { WithEstimatesProps } from './withEstimates';
 import { compose, transformTableStateToQuery } from '@/utils';
 
-/**
- * Sale estimates list page.
- */
-function EstimatesList({
-  // #withEstimate
+interface WithEstimatesActionsProps {
+  resetEstimatesTableState: () => void;
+  resetEstimatesSelectedRows: () => void;
+}
+
+interface EstimatesListProps
+  extends Pick<
+      WithEstimatesProps,
+      'estimatesTableState' | 'estimatesTableStateChanged'
+    >,
+    WithEstimatesActionsProps {}
+
+function EstimatesListInner({
   estimatesTableState,
   estimatesTableStateChanged,
-
-  // #withEstimatesActions
   resetEstimatesTableState,
-}) {
-  // Resets the estimates table state once the page unmount.
+  resetEstimatesSelectedRows,
+}: EstimatesListProps) {
   React.useEffect(
     () => () => {
       resetEstimatesTableState();
+      resetEstimatesSelectedRows();
     },
-    [resetEstimatesTableState],
+    [resetEstimatesSelectedRows, resetEstimatesTableState],
   );
 
   return (
@@ -38,6 +44,8 @@ function EstimatesList({
       tableStateChanged={estimatesTableStateChanged}
     >
       <EstimatesActionsBar />
+      <EstimatesListDrawers />
+      <EstimatesListDialogs />
 
       <DashboardPageContent>
         <EstimatesDataTable />
@@ -46,10 +54,10 @@ function EstimatesList({
   );
 }
 
-export default compose(
+export const EstimatesList = compose(
   withEstimates(({ estimatesTableState, estimatesTableStateChanged }) => ({
     estimatesTableState,
     estimatesTableStateChanged,
   })),
   withEstimatesActions,
-)(EstimatesList);
+)(EstimatesListInner);

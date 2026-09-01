@@ -1,15 +1,21 @@
 // @ts-nocheck
-import styled from 'styled-components';
-import { Form } from 'formik';
 import { Button, Intent } from '@blueprintjs/core';
+import { Form } from 'formik';
+import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
-
+import styled from 'styled-components';
 import { FormattedMessage as T, FFormGroup, FTextArea } from '@/components';
+
+export interface PreferencesReceiptsFormProps {
+  isSubmitting: boolean;
+}
 
 /**
  * Preferences general form.
  */
-export function PreferencesReceiptsForm({ isSubmitting }) {
+export function PreferencesReceiptsForm({
+  isSubmitting,
+}: PreferencesReceiptsFormProps) {
   const history = useHistory();
 
   // Handle close click.
@@ -22,11 +28,11 @@ export function PreferencesReceiptsForm({ isSubmitting }) {
       {/* ---------- Customer Notes ----------  */}
       <FFormGroup
         name={'receiptMessage'}
-        label={<T id={'pref.receipts.receiptMessage.field'} />}
+        label={intl.get('pref.receipts.receiptMessage.field')}
         fastField={true}
       >
         <FTextArea
-          medium={'true'}
+          medium={true}
           name={'receiptMessage'}
           fastField={true}
           fill={true}
@@ -36,11 +42,11 @@ export function PreferencesReceiptsForm({ isSubmitting }) {
       {/* ---------- Terms & Conditions ----------  */}
       <FFormGroup
         name={'termsConditions'}
-        label={<T id={'pref.receipts.termsConditions.field'} />}
+        label={intl.get('pref.receipts.termsConditions.field')}
         fastField={true}
       >
         <FTextArea
-          medium={'true'}
+          medium={true}
           name={'termsConditions'}
           fastField={true}
           fill={true}

@@ -1,9 +1,4 @@
 // @ts-nocheck
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useFormik } from 'formik';
-import { FormattedMessage as T } from '@/components';
-
-import { useHistory } from 'react-router-dom';
 import {
   InputGroup,
   FormGroup,
@@ -16,15 +11,20 @@ import {
   H5,
   H6,
 } from '@blueprintjs/core';
+import { useFormik } from 'formik';
+import { pick, get } from 'lodash';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Row, Col } from 'react-grid-system';
+import intl from 'react-intl-universal';
+import { useHistory } from 'react-router-dom';
 import { ReactSortable } from 'react-sortablejs';
 import * as Yup from 'yup';
-import { pick, get } from 'lodash';
-import ErrorMessage from '@/components/ErrorMessage';
+import { FormattedMessage as T } from '@/components';
 import { If, Icon, AppToaster } from '@/components';
-import ViewFormContainer from '@/containers/Views/ViewForm.container.js';
+import ErrorMessage from '@/components/ErrorMessage';
+import { ViewFormContainer } from '@/containers/Views/ViewForm.container';
 
-function ViewForm({
+function ViewFormInner({
   requestSubmitView,
   requestEditView,
   onDelete,
@@ -274,7 +274,7 @@ function ViewForm({
           <Row>
             <Col sm={8}>
               <FormGroup
-                label={<T id={'view_name'} />}
+                label={intl.get('view_name')}
                 className={'form-group--name'}
                 intent={errors.name && touched.name && Intent.DANGER}
                 helperText={
@@ -496,4 +496,4 @@ function ViewForm({
   );
 }
 
-export default ViewFormContainer(ViewForm);
+export const ViewForm = ViewFormContainer(ViewFormInner);

@@ -1,15 +1,20 @@
-// @ts-nocheck
 import * as R from 'ramda';
 import intl from 'react-intl-universal';
-
-import { Align } from '@/constants';
+import type { CashFlowColumnKey } from '@bigcapital/sdk-ts';
 import { CellTextSpan } from '@/components/Datatable/Cells';
+import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
 
-/**
- * Account name column mapper.
- */
-const accountNameMapper = (column) => ({
+const isColumnKey = (key: CashFlowColumnKey) => R.pathEq(['key'], key);
+
+interface ReportTableColumn {
+  key: string;
+  label: string;
+  cellIndex?: number;
+  children?: ReportTableColumn[];
+}
+
+const accountNameMapper = (column: ReportTableColumn) => ({
   id: column.key,
   key: column.key,
   Header: intl.get('account_name'),
@@ -21,10 +26,11 @@ const accountNameMapper = (column) => ({
   sticky: Align.Left,
 });
 
-/**
- * Date range columns mapper.
- */
-const dateRangeMapper = (data, index, column) => ({
+const dateRangeMapper = (
+  data: unknown[],
+  index: number,
+  column: ReportTableColumn,
+) => ({
   id: column.key,
   Header: column.label,
   key: column.key,
@@ -37,13 +43,14 @@ const dateRangeMapper = (data, index, column) => ({
   disableSortBy: true,
   textOverview: true,
   align: Align.Right,
-  money: true
+  money: true,
 });
 
-/**
- * Total column mapper.
- */
-const totalMapper = (data, index, column) => ({
+const totalMapper = (
+  data: unknown[],
+  index: number,
+  column: ReportTableColumn,
+) => ({
   key: 'total',
   Header: intl.get('total'),
   accessor: `cells[${index}].value`,
@@ -56,26 +63,23 @@ const totalMapper = (data, index, column) => ({
   }),
   disableSortBy: true,
   align: Align.Right,
-  money: true
+  money: true,
 });
 
-/**
- * Detarmines the given string starts with `date-range` string.
- */
-const isMatchesDateRange = (r) => R.match(/^date-range/g, r).length > 0;
+const isMatchesDateRange = (r: string) => R.match(/^date-range/g, r).length > 0;
 
-/**
- * Cash flow dynamic columns.
- */
-export const dynamicColumns = (columns, data) => {
+export const dynamicColumns = (
+  columns: ReportTableColumn[],
+  data: unknown[],
+) => {
   const mapper = (column, index) => {
     return R.compose(
       R.when(
         R.pathSatisfies(isMatchesDateRange, ['key']),
         R.curry(dateRangeMapper)(data, index),
       ),
-      R.when(R.pathEq(['key'], 'name'), accountNameMapper),
-      R.when(R.pathEq(['key'], 'total'), R.curry(totalMapper)(data, index)),
+      R.when(isColumnKey('name'), accountNameMapper),
+      R.when(isColumnKey('total'), R.curry(totalMapper)(data, index)),
     )(column);
   };
   return columns.map(mapper);

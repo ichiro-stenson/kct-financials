@@ -1,35 +1,42 @@
-// @ts-nocheck
 import React from 'react';
 import { compose } from '@/utils';
 
 import '@/style/pages/Items/List.scss';
 
-import { DashboardPageContent } from '@/components';
+import { ItemsActionsBar } from './ItemsActionsBar';
+import { ItemsDataTable } from './ItemsDataTable';
+import { ItemsListDialogs } from './ItemsListDialogs';
+import { ItemsListDrawers } from './ItemsListDrawers';
 import { ItemsListProvider } from './ItemsListProvider';
-
-import ItemsActionsBar from './ItemsActionsBar';
-import ItemsDataTable from './ItemsDataTable';
-
 import { withItems } from './withItems';
 import { withItemsActions } from './withItemsActions';
+import type { WithItemsProps } from './withItems';
+import type { WithItemsActionsProps } from './withItemsActions';
+import { DashboardPageContent } from '@/components';
+
+interface ItemsListInnerProps
+  extends Pick<WithItemsProps, 'itemsTableState' | 'itemsTableStateChanged'>,
+    WithItemsActionsProps {}
 
 /**
  * Items list.
  */
-function ItemsList({
+function ItemsListInner({
   // #withItems
   itemsTableState,
   itemsTableStateChanged,
 
   // #withItemsActions
   resetItemsTableState,
-}) {
-  // Resets items table query state once the page unmount.
+  resetItemsSelectedRows,
+}: ItemsListInnerProps) {
+  // Resets items table query state and selected rows once the page unmount.
   React.useEffect(
     () => () => {
       resetItemsTableState();
+      resetItemsSelectedRows();
     },
-    [resetItemsTableState],
+    [resetItemsSelectedRows, resetItemsTableState],
   );
 
   return (
@@ -38,6 +45,8 @@ function ItemsList({
       tableStateChanged={itemsTableStateChanged}
     >
       <ItemsActionsBar />
+      <ItemsListDrawers />
+      <ItemsListDialogs />
 
       <DashboardPageContent>
         <ItemsDataTable />
@@ -46,10 +55,10 @@ function ItemsList({
   );
 }
 
-export default compose(
+export const ItemsList = compose(
   withItemsActions,
   withItems(({ itemsTableState, itemsTableStateChanged }) => ({
     itemsTableState,
     itemsTableStateChanged,
   })),
-)(ItemsList);
+)(ItemsListInner);

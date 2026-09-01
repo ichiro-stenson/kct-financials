@@ -31,7 +31,7 @@ import { TaxRateAction } from './TaxRates.types';
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class TaxRatesController {
-  constructor(private readonly taxRatesApplication: TaxRatesApplication) { }
+  constructor(private readonly taxRatesApplication: TaxRatesApplication) {}
 
   @Post()
   @RequirePermission(TaxRateAction.CREATE, AbilitySubject.TaxRate)
@@ -96,17 +96,7 @@ export class TaxRatesController {
   @ApiResponse({
     status: 200,
     description: 'The tax rates have been successfully retrieved.',
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          type: 'array',
-          items: {
-            $ref: getSchemaPath(TaxRateResponseDto),
-          },
-        },
-      },
-    },
+    type: [TaxRateResponseDto],
   })
   public getTaxRates() {
     return this.taxRatesApplication.getTaxRates();

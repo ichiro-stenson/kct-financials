@@ -1,18 +1,20 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
-
+import { CurrenciesDataTable } from './CurrenciesDataTable';
 import { CurrenciesProvider } from './CurrenciesProvider';
-import CurrenciesDataTable from './CurrenciesDataTable';
-
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { compose } from '@/utils';
 
-function CurrenciesList({
+type CurrenciesListInnerProps = Pick<
+  WithDashboardActionsProps,
+  'changePreferencesPageTitle'
+>;
+
+function CurrenciesListInner({
   // #withDashboardActions
   changePreferencesPageTitle,
-}) {
+}: CurrenciesListInnerProps) {
   useEffect(() => {
     changePreferencesPageTitle(intl.get('currencies'));
   }, [changePreferencesPageTitle]);
@@ -24,4 +26,5 @@ function CurrenciesList({
   );
 }
 
-export default compose(withDashboardActions)(CurrenciesList);
+export const CurrenciesList =
+  compose(withDashboardActions)(CurrenciesListInner);

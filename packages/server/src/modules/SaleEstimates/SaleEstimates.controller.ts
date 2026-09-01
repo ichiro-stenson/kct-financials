@@ -34,6 +34,8 @@ import { SaleEstimateResponseDto } from './dtos/SaleEstimateResponse.dto';
 import { GetSaleEstimatesQueryDto } from './dtos/GetSaleEstimatesQuery.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { SaleEstiamteStateResponseDto } from './dtos/SaleEstimateStateResponse.dto';
+import { SaleEstimateHtmlContentResponseDto } from './dtos/SaleEstimateHtmlResponse.dto';
+import { SaleEstimateMailStateResponseDto } from './dtos/SaleEstimateMailStateResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import {
   BulkDeleteDto,
@@ -47,11 +49,14 @@ import { SaleEstimateAction } from './types/SaleEstimates.types';
 
 @Controller('sale-estimates')
 @ApiTags('Sale Estimates')
-@ApiExtraModels(SaleEstimateResponseDto)
-@ApiExtraModels(PaginatedResponseDto)
-@ApiExtraModels(SaleEstiamteStateResponseDto)
-@ApiCommonHeaders()
-@ApiExtraModels(ValidateBulkDeleteResponseDto)
+@ApiExtraModels(
+  SaleEstimateResponseDto,
+  PaginatedResponseDto,
+  SaleEstiamteStateResponseDto,
+  SaleEstimateHtmlContentResponseDto,
+  ValidateBulkDeleteResponseDto,
+  SaleEstimateMailStateResponseDto,
+)
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class SaleEstimatesController {
   @Post('validate-bulk-delete')
@@ -97,7 +102,7 @@ export class SaleEstimatesController {
    */
   constructor(
     private readonly saleEstimatesApplication: SaleEstimatesApplication,
-  ) { }
+  ) {}
 
   @Post()
   @RequirePermission(SaleEstimateAction.Create, AbilitySubject.SaleEstimate)
@@ -184,7 +189,7 @@ export class SaleEstimatesController {
     description: 'Sale estimates retrieved successfully',
     schema: {
       allOf: [
-        { $ref: getSchemaPath(SaleEstimateResponseDto) },
+        { $ref: getSchemaPath(PaginatedResponseDto) },
         {
           properties: {
             data: {
@@ -250,7 +255,10 @@ export class SaleEstimatesController {
   }
 
   @Post(':id/notify-sms')
-  @RequirePermission(SaleEstimateAction.NotifyBySms, AbilitySubject.SaleEstimate)
+  @RequirePermission(
+    SaleEstimateAction.NotifyBySms,
+    AbilitySubject.SaleEstimate,
+  )
   @ApiOperation({ summary: 'Notify the given sale estimate by SMS.' })
   @ApiParam({
     name: 'id',
@@ -300,6 +308,11 @@ export class SaleEstimatesController {
   @Get(':id/mail')
   @RequirePermission(SaleEstimateAction.View, AbilitySubject.SaleEstimate)
   @ApiOperation({ summary: 'Retrieves the sale estimate mail state.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Retrieves the sale estimate mail state.',
+    schema: { $ref: getSchemaPath(SaleEstimateMailStateResponseDto) },
+  })
   @ApiParam({
     name: 'id',
     required: true,
@@ -322,8 +335,17 @@ export class SaleEstimatesController {
   @ApiResponse({
     status: 200,
     description: 'The sale estimate details have been successfully retrieved.',
-    schema: {
-      $ref: getSchemaPath(SaleEstimateResponseDto),
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(SaleEstimateResponseDto),
+        },
+      },
+      'application/json+html': {
+        schema: {
+          $ref: getSchemaPath(SaleEstimateHtmlContentResponseDto),
+        },
+      },
     },
   })
   @ApiParam({
@@ -337,7 +359,9 @@ export class SaleEstimatesController {
     @Headers('accept') acceptHeader: string,
     @Res({ passthrough: true }) res: Response,
   ) {
-    if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    const accept = acceptHeader ?? '';
+
+    if (accept.includes(AcceptType.ApplicationPdf)) {
       const [pdfContent] =
         await this.saleEstimatesApplication.getSaleEstimatePdf(estimateId);
 
@@ -346,7 +370,7 @@ export class SaleEstimatesController {
         'Content-Length': pdfContent.length,
       });
       res.send(pdfContent);
-    } else if (acceptHeader.includes(AcceptType.ApplicationTextHtml)) {
+    } else if (accept.includes(AcceptType.ApplicationTextHtml)) {
       const htmlContent =
         await this.saleEstimatesApplication.getSaleEstimateHtml(estimateId);
 

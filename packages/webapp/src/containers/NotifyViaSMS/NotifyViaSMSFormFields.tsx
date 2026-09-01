@@ -1,25 +1,20 @@
 // @ts-nocheck
-import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
 import { FormGroup, InputGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
+import { FastField, ErrorMessage } from 'formik';
+import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import {
-  FFormGroup,
-  FSelect,
-  FieldRequiredHint,
-  FormattedMessage as T,
-} from '@/components';
+import { FFormGroup, FSelect, FieldRequiredHint } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { inputIntent } from '@/utils';
 
-export default function NotifyViaSMSFormFields({ notificationTypes }) {
+export function NotifyViaSMSFormFields({ notificationTypes }) {
   return (
     <NotifyViaSMSFormFieldsRoot>
       <FFormGroup
         name={'notification_key'}
-        label={<T id={'notify_via_sms.dialog.notification_type'} />}
+        label={intl.get('notify_via_sms.dialog.notification_type')}
         className={classNames(CLASSES.FILL)}
         fastField
       >
@@ -39,7 +34,7 @@ export default function NotifyViaSMSFormFields({ notificationTypes }) {
       <FastField name={'customer_name'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
-            label={<T id={'notify_via_sms.dialog.send_notification_to'} />}
+            label={intl.get('notify_via_sms.dialog.send_notification_to')}
             className={classNames('form-group--customer-name', CLASSES.FILL)}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
@@ -58,7 +53,7 @@ export default function NotifyViaSMSFormFields({ notificationTypes }) {
       <FastField name={'customer_phone_number'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
-            label={<T id={'phone_number'} />}
+            label={intl.get('phone_number')}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="customer_phone_number" />}

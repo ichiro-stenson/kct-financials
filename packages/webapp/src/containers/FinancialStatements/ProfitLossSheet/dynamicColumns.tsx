@@ -1,13 +1,25 @@
-// @ts-nocheck
-import * as R from 'ramda';
 import { isEmpty } from 'lodash';
-
+import * as R from 'ramda';
+import type { ProfitLossColumnKey } from '@bigcapital/sdk-ts';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
 
-const getTableCellValueAccessor = (index) => `cells[${index}].value`;
+interface ReportTableColumn {
+  key: string;
+  label: string;
+  cellIndex?: number;
+  children?: ReportTableColumn[];
+}
 
-const getReportColWidth = (data, accessor, labelText) => {
+const getTableCellValueAccessor = (index: number) => `cells[${index}].value`;
+
+const isColumnKey = (key: ProfitLossColumnKey) => R.pathEq(['key'], key);
+
+const getReportColWidth = (
+  data: unknown[],
+  accessor: string,
+  labelText?: string,
+) => {
   return getColumnWidth(
     data,
     accessor,
@@ -16,13 +28,13 @@ const getReportColWidth = (data, accessor, labelText) => {
   );
 };
 
-const isNodeHasChildren = (node) => !isEmpty(node.children);
+const isNodeHasChildren = (node: ReportTableColumn) => !isEmpty(node.children);
 
 /**
  * `Percentage of income` column accessor.
  */
 const percentageOfIncomeAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+  const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
   return {
@@ -33,7 +45,7 @@ const percentageOfIncomeAccessor = R.curry((data, column) => {
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
-    money: true
+    money: true,
   };
 });
 
@@ -41,7 +53,7 @@ const percentageOfIncomeAccessor = R.curry((data, column) => {
  * `Percentage of expense` column accessor.
  */
 const percentageOfExpenseAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+  const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
   return {
@@ -52,7 +64,7 @@ const percentageOfExpenseAccessor = R.curry((data, column) => {
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
-    money: true
+    money: true,
   };
 });
 
@@ -60,7 +72,7 @@ const percentageOfExpenseAccessor = R.curry((data, column) => {
  * `Percentage of column` column accessor.
  */
 const percentageOfColumnAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+  const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
   return {
@@ -71,7 +83,7 @@ const percentageOfColumnAccessor = R.curry((data, column) => {
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
-    money: true
+    money: true,
   };
 });
 
@@ -79,7 +91,7 @@ const percentageOfColumnAccessor = R.curry((data, column) => {
  * `Percentage of row` column accessor.
  */
 const percentageOfRowAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+  const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
   return {
@@ -90,7 +102,7 @@ const percentageOfRowAccessor = R.curry((data, column) => {
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
-    money: true
+    money: true,
   };
 });
 
@@ -98,7 +110,7 @@ const percentageOfRowAccessor = R.curry((data, column) => {
  * Previous year column accessor.
  */
 const previousYearAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+  const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
   return {
@@ -109,7 +121,7 @@ const previousYearAccessor = R.curry((data, column) => {
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
-    money: true
+    money: true,
   };
 });
 
@@ -117,7 +129,7 @@ const previousYearAccessor = R.curry((data, column) => {
  * Pervious year change column accessor.
  */
 const previousYearChangeAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+  const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
   return {
@@ -128,7 +140,7 @@ const previousYearChangeAccessor = R.curry((data, column) => {
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
-    money: true
+    money: true,
   };
 });
 
@@ -136,7 +148,7 @@ const previousYearChangeAccessor = R.curry((data, column) => {
  * Previous year percentage column accessor.
  */
 const previousYearPercentageAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+  const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
   return {
@@ -147,7 +159,7 @@ const previousYearPercentageAccessor = R.curry((data, column) => {
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
-    money: true
+    money: true,
   };
 });
 
@@ -155,7 +167,7 @@ const previousYearPercentageAccessor = R.curry((data, column) => {
  * Previous period column accessor.
  */
 const previousPeriodAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+  const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
   return {
@@ -166,7 +178,7 @@ const previousPeriodAccessor = R.curry((data, column) => {
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
-    money: true
+    money: true,
   };
 });
 
@@ -174,7 +186,7 @@ const previousPeriodAccessor = R.curry((data, column) => {
  * Previous period change column accessor.
  */
 const previousPeriodChangeAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+  const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
   return {
@@ -185,7 +197,7 @@ const previousPeriodChangeAccessor = R.curry((data, column) => {
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
-    money: true
+    money: true,
   };
 });
 
@@ -193,7 +205,7 @@ const previousPeriodChangeAccessor = R.curry((data, column) => {
  * Previous period percentage column accessor.
  */
 const previousPeriodPercentageAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+  const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
   return {
@@ -204,7 +216,7 @@ const previousPeriodPercentageAccessor = R.curry((data, column) => {
     align: Align.Right,
     disableSortBy: true,
     textOverview: true,
-    money: true
+    money: true,
   };
 });
 
@@ -216,39 +228,33 @@ const previousPeriodPercentageAccessor = R.curry((data, column) => {
  */
 const totalColumnsMapper = R.curry((data, column) => {
   return R.compose(
-    R.when(R.pathEq(['key'], 'total'), totalColumn(data)),
+    R.when(isColumnKey('total'), totalColumn(data)),
     // Percetage of column/row.
+    R.when(isColumnKey('percentage_column'), percentageOfColumnAccessor(data)),
+    R.when(isColumnKey('percentage_row'), percentageOfRowAccessor(data)),
+    R.when(isColumnKey('percentage_income'), percentageOfIncomeAccessor(data)),
     R.when(
-      R.pathEq(['key'], 'percentage_column'),
-      percentageOfColumnAccessor(data),
-    ),
-    R.when(R.pathEq(['key'], 'percentage_row'), percentageOfRowAccessor(data)),
-    R.when(
-      R.pathEq(['key'], 'percentage_income'),
-      percentageOfIncomeAccessor(data),
-    ),
-    R.when(
-      R.pathEq(['key'], 'percentage_expenses'),
+      isColumnKey('percentage_expenses'),
       percentageOfExpenseAccessor(data),
     ),
     // Previous year.
-    R.when(R.pathEq(['key'], 'previous_year'), previousYearAccessor(data)),
+    R.when(isColumnKey('previous_year'), previousYearAccessor(data)),
     R.when(
-      R.pathEq(['key'], 'previous_year_change'),
+      isColumnKey('previous_year_change'),
       previousYearChangeAccessor(data),
     ),
     R.when(
-      R.pathEq(['key'], 'previous_year_percentage'),
+      isColumnKey('previous_year_percentage'),
       previousYearPercentageAccessor(data),
     ),
     // Pervious period.
-    R.when(R.pathEq(['key'], 'previous_period'), previousPeriodAccessor(data)),
+    R.when(isColumnKey('previous_period'), previousPeriodAccessor(data)),
     R.when(
-      R.pathEq(['key'], 'previous_period_change'),
+      isColumnKey('previous_period_change'),
       previousPeriodChangeAccessor(data),
     ),
     R.when(
-      R.pathEq(['key'], 'previous_period_percentage'),
+      isColumnKey('previous_period_percentage'),
       previousPeriodPercentageAccessor(data),
     ),
   )(column);
@@ -275,7 +281,7 @@ const assocColumnsToTotalColumn = R.curry((data, column, columnAccessor) => {
  */
 const totalColumn = R.curry((data, column) => {
   const hasChildren = isNodeHasChildren(column);
-  const accessor = getTableCellValueAccessor(column.cell_index);
+  const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
   return {
@@ -286,7 +292,7 @@ const totalColumn = R.curry((data, column) => {
     width,
     disableSortBy: true,
     align: hasChildren ? Align.Center : Align.Right,
-    money: true
+    money: true,
   };
 });
 
@@ -306,7 +312,7 @@ const totalColumnCompose = R.curry((data, column) => {
  * Account name column mapper.
  */
 const accountNameColumn = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+  const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
   return {
@@ -327,7 +333,7 @@ const accountNameColumn = R.curry((data, column) => {
  * @returns
  */
 const dateRangeSoloColumnAttrs = (data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+  const accessor = getTableCellValueAccessor(column.cellIndex);
 
   return {
     accessor,
@@ -347,7 +353,7 @@ const dateRangeColumn = R.curry((data, column) => {
     disableSortBy: true,
     textOverview: true,
     align: isDateColumnHasColumns ? Align.Center : Align.Right,
-    money: true
+    money: true,
   };
   return R.compose(
     R.when(
@@ -364,7 +370,7 @@ const dateRangeColumn = R.curry((data, column) => {
 /**
  * Detarmines the given string starts with `date-range` string.
  */
-const isMatchesDateRange = (r) => R.match(/^date-range/g, r).length > 0;
+const isMatchesDateRange = (r: string) => R.match(/^date-range/g, r).length > 0;
 
 /**
  *
@@ -378,17 +384,14 @@ const dynamicColumnMapper = R.curry((data, column) => {
 
   return R.compose(
     R.when(R.pathSatisfies(isMatchesDateRange, ['key']), indexDatePeriodMapper),
-    R.when(R.pathEq(['key'], 'name'), indexAccountNameColumn),
-    R.when(R.pathEq(['key'], 'total'), indexTotalColumn),
+    R.when(isColumnKey('name'), indexAccountNameColumn),
+    R.when(isColumnKey('total'), indexTotalColumn),
   )(column);
 });
 
-/**
- *
- * @param {*} columns
- * @param {*} data
- * @returns
- */
-export const dynamicColumns = (columns, data) => {
+export const dynamicColumns = (
+  columns: ReportTableColumn[],
+  data: unknown[],
+) => {
   return R.map(dynamicColumnMapper(data), columns);
 };

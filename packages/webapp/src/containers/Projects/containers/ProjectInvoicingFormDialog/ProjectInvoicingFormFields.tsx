@@ -1,23 +1,24 @@
 // @ts-nocheck
+import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
+import classNames from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
-
-import classNames from 'classnames';
-import { CLASSES } from '@/constants/classes';
-import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
 import {
   FFormGroup,
   FCheckbox,
   FDateInput,
   FieldRequiredHint,
 } from '@/components';
-import { momentFormatter } from '@/utils';
+import { CLASSES } from '@/constants/classes';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Project invoicing form fields.
  * @returns
  */
-function ProjectInvoicingFormFields() {
+export function ProjectInvoicingFormFields() {
+  const dateInputFormatter = useDateInputFormatter();
+
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Date -----------*/}
@@ -27,9 +28,8 @@ function ProjectInvoicingFormFields() {
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
         <FDateInput
-          {...momentFormatter('YYYY/MM/DD')}
+          {...dateInputFormatter}
           name="date"
-          formatDate={(date) => date.toLocaleString()}
           popoverProps={{
             position: Position.BOTTOM,
             minimal: true,
@@ -57,5 +57,3 @@ function ProjectInvoicingFormFields() {
     </div>
   );
 }
-
-export default ProjectInvoicingFormFields;

@@ -81,6 +81,7 @@ import { PaymentLinksModule } from '../PaymentLinks/PaymentLinks.module';
 import { RolesModule } from '../Roles/Roles.module';
 import { SubscriptionModule } from '../Subscription/Subscription.module';
 import { OrganizationModule } from '../Organization/Organization.module';
+import { WorkspacesModule } from '../ee/Workspaces/Workspaces.module';
 import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module';
 import { PaymentServicesModule } from '../PaymentServices/PaymentServices.module';
 import { AuthModule } from '../Auth/Auth.module';
@@ -103,6 +104,7 @@ import { ExchangeRatesModule } from '../ExchangeRates/ExchangeRates.module';
 import { TenantModelsInitializeModule } from '../Tenancy/TenantModelsInitialize.module';
 import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module';
 import { SocketModule } from '../Socket/Socket.module';
+import { EEModule } from '../EE/EE.module';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { AppThrottleModule } from './AppThrottle.module';
 
@@ -168,10 +170,10 @@ import { AppThrottleModule } from './AppThrottle.module';
     ClsModule.forRoot({
       global: true,
       middleware: {
-        mount: true,
         setup: (cls: ClsService, req: Request, res: Response) => {
           cls.set('organizationId', req.headers['organization-id']);
         },
+        mount: true,
         generateId: true,
         saveReq: true,
       },
@@ -243,6 +245,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     RolesModule,
     SubscriptionModule,
     OrganizationModule,
+    WorkspacesModule,
     TenantDBManagerModule,
     PaymentServicesModule,
     LoopsModule,
@@ -257,6 +260,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     UsersModule,
     ContactsModule,
     SocketModule,
+    EEModule,
     ExchangeRatesModule,
   ],
   controllers: [AppController],

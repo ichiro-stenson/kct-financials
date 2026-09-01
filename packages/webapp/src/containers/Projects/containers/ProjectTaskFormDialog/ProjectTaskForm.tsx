@@ -1,14 +1,14 @@
 // @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { Formik } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Formik } from 'formik';
-import { Intent } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
 import { CreateProjectTaskFormSchema } from './ProjectTaskForm.schema';
+import { TaskFormContent as ProjectTaskFormContent } from './ProjectTaskFormContent';
 import { useProjectTaskFormContext } from './ProjectTaskFormProvider';
-import { compose, transformToForm } from '@/utils';
-import ProjectTaskFormContent from './ProjectTaskFormContent';
+import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { compose, transformToForm } from '@/utils';
 
 const defaultInitialValues = {
   name: '',
@@ -20,7 +20,7 @@ const defaultInitialValues = {
  * Project task form.
  * @returns
  */
-function ProjectTaskForm({
+function ProjectTaskFormInner({
   // #withDialogActions
   closeDialog,
 }) {
@@ -43,7 +43,7 @@ function ProjectTaskForm({
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    const form = {...values};
+    const form = { ...values };
 
     // Handle request response success.
     const onSuccess = (response) => {
@@ -60,11 +60,7 @@ function ProjectTaskForm({
     };
 
     // Handle request response errors.
-    const onError = ({
-      response: {
-        data: { errors },
-      },
-    }) => {
+    const onError = ({ data: { errors } }) => {
       setSubmitting(false);
     };
     if (isNewMode) {
@@ -84,4 +80,4 @@ function ProjectTaskForm({
   );
 }
 
-export default compose(withDialogActions)(ProjectTaskForm);
+export const ProjectTaskForm = compose(withDialogActions)(ProjectTaskFormInner);

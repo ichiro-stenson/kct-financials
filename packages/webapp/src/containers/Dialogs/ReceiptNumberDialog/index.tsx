@@ -1,12 +1,21 @@
-// @ts-nocheck
 import React, { lazy } from 'react';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose, saveInvoke } from '@/utils';
 
-const ReceiptNumberDialogContent = lazy(
-  () => import('./ReceiptNumberDialogContent'),
+const ReceiptNumberDialogContent = lazy(() =>
+  import('./ReceiptNumberDialogContent').then((m) => ({
+    default: m.ReceiptNumberDialogContent,
+  })),
 );
+
+interface ReceiptNumberDialogProps {
+  dialogName: string;
+  payload: { initialFormValues?: Partial<ReferenceNumberFormValues> };
+  isOpen: boolean | undefined;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
+}
 
 /**
  * Sale receipt number dialog.
@@ -16,8 +25,8 @@ function ReceiptNumberDialog({
   payload: { initialFormValues = {} },
   isOpen,
   onConfirm,
-}) {
-  const handleConfirm = (values) => {
+}: ReceiptNumberDialogProps): React.ReactElement {
+  const handleConfirm = (values: ReferenceNumberFormValues) => {
     saveInvoke(onConfirm, values);
   };
 
@@ -31,6 +40,7 @@ function ReceiptNumberDialog({
     >
       <DialogSuspense>
         <ReceiptNumberDialogContent
+          // @ts-expect-error — compose()-wrapped component loses generic prop inference.
           initialValues={{ ...initialFormValues }}
           onConfirm={handleConfirm}
         />
@@ -39,4 +49,4 @@ function ReceiptNumberDialog({
   );
 }
 
-export default compose(withDialogRedux())(ReceiptNumberDialog);
+export const index = compose(withDialogRedux())(ReceiptNumberDialog);

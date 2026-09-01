@@ -1,14 +1,25 @@
-// @ts-nocheck
-import React from 'react';
-import { getColumnWidth } from '@/utils';
 import * as R from 'ramda';
+import React from 'react';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
+import type { GeneralLedgerColumnKey } from '@bigcapital/sdk-ts';
 import { Align, CLASSES } from '@/constants';
+import { getColumnWidth } from '@/utils';
+
+interface CellProps {
+  cell: { value: React.ReactNode };
+}
+
+interface ColumnDef {
+  key: string;
+  label: string;
+  cellIndex: number;
+  [key: string]: unknown;
+}
 
 /**
- * Description cell – wraps value in a div with muted text class.
+ * Description cell - wraps value in a div with muted text class.
  */
-function DescriptionCell({ cell: { value } }) {
+function DescriptionCell({ cell: { value } }: CellProps) {
   return React.createElement(
     'div',
     { className: `cell ${CLASSES.TEXT_MUTED}` },
@@ -16,9 +27,15 @@ function DescriptionCell({ cell: { value } }) {
   );
 }
 
-const getTableCellValueAccessor = (index) => `cells[${index}].value`;
+const getTableCellValueAccessor = (index: number) => `cells[${index}].value`;
 
-const getReportColWidth = (data, accessor, headerText) => {
+const isColumnKey = (key: GeneralLedgerColumnKey) => R.pathEq(['key'], key);
+
+const getReportColWidth = (
+  data: unknown[],
+  accessor: string,
+  headerText: string,
+) => {
   return getColumnWidth(
     data,
     accessor,
@@ -30,8 +47,8 @@ const getReportColWidth = (data, accessor, headerText) => {
 /**
  * Account name column mapper.
  */
-const commonColumnMapper = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+const commonColumnMapper = R.curry((data: unknown[], column: ColumnDef) => {
+  const accessor = getTableCellValueAccessor(column.cellIndex);
 
   return {
     key: column.key,
@@ -45,8 +62,8 @@ const commonColumnMapper = R.curry((data, column) => {
 /**
  * Numeric columns accessor.
  */
-const numericColumnAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+const numericColumnAccessor = R.curry((data: unknown[], column: ColumnDef) => {
+  const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
   return {
@@ -60,7 +77,7 @@ const numericColumnAccessor = R.curry((data, column) => {
 /**
  * Date column accessor.
  */
-const dateColumnAccessor = R.curry((column) => {
+const dateColumnAccessor = R.curry((column: ColumnDef) => {
   return {
     ...column,
     width: 120,
@@ -70,72 +87,119 @@ const dateColumnAccessor = R.curry((column) => {
 /**
  * Transaction type column accessor.
  */
-const transactionTypeColumnAccessor = (column) => {
-  return {
-    ...column,
-    width: 125,
+const transactionTypeColumnAccessor =
+  (onViewDetail?: (referenceType: string, referenceId: number) => void) =>
+  (column: ColumnDef) => {
+    return {
+      ...column,
+      width: 125,
+      Cell: createTransactionLinkCell(onViewDetail),
+    };
+  };
+
+/**
+ * Transaction number cell - renders the reference number as a link that opens
+ * the underlying transaction detail drawer.
+ */
+const createTransactionLinkCell = (
+  onViewDetail?: (referenceType: string, referenceId: number) => void,
+) => {
+  return function TransactionLinkCell({ cell }: any) {
+    const { value, row } = cell;
+    const { referenceType, referenceId } = row?.original?.meta ?? {};
+
+    if (!referenceType || !referenceId) {
+      return React.createElement('span', null, value);
+    }
+    const handleClick = (event: React.MouseEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+      onViewDetail?.(referenceType, referenceId);
+    };
+
+    return React.createElement(
+      'a',
+      { className: CLASSES.TEXT_LINK, onClick: handleClick },
+      value,
+    );
   };
 };
 
 /**
  * Transaction number column accessor.
  */
-const transactionIdColumnAccessor = (column) => {
-  return {
-    ...column,
-    width: 80,
+const transactionIdColumnAccessor =
+  (onViewDetail?: (referenceType: string, referenceId: number) => void) =>
+  (column: ColumnDef) => {
+    return {
+      ...column,
+      width: 80,
+      Cell: createTransactionLinkCell(onViewDetail),
+    };
   };
-};
 
 /**
  * Description column accessor (muted text in wrapped cell).
  */
-const descriptionColumnAccessor = (column) => {
+const descriptionColumnAccessor = (column: ColumnDef) => {
   return {
     ...column,
     Cell: DescriptionCell,
   };
 };
 
-const dynamiColumnMapper = R.curry((data, column) => {
-  const _numericColumnAccessor = numericColumnAccessor(data);
+const dynamiColumnMapper = R.curry(
+  (
+    onViewDetail: (referenceType: string, referenceId: number) => void,
+    data: unknown[],
+    column: ColumnDef,
+  ) => {
+    const _numericColumnAccessor = numericColumnAccessor(data);
+    const _transactionIdColumnAccessor =
+      transactionIdColumnAccessor(onViewDetail);
 
-  return R.compose(
-    R.when(R.pathEq(['key'], 'date'), dateColumnAccessor),
-    R.when(
-      R.pathEq(['key'], 'reference_type'),
-      transactionTypeColumnAccessor,
-    ),
-    R.when(
-      R.pathEq(['key'], 'reference_number'),
-      transactionIdColumnAccessor,
-    ),
-    R.when(R.pathEq(['key'], 'description'), descriptionColumnAccessor),
-    R.when(R.pathEq(['key'], 'credit'), _numericColumnAccessor),
-    R.when(R.pathEq(['key'], 'debit'), _numericColumnAccessor),
-    R.when(R.pathEq(['key'], 'amount'), _numericColumnAccessor),
-    R.when(R.pathEq(['key'], 'running_balance'), _numericColumnAccessor),
-    commonColumnMapper(data),
-  )(column);
-});
+    return R.compose(
+      R.when(isColumnKey('date'), dateColumnAccessor),
+      R.when(
+        isColumnKey('reference_type'),
+        transactionTypeColumnAccessor(onViewDetail),
+      ),
+      R.when(isColumnKey('reference_number'), _transactionIdColumnAccessor),
+      R.when(isColumnKey('description'), descriptionColumnAccessor),
+      R.when(isColumnKey('credit'), _numericColumnAccessor),
+      R.when(isColumnKey('debit'), _numericColumnAccessor),
+      R.when(isColumnKey('amount'), _numericColumnAccessor),
+      R.when(isColumnKey('running_balance'), _numericColumnAccessor),
+      commonColumnMapper(data),
+    )(column);
+  },
+);
 
 /**
  * Composes the dynamic columns that fetched from request to columns to table component.
  */
-export const dynamicColumns = R.curry((data, columns) => {
-  return R.map(dynamiColumnMapper(data), columns);
-});
+export const dynamicColumns = R.curry(
+  (
+    onViewDetail: (referenceType: string, referenceId: number) => void,
+    data: unknown[],
+    columns: ColumnDef[],
+  ) => {
+    return R.map(dynamiColumnMapper(onViewDetail, data), columns);
+  },
+);
 
 /**
  * Retrieves the G/L sheet table columns for table component.
  */
-export const useGeneralLedgerTableColumns = () => {
+export const useGeneralLedgerTableColumns = (
+  onViewDetail: (referenceType: string, referenceId: number) => void,
+) => {
   const { generalLedger } = useGeneralLedgerContext();
 
   if (!generalLedger) {
-    throw new Error('asdfadsf');
+    throw new Error('General ledger data is not available');
   }
-  const { table } = generalLedger;
+  const table = (generalLedger as any)?.table;
 
-  return dynamicColumns(table.rows, table.columns);
+  return dynamicColumns(onViewDetail, table.rows, table.columns);
 };

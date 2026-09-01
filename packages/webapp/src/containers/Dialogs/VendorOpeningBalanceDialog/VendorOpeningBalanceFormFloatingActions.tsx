@@ -1,26 +1,23 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
-
 import { useVendorOpeningBalanceContext } from './VendorOpeningBalanceFormProvider';
+import type { VendorOpeningBalanceFormValues } from './utils';
+import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 /**
  * Vendor Opening balance floating actions.
- * @returns
  */
-function VendorOpeningBalanceFormFloatingActions({
-  // #withDialogActions
+function VendorOpeningBalanceFormFloatingActionsInner({
   closeDialog,
-}) {
+}: WithDialogActionsProps) {
   // dialog context.
   const { dialogName } = useVendorOpeningBalanceContext();
 
   // Formik context.
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<VendorOpeningBalanceFormValues>();
 
   // Handle close button click.
   const handleCancelBtnClick = () => {
@@ -45,6 +42,6 @@ function VendorOpeningBalanceFormFloatingActions({
     </div>
   );
 }
-export default compose(withDialogActions)(
-  VendorOpeningBalanceFormFloatingActions,
-);
+export const VendorOpeningBalanceFormFloatingActions = compose(
+  withDialogActions,
+)(VendorOpeningBalanceFormFloatingActionsInner);

@@ -1,13 +1,13 @@
-// @ts-nocheck
-import React from 'react';
-
 import { Button, Intent } from '@blueprintjs/core';
+import React from 'react';
 import { Icon, FormattedMessage as T } from '@/components';
-
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-function ApiKeysActions({ openDialog, closeDialog }) {
+type ApiKeysActionsInnerProps = Pick<WithDialogActionsProps, 'openDialog'>;
+
+function ApiKeysActionsInner({ openDialog }: ApiKeysActionsInnerProps) {
   const onClickGenerateApiKey = () => {
     openDialog('api-keys-generate');
   };
@@ -25,5 +25,4 @@ function ApiKeysActions({ openDialog, closeDialog }) {
   );
 }
 
-export default compose(withDialogActions)(ApiKeysActions);
-
+export const ApiKeysActions = compose(withDialogActions)(ApiKeysActionsInner);

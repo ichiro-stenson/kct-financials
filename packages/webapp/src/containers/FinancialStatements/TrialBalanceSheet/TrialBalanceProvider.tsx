@@ -1,22 +1,48 @@
-// @ts-nocheck
-import { createContext, useContext, useMemo } from 'react';
-import FinancialReportPage from '../FinancialReportPage';
-import { useTrialBalanceSheet } from '@/hooks/query';
+import { TrialBalanceTableQuery } from '@bigcapital/sdk-ts';
+import { createContext, useContext, useMemo, ReactNode } from 'react';
 import { transformFilterFormToQuery } from '../common';
+import { FinancialReportPage } from '../FinancialReportPage';
+import { useTrialBalanceSheet } from '@/hooks/query';
 
-const TrialBalanceSheetContext = createContext();
+type UseTrialBalanceSheetResult = ReturnType<typeof useTrialBalanceSheet>;
 
-function TrialBalanceSheetProvider({ query, ...props }) {
-  const httpQuery = useMemo(() => transformFilterFormToQuery(query), [query]);
+type TrialBalanceSheetContextValue = {
+  trialBalanceSheet: UseTrialBalanceSheetResult['data'];
+  isFetching: boolean;
+  isLoading: boolean;
+  refetchSheet: UseTrialBalanceSheetResult['refetch'];
+  httpQuery: TrialBalanceTableQuery;
+};
+
+interface TrialBalanceSheetProviderProps {
+  query: TrialBalanceTableQuery;
+  children?: ReactNode;
+}
+
+const TrialBalanceSheetContext = createContext<
+  TrialBalanceSheetContextValue | undefined
+>(undefined);
+
+function TrialBalanceSheetProvider({
+  query,
+  ...props
+}: TrialBalanceSheetProviderProps) {
+  const httpQuery = useMemo(
+    () => transformFilterFormToQuery(query) as TrialBalanceTableQuery,
+    [query],
+  );
 
   const {
     data: trialBalanceSheet,
     isFetching,
     isLoading,
     refetch,
-  } = useTrialBalanceSheet({ ...httpQuery }, { keepPreviousData: true });
+  } = useTrialBalanceSheet(
+    { ...httpQuery },
+    { placeholderData: (prev) => prev },
+  );
 
-  const provider = {
+  const provider: TrialBalanceSheetContextValue = {
     trialBalanceSheet,
     isLoading,
     isFetching,
@@ -31,6 +57,13 @@ function TrialBalanceSheetProvider({ query, ...props }) {
   );
 }
 
-const useTrialBalanceSheetContext = () => useContext(TrialBalanceSheetContext);
+const useTrialBalanceSheetContext = (): TrialBalanceSheetContextValue => {
+  const ctx = useContext(TrialBalanceSheetContext);
+  if (!ctx)
+    throw new Error(
+      'useTrialBalanceSheetContext must be used within a TrialBalanceSheetProvider',
+    );
+  return ctx;
+};
 
 export { TrialBalanceSheetProvider, useTrialBalanceSheetContext };

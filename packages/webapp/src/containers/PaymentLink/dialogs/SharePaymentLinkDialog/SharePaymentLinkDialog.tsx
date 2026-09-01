@@ -11,7 +11,7 @@ const SharePaymentLinkContent = React.lazy(() =>
 );
 
 /**
- * 
+ *
  */
 function SharePaymentLinkDialogRoot({ dialogName, payload, isOpen }) {
   return (

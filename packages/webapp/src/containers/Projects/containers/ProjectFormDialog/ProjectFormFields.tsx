@@ -1,12 +1,11 @@
 // @ts-nocheck
+import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
+import classNames from 'classnames';
+import { useFormikContext } from 'formik';
+import { FastField } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useFormikContext } from 'formik';
-
-import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
-import { FastField } from 'formik';
-import { CLASSES } from '@/constants/classes';
-import classNames from 'classnames';
+import { useProjectFormContext } from './ProjectFormProvider';
 import {
   FFormGroup,
   FInputGroup,
@@ -14,20 +13,20 @@ import {
   FDateInput,
   FMoneyInputGroup,
   InputPrependText,
-  FormattedMessage as T,
   Stack,
   CustomersSelect,
 } from '@/components';
-import { momentFormatter } from '@/utils';
-import { useProjectFormContext } from './ProjectFormProvider';
+import { CLASSES } from '@/constants/classes';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Project form fields.
  * @returns
  */
-function ProjectFormFields() {
+export function ProjectFormFields() {
   // Formik context.
   const { values } = useFormikContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -51,9 +50,8 @@ function ProjectFormFields() {
             className={classNames(CLASSES.FILL, 'form-group--date')}
           >
             <FDateInput
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               name="deadline"
-              formatDate={(date) => date.toLocaleString()}
               popoverProps={{
                 position: Position.BOTTOM,
                 minimal: true,
@@ -106,5 +104,3 @@ function ProjectFormCustomerSelect() {
     </FormGroup>
   );
 }
-
-export default ProjectFormFields;

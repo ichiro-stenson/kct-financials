@@ -1,11 +1,13 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus, Can, FormattedMessage as T } from '@/components';
 import { AbilitySubject, ExpenseAction } from '@/constants/abilityOption';
 
-export default function InvoicesEmptyStatus() {
+// Note: the export name `InvoicesEmptyStatus` is a copy-paste artifact from the
+// @ts-nocheck original — preserved to avoid breaking the re-export in
+// `ExpenseDataTable.tsx` (`InvoicesEmptyStatus as ExpensesEmptyStatus`).
+export function InvoicesEmptyStatus() {
   const history = useHistory();
 
   return (

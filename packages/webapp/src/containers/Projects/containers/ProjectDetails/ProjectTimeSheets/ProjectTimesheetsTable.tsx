@@ -1,36 +1,36 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
+import { ActionsMenu } from './components';
+import { useProjectTimesheetColumns } from './hooks';
+import { useProjectTimesheetContext } from './ProjectTimesheetsProvider';
 import {
   DataTable,
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
-import { ActionsMenu } from './components';
+import { DialogsName } from '@/constants/dialogs';
 import { TABLES } from '@/constants/tables';
-import { useProjectTimesheetColumns } from './hooks';
-import { useMemorizedColumnsWidths } from '@/hooks';
-import { useProjectTimesheetContext } from './ProjectTimesheetsProvider';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
+import { useMemorizedColumnsWidths } from '@/hooks';
+import { useProjectDetailContext } from '../ProjectDetailProvider';
 import { compose } from '@/utils';
-import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Timesheet DataTable.
  * @returns
  */
 function ProjectTimesheetsTableRoot({
-  // #withSettings
-  timesheetsTableSize,
-
   // #withDialog
   openDialog,
   // #withAlertActions
   openAlert,
 }) {
+  // Settings hook.
+  const { timesheetsSettings } = useProjectDetailContext();
+  const timesheetsTableSize = timesheetsSettings?.tableSize;
+
   const { projectTimeEntries } = useProjectTimesheetContext();
 
   // Retrieve project timesheet table columns.
@@ -72,9 +72,6 @@ function ProjectTimesheetsTableRoot({
 export const ProjectTimesheetsTable = compose(
   withAlertActions,
   withDialogActions,
-  withSettings(({ timesheetsSettings }) => ({
-    timesheetsTableSize: timesheetsSettings?.tableSize,
-  })),
 )(ProjectTimesheetsTableRoot);
 
 const ProjectTimesheetDataTable = styled(DataTable)`
@@ -93,12 +90,12 @@ const ProjectTimesheetDataTable = styled(DataTable)`
         &.td-name {
           padding-left: 1rem;
         }
-        &.td-actions{
+        &.td-actions {
           padding-right: 1rem;
         }
       }
 
-      .tr:last-of-type .td{
+      .tr:last-of-type .td {
         border-bottom: 0;
       }
     }

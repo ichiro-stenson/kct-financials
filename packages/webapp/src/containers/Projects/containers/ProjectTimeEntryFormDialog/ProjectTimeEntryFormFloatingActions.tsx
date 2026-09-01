@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React from 'react';
-import { useFormikContext } from 'formik';
 import { Intent, Button, Classes } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
+import { useFormikContext } from 'formik';
+import React from 'react';
 import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
+import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
@@ -11,7 +11,7 @@ import { compose } from '@/utils';
  * Projcet time entry form floating actions.
  * @returns
  */
-function ProjectTimeEntryFormFloatingActions({
+function ProjectTimeEntryFormFloatingActionsInner({
   // #withDialogActions
   closeDialog,
 }) {
@@ -42,4 +42,6 @@ function ProjectTimeEntryFormFloatingActions({
   );
 }
 
-export default compose(withDialogActions)(ProjectTimeEntryFormFloatingActions);
+export const ProjectTimeEntryFormFloatingActions = compose(withDialogActions)(
+  ProjectTimeEntryFormFloatingActionsInner,
+);

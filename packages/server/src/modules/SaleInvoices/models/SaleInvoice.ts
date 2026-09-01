@@ -9,7 +9,10 @@ import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 import { DiscountType } from '@/common/types/Discount';
 import { Account } from '@/modules/Accounts/models/Account.model';
+import type { Branch } from '@/modules/Branches/models/Branch.model';
+import type { Customer } from '@/modules/Customers/models/Customer';
 import { ISearchRole } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
+import { sanitizeSortDirection } from '@/modules/DynamicListing/DynamicFilter/sanitizeSortDirection';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { TransactionPaymentServiceEntry } from '@/modules/PaymentServices/models/TransactionPaymentServiceEntry.model';
 import { InjectAttachable } from '@/modules/Attachments/decorators/InjectAttachable.decorator';
@@ -63,6 +66,8 @@ export class SaleInvoice extends TenantBaseModel {
   public attachments!: Document[];
   public writtenoffExpenseAccount!: Account;
   public paymentMethods!: TransactionPaymentServiceEntry[];
+  public branch?: Branch;
+  public customer?: Customer;
   /**
    * Table name
    */
@@ -417,14 +422,16 @@ export class SaleInvoice extends TenantBaseModel {
        * Sort the sale invoices by full-payment invoices.
        */
       sortByStatus(query, order) {
-        query.orderByRaw(`PAYMENT_AMOUNT = BALANCE ${order}`);
+        const dir = sanitizeSortDirection(order);
+        query.orderByRaw(`PAYMENT_AMOUNT = BALANCE ${dir}`);
       },
 
       /**
        * Sort the sale invoices by the due amount.
        */
       sortByDueAmount(query, order) {
-        query.orderByRaw(`BALANCE - PAYMENT_AMOUNT ${order}`);
+        const dir = sanitizeSortDirection(order);
+        query.orderByRaw(`BALANCE - PAYMENT_AMOUNT ${dir}`);
       },
 
       /**

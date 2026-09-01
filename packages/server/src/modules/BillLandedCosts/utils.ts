@@ -15,6 +15,7 @@ export const ERRORS = {
   COST_AMOUNT_BIGGER_THAN_UNALLOCATED_AMOUNT:
     'COST_AMOUNT_BIGGER_THAN_UNALLOCATED_AMOUNT',
   ALLOCATE_COST_SHOULD_NOT_BE_BILL: 'ALLOCATE_COST_SHOULD_NOT_BE_BILL',
+  LANDED_COST_FEATURE_NOT_ENABLED: 'LANDED_COST_FEATURE_NOT_ENABLED',
 };
 
 /**
@@ -25,7 +26,7 @@ export const ERRORS = {
  */
 export const mergeLocatedWithBillEntries = (
   locatedEntries: IBillLandedCostTransactionEntry[],
-  billEntries: ModelObject<ItemEntry>[]
+  billEntries: ModelObject<ItemEntry>[],
 ): (IBillLandedCostTransactionEntry & { entry: ModelObject<ItemEntry> })[] => {
   const billEntriesByEntryId = transformToMap(billEntries, 'id');
 
@@ -34,7 +35,6 @@ export const mergeLocatedWithBillEntries = (
     entry: billEntriesByEntryId.get(entry.entryId),
   }));
 };
-
 
 export const CONFIG = {
   COST_TYPES: {

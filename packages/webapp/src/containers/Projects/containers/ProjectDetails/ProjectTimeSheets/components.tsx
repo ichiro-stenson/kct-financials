@@ -1,9 +1,9 @@
 // @ts-nocheck
+import { Menu, MenuItem, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { FormatDate, Icon } from '@/components';
-import { Menu, MenuItem, Intent } from '@blueprintjs/core';
 import { safeCallback, firstLettersArgs } from '@/utils';
 
 /**
@@ -65,7 +65,7 @@ const TimesheetContent = styled.div`
   display: block;
   white-space: nowrap;
   font-size: 13px;
-  color: #5D5E71;
+  color: #5d5e71;
   margin-top: 0.25rem;
 `;
 

@@ -25,7 +25,7 @@ export class GetSaleEstimatesService {
   public async getEstimates(
     filterDTO: Partial<ISalesEstimatesFilter>,
   ): Promise<{
-    salesEstimates: SaleEstimate[];
+    data: SaleEstimate[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
@@ -61,7 +61,7 @@ export class GetSaleEstimatesService {
       new SaleEstimateTransfromer(),
     );
     return {
-      salesEstimates: transformedEstimates,
+      data: transformedEstimates,
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };

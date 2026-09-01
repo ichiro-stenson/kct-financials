@@ -1,21 +1,27 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
+import styled from 'styled-components';
+import type { Currency } from '@bigcapital/sdk-ts';
+import { ActionMenuList, useCurrenciesTableColumns } from './components';
+import { useCurrenciesContext } from './CurrenciesProvider';
+import { DataTable, TableSkeletonRows } from '@/components';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-import { DataTable, TableSkeletonRows } from '@/components';
-
-import { useCurrenciesContext } from './CurrenciesProvider';
-
-import { ActionMenuList, useCurrenciesTableColumns } from './components';
-
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import styled from 'styled-components';
+type CurrenciesDataTableInnerProps = Pick<
+  WithDialogActionsProps,
+  'openDialog'
+> &
+  Pick<WithAlertActionsProps, 'openAlert'> & {
+    tableProps?: Record<string, unknown>;
+  };
 
 /**
  * Currencies table.
  */
-function CurrenciesDataTable({
+function CurrenciesDataTableInner({
   // #ownProps
   tableProps,
 
@@ -24,7 +30,7 @@ function CurrenciesDataTable({
 
   // #withAlertActions
   openAlert,
-}) {
+}: CurrenciesDataTableInnerProps) {
   const { currencies, isCurrenciesLoading } = useCurrenciesContext();
 
   // Table columns.
@@ -32,7 +38,7 @@ function CurrenciesDataTable({
 
   // Handle Edit Currency.
   const handleEditCurrency = useCallback(
-    (currency) => {
+    (currency: Currency) => {
       openDialog('currency-form', {
         action: 'edit',
         currency: currency,
@@ -42,14 +48,14 @@ function CurrenciesDataTable({
   );
 
   // Handle delete currency.
-  const handleDeleteCurrency = ({ currency_code }) => {
-    openAlert('currency-delete', { currency_code: currency_code });
+  const handleDeleteCurrency = (currency: Currency) => {
+    openAlert('currency-delete', { currency_code: currency.currencyCode });
   };
 
   return (
     <CurrencieDataTable
       columns={columns}
-      data={currencies}
+      data={currencies ?? []}
       loading={isCurrenciesLoading}
       progressBarLoading={isCurrenciesLoading}
       TableLoadingRenderer={TableSkeletonRows}
@@ -65,10 +71,10 @@ function CurrenciesDataTable({
   );
 }
 
-export default compose(
+export const CurrenciesDataTable = compose(
   withDialogActions,
   withAlertActions,
-)(CurrenciesDataTable);
+)(CurrenciesDataTableInner);
 
 const CurrencieDataTable = styled(DataTable)`
   .table .th,

@@ -1,13 +1,13 @@
 // @ts-nocheck
 import React from 'react';
-
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
-
 import { compose } from '@/utils';
 
 const RefundVendorCreditDrawerContent = React.lazy(() =>
-  import('./RefundVendorCreditDrawerContent'),
+  import('./RefundVendorCreditDrawerContent').then((m) => ({
+    default: m.RefundVendorCreditDrawerContent,
+  })),
 );
 
 /**
@@ -36,4 +36,4 @@ function RefundCreditNoteDetailDrawer({
   );
 }
 
-export default compose(withDrawers())(RefundCreditNoteDetailDrawer);
+export const index = compose(withDrawers())(RefundCreditNoteDetailDrawer);

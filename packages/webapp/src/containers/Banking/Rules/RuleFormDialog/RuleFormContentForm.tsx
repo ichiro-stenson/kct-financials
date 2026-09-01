@@ -1,9 +1,19 @@
 // @ts-nocheck
-import { useCallback, useMemo } from 'react';
+import { Button, Classes, Intent, Radio, Tag } from '@blueprintjs/core';
 import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
 import { get } from 'lodash';
-import { Button, Classes, Intent, Radio, Tag } from '@blueprintjs/core';
 import * as R from 'ramda';
+import { useCallback, useMemo } from 'react';
+import {
+  Fields,
+  RuleFormValues,
+  TransactionTypeOptions,
+  getAccountRootFromMoneyCategory,
+  getDefaultFieldConditionByFieldKey,
+  getFieldConditionsByFieldKey,
+  initialValues,
+} from './_utils';
+import { useRuleFormDialogBoot } from './RuleFormBoot';
 import { CreateRuleFormSchema } from './RuleFormContentForm.schema';
 import {
   AccountsSelect,
@@ -16,25 +26,15 @@ import {
   Group,
   Stack,
 } from '@/components';
-import { useCreateBankRule, useEditBankRule } from '@/hooks/query/bank-rules';
-import {
-  Fields,
-  RuleFormValues,
-  TransactionTypeOptions,
-  getAccountRootFromMoneyCategory,
-  getDefaultFieldConditionByFieldKey,
-  getFieldConditionsByFieldKey,
-  initialValues,
-} from './_utils';
-import { useRuleFormDialogBoot } from './RuleFormBoot';
+import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
+import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useCreateBankRule, useEditBankRule } from '@/hooks/query/banking';
 import {
   transformToCamelCase,
   transformToForm,
   transfromToSnakeCase,
 } from '@/utils';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { DialogsName } from '@/constants/dialogs';
-import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
 
 // Retrieves the add money in button options.
 const MoneyInOptions = getAddMoneyInOptions();
@@ -101,7 +101,11 @@ function RuleFormContentFormRoot({
           style={{ maxWidth: 300 }}
           fastField
         >
-          <FInputGroup name={'name'} fastField />
+          <FInputGroup
+            name={'name'}
+            fastField
+            data-testId={'rule-name-input'}
+          />
         </FFormGroup>
 
         <FFormGroup
@@ -116,6 +120,7 @@ function RuleFormContentFormRoot({
             items={accounts}
             filterByTypes={['cash', 'bank']}
             fastField
+            buttonProps={{ 'data-testId': 'rule-apply-account-select' }}
           />
         </FFormGroup>
 
@@ -229,7 +234,11 @@ function RuleFormConditions() {
               style={{ marginBottom: 0, flex: '1 0 ', width: '40%' }}
               fastField
             >
-              <FInputGroup name={`conditions[${index}].value`} fastField />
+              <FInputGroup
+                name={`conditions[${index}].value`}
+                fastField
+                data-testId={'rule-condition-value-input'}
+              />
             </FFormGroup>
           </Group>
         ))}
@@ -311,6 +320,7 @@ function RuleApplyIfTransactionTypeField() {
         popoverProps={{ minimal: true, inline: false }}
         onItemChange={handleItemChange}
         fastField
+        buttonProps={{ 'data-testId': 'rule-apply-type-select' }}
       />
     </FFormGroup>
   );
@@ -353,6 +363,7 @@ function RuleAssignCategoryField() {
         textAccessor={'name'}
         onItemChange={handleItemChange}
         fastField
+        buttonProps={{ 'data-testId': 'rule-assign-category-select' }}
       />
     </FFormGroup>
   );
@@ -382,6 +393,7 @@ function RuleAssignCategoryAccountField() {
         filterByRootTypes={accountRoot}
         shouldUpdateDeps={{ accountRoot }}
         fastField
+        buttonProps={{ 'data-testId': 'rule-assign-account-select' }}
       />
     </FFormGroup>
   );

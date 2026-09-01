@@ -1,15 +1,15 @@
 // @ts-nocheck
-import { useQueryClient, useMutation } from 'react-query';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { queryTypes as t } from './type';
 import { useRequestQuery } from '@/hooks/useQueryRequest';
 import useApiRequest from '@/hooks/useRequest';
-import t from './type';
 
 // Common invalidate queries.
 const commonInvalidateQueries = (queryClient) => {
   // Invalidate projects.
-  queryClient.invalidateQueries(t.PROJECTS);
+  queryClient.invalidateQueries({ queryKey: [t.PROJECTS] });
   // Invalidate project tasks.
-  queryClient.invalidateQueries(t.PROJECT_TASKS);
+  queryClient.invalidateQueries({ queryKey: [t.PROJECT_TASKS] });
 };
 
 /**
@@ -20,16 +20,15 @@ export function useCreateProjectTask(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`/projects/${id}/tasks`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation({
+    mutationFn: ([id, values]) =>
+      apiRequest.post(`/projects/${id}/tasks`, values),
+    onSuccess: (res, [id, values]) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -41,13 +40,14 @@ export function useEditProjectTask(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(([id, values]) => apiRequest.put(`tasks/${id}`, values), {
+  return useMutation({
+    mutationFn: ([id, values]) => apiRequest.put(`tasks/${id}`, values),
     onSuccess: (res, [id, values]) => {
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);
 
       // Invalidate specific project task.
-      queryClient.invalidateQueries([t.PROJECT_TASK, id]);
+      queryClient.invalidateQueries({ queryKey: [t.PROJECT_TASK, id] });
     },
     ...props,
   });
@@ -61,10 +61,11 @@ export function useDeleteProjectTask(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id) => apiRequest.delete(`tasks/${id}`), {
+  return useMutation({
+    mutationFn: (id) => apiRequest.delete(`tasks/${id}`),
     onSuccess: (res, id) => {
       // Invalidate specific project task.
-      queryClient.invalidateQueries([t.PROJECT_TASK, id]);
+      queryClient.invalidateQueries({ queryKey: [t.PROJECT_TASK, id] });
 
       // Common invalidate queries.
       commonInvalidateQueries(queryClient);

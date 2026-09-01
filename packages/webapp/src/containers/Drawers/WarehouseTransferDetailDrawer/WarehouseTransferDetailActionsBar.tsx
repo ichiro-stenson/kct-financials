@@ -1,45 +1,38 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   Button,
-  NavbarGroup,
   Classes,
-  NavbarDivider,
   Intent,
+  NavbarDivider,
+  NavbarGroup,
 } from '@blueprintjs/core';
-
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { useWarehouseDetailDrawerContext } from './WarehouseTransferDetailDrawerProvider';
-import { DrawerActionsBar, Icon, FormattedMessage as T } from '@/components';
-
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { DrawerActionsBar, FormattedMessage as T, Icon } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
-import { DRAWERS } from '@/constants/drawers';
 import { compose } from '@/utils';
 
-/**
- * Warehouse transfer detail actions bar.
- */
-function WarehouseTransferDetailActionsBar({
-  // #withAlertActions
-  openAlert,
+interface WarehouseTransferDetailActionsBarProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {}
 
-  // #withDrawerActions
+function WarehouseTransferDetailActionsBarInner({
+  openAlert,
   closeDrawer,
-}) {
+}: WarehouseTransferDetailActionsBarProps): React.ReactElement {
   const history = useHistory();
 
   const { warehouseTransferId } = useWarehouseDetailDrawerContext();
 
-  // Handle edit warehosue transfer.
   const handleEditWarehosueTransfer = () => {
     history.push(`/warehouses-transfers/${warehouseTransferId}/edit`);
     closeDrawer(DRAWERS.WAREHOUSE_TRANSFER_DETAILS);
   };
 
-  // Handle delete warehouse transfer.
   const handleDeletetWarehosueTransfer = () => {
     openAlert('warehouse-transfer-delete', { warehouseTransferId });
   };
@@ -66,8 +59,7 @@ function WarehouseTransferDetailActionsBar({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withAlertActions,
+export const WarehouseTransferDetailActionsBar = compose(
   withDrawerActions,
-)(WarehouseTransferDetailActionsBar);
+  withAlertActions,
+)(WarehouseTransferDetailActionsBarInner);

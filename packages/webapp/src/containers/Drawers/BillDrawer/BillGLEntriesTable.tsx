@@ -1,34 +1,29 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
-import { Card } from '@/components';
-
-import { useTransactionsByReference } from '@/hooks/query';
-import { useBillDrawerContext } from './BillDrawerProvider';
-
-import JournalEntriesTable, {
+import {
   AmountDisplayedBaseCurrencyMessage,
+  JournalEntriesTable,
 } from '../../JournalEntriesTable/JournalEntriesTable';
+import { useBillDrawerContext } from './BillDrawerProvider';
+import { Card } from '@/components';
+import { useTransactionsByReference } from '@/hooks/query';
 
 /**
  * Bill GL entries table.
  * @returns {React.JSX}
  */
-export default function BillGLEntriesTable() {
+export function BillGLEntriesTable() {
   const { billId } = useBillDrawerContext();
 
   // Handle fetch transaction by reference.
-  const {
-    data: { transactions },
-    isLoading: isTransactionLoading,
-  } = useTransactionsByReference(
+  const { data, isLoading: isTransactionLoading } = useTransactionsByReference(
     {
-      reference_id: billId,
-      reference_type: 'Bill',
+      referenceId: billId as number,
+      referenceType: 'Bill',
     },
     { enabled: !!billId },
   );
+  const transactions = data?.transactions ?? [];
 
   return (
     <BilleGLEntriesRoot>

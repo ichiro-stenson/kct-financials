@@ -1,19 +1,17 @@
 // @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster } from '@/components';
-import { Alert, Intent } from '@blueprintjs/core';
-import { useDeletePdfTemplate } from '@/hooks/query/pdf-templates';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { useDeletePdfTemplate } from '@/hooks/query/pdf-templates';
 import { compose } from '@/utils';
 
 /**
  * Delete branding template alert.
  */
-function DeleteBrandingTemplateAlert({
+function DeleteBrandingTemplateAlertInner({
   // #ownProps
   name,
 
@@ -35,30 +33,24 @@ function DeleteBrandingTemplateAlert({
         });
         closeAlert(name);
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {
-          if (
-            errors.find(
-              (error) => error.type === 'CANNOT_DELETE_PREDEFINED_PDF_TEMPLATE',
-            )
-          ) {
-            AppToaster.show({
-              message: 'Cannot delete a predefined branding template.',
-              intent: Intent.DANGER,
-            });
-          } else {
-            AppToaster.show({
-              message: 'Something went wrong.',
-              intent: Intent.DANGER,
-            });
-          }
-          closeAlert(name);
-        },
-      );
+      .catch(({ data: { errors } }) => {
+        if (
+          errors.find(
+            (error) => error.type === 'CANNOT_DELETE_PREDEFINED_PDF_TEMPLATE',
+          )
+        ) {
+          AppToaster.show({
+            message: 'Cannot delete a predefined branding template.',
+            intent: Intent.DANGER,
+          });
+        } else {
+          AppToaster.show({
+            message: 'Something went wrong.',
+            intent: Intent.DANGER,
+          });
+        }
+        closeAlert(name);
+      });
   };
 
   const handleCancel = () => {
@@ -79,7 +71,7 @@ function DeleteBrandingTemplateAlert({
   );
 }
 
-export default compose(
+export const DeleteBrandingTemplateAlert = compose(
   withAlertStoreConnect(),
   withAlertActions,
-)(DeleteBrandingTemplateAlert);
+)(DeleteBrandingTemplateAlertInner);

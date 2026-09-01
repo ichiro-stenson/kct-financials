@@ -1,12 +1,11 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
 import { ProjectDetailHeader } from '../ProjectDetailsHeader';
-import { ProjectTasksTable } from './ProjectTasksTable';
 import { ProjectTaskProvider } from './ProjectTaskProvider';
+import { ProjectTasksTable } from './ProjectTasksTable';
 
-export default function ProjectTasks() {
+export function ProjectTasks() {
   return (
     <ProjectTaskProvider>
       <ProjectDetailHeader />

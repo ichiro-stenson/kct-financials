@@ -1,16 +1,14 @@
 // @ts-nocheck
-import React from 'react';
 import * as R from 'ramda';
-
-import { withUniversalSearch } from './withUniversalSearch';
-
+import React from 'react';
 import { getUniversalSearchItemsActions } from './utils';
+import { withUniversalSearch } from './withUniversalSearch';
 import { withUniversalSearchActions } from './withUniversalSearchActions';
 
 /**
  * Universal search selected item action based on each resource type.
  */
-function DashboardUniversalSearchItemActions({
+function DashboardUniversalSearchItemActionsInner({
   searchSelectedResourceType,
   searchSelectedResourceId,
 
@@ -33,7 +31,7 @@ function DashboardUniversalSearchItemActions({
   ));
 }
 
-export default R.compose(
+export const DashboardUniversalSearchItemActions = R.compose(
   withUniversalSearch(
     ({ searchSelectedResourceType, searchSelectedResourceId }) => ({
       searchSelectedResourceType,
@@ -41,4 +39,4 @@ export default R.compose(
     }),
   ),
   withUniversalSearchActions,
-)(DashboardUniversalSearchItemActions);
+)(DashboardUniversalSearchItemActionsInner);

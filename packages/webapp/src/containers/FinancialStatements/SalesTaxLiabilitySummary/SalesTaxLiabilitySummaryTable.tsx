@@ -1,33 +1,26 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-import { compose } from 'ramda';
-
-import { TableStyle } from '@/constants';
-import { ReportDataTable, FinancialSheet } from '@/components';
-import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+import { getReportRowTestId } from '../reportTestIds';
 import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { useSalesTaxLiabilitySummaryColumns } from './utils';
+import { ReportDataTable, FinancialSheet } from '@/components';
+import { TableStyle } from '@/constants';
+import { useCurrentOrganizationName } from '@/hooks/query';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
-/**
- * Balance sheet table.
- */
-function SalesTaxLiabilitySummaryTableRoot({
-  // #ownProps
-  organizationName,
-}) {
-  // Balance sheet context.
-  const {
-    salesTaxLiabilitySummary: { table, query, meta },
-  } = useSalesTaxLiabilitySummaryContext();
+function SalesTaxLiabilitySummaryTableRoot() {
+  const organizationName = useCurrentOrganizationName();
+  const { salesTaxLiabilitySummary } = useSalesTaxLiabilitySummaryContext();
+
+  const table = salesTaxLiabilitySummary?.table;
+  const meta = salesTaxLiabilitySummary?.meta;
 
   // Retrieve the database columns.
   const columns = useSalesTaxLiabilitySummaryColumns();
 
   // Retrieve default expanded rows of balance sheet.
   const expandedRows = React.useMemo(
-    () => defaultExpanderReducer(table.rows, 3),
+    () => defaultExpanderReducer(table?.rows, 3),
     [table],
   );
 
@@ -35,13 +28,13 @@ function SalesTaxLiabilitySummaryTableRoot({
     <FinancialSheet
       companyName={organizationName}
       sheetType={'Sales Tax Liability Summary'}
-      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
-      basis={''}
+      dateText={meta?.formattedDateRange}
     >
       <SalesTaxLiabilitySummaryDataTable
         columns={columns}
-        data={table.rows}
+        data={table?.rows}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('sales-tax-liability')}
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}
@@ -95,8 +88,4 @@ const SalesTaxLiabilitySummaryDataTable = styled(ReportDataTable)`
   }
 `;
 
-export const SalesTaxLiabilitySummaryTable = compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(SalesTaxLiabilitySummaryTableRoot);
+export const SalesTaxLiabilitySummaryTable = SalesTaxLiabilitySummaryTableRoot;

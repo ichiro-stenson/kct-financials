@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   Button,
   Classes,
@@ -8,32 +5,41 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 import {
   Icon,
   DrawerActionsBar,
   Can,
   FormattedMessage as T,
 } from '@/components';
-
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
-import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 import { ManualJournalAction, AbilitySubject } from '@/constants/abilityOption';
-
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+import { compose } from '@/utils';
+
+interface ManualJournalDrawerActionBarInnerProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {}
 
 /**
  * Manual journal action bar.
  */
-function ManualJournalDrawerActionBar({
+function ManualJournalDrawerActionBarInner({
   // #withAlertsDialog
   openAlert,
 
   // #withDrawerActions
   closeDrawer,
-}) {
+}: ManualJournalDrawerActionBarInnerProps) {
   const history = useHistory();
   const { manualJournalId } = useManualJournalDrawerContext();
 
@@ -74,7 +80,7 @@ function ManualJournalDrawerActionBar({
   );
 }
 
-export default compose(
+export const ManualJournalDrawerActionBar = compose(
   withAlertActions,
   withDrawerActions,
-)(ManualJournalDrawerActionBar);
+)(ManualJournalDrawerActionBarInner);

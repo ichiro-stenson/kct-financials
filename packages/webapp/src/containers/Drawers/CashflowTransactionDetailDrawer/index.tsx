@@ -1,13 +1,13 @@
 // @ts-nocheck
 import React from 'react';
-
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
-
 import { compose } from '@/utils';
 
 const CashFlowTransactionDrawerContent = React.lazy(() =>
-  import('./CashflowTransactionDrawerContent'),
+  import('./CashflowTransactionDrawerContent').then((m) => ({
+    default: m.CashflowTransactionDrawerContent,
+  })),
 );
 
 /**
@@ -33,4 +33,4 @@ function CashflowTransactionDetailDrawer({
   );
 }
 
-export default compose(withDrawers())(CashflowTransactionDetailDrawer);
+export const index = compose(withDrawers())(CashflowTransactionDetailDrawer);

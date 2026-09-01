@@ -1,15 +1,16 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
+import React from 'react';
 import { FormattedMessage as T, EmptyStatus } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-function BranchesEmptyStatus({
+type BranchesEmptyStatusInnerProps = Pick<WithDialogActionsProps, 'openDialog'>;
+
+function BranchesEmptyStatusInner({
   // #withDialogActions
   openDialog,
-}) {
+}: BranchesEmptyStatusInnerProps) {
   // Handle activate action branch.
   const handleActivateBranch = () => {
     openDialog('branch-activate', {});
@@ -37,4 +38,6 @@ function BranchesEmptyStatus({
     />
   );
 }
-export default compose(withDialogActions)(BranchesEmptyStatus);
+export const BranchesEmptyStatus = compose(withDialogActions)(
+  BranchesEmptyStatusInner,
+);

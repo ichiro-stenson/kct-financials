@@ -36,7 +36,6 @@ export enum ReportsAction {
   READ_INVENTORY_VALUATION_SUMMARY = 'read-inventory-valuation-summary',
   READ_INVENTORY_ITEM_DETAILS = 'read-inventory-item-details',
   READ_CASHFLOW_ACCOUNT_TRANSACTION = 'read-cashflow-account-transactions',
-  READ_PROJECT_PROFITABILITY_SUMMARY = 'read-project-profitability-summary',
   READ_SALES_TAX_LIABILITY_SUMMARY = 'read-sales-tax-liability-summary',
 }
 
@@ -93,9 +92,9 @@ interface FinancialDateMeta {
 }
 
 interface IFinancialSheetTotal {
-    amount: number;
-    formattedAmount: string;
-    currencyCode: string;
+  amount: number;
+  formattedAmount: string;
+  currencyCode: string;
 }
 
 interface IFinancialSheetPercentage {

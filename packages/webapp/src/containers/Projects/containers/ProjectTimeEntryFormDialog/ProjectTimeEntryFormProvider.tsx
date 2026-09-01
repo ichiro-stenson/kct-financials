@@ -31,9 +31,7 @@ function ProjectTimeEntryFormProvider({
   const { mutateAsync: editProjectTimeEntryMutate } = useEditProjectTimeEntry();
 
   // Handle fetch project tasks.
-  const {
-    data: { projectTasks },
-  } = useProjectTasks(project, {
+  const { data: projectTasksData } = useProjectTasks(project, {
     enabled: !!project,
   });
 
@@ -44,20 +42,17 @@ function ProjectTimeEntryFormProvider({
     });
 
   // Fetch project list data table or list
-  const {
-    data: { projects },
-    isLoading: isProjectsLoading,
-  } = useProjects();
+  const { data: projectsData, isLoading: isProjectsLoading } = useProjects();
 
   const isNewMode = !timesheetId;
 
   // provider payload.
   const provider = {
     dialogName,
-    projects,
+    projects: projectsData?.projects,
     projectId,
     timesheetId,
-    projectTasks,
+    projectTasks: projectTasksData?.projectTasks,
     isNewMode,
     setProjectPayload,
     projectTimeEntry,

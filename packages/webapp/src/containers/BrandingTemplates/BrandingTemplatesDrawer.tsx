@@ -1,11 +1,13 @@
 // @ts-nocheck
-import React from 'react';
 import * as R from 'ramda';
+import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 
-const BrandingTemplatesContent = React.lazy(
-  () => import('./BrandingTemplatesContent'),
+const BrandingTemplatesContent = React.lazy(() =>
+  import('./BrandingTemplatesContent').then((m) => ({
+    default: m.BrandingTemplateContent,
+  })),
 );
 
 /**
@@ -19,11 +21,7 @@ function BrandingTemplatesDrawerRoot({
   payload,
 }) {
   return (
-    <Drawer
-      isOpen={isOpen}
-      name={name}
-      payload={payload}
-    >
+    <Drawer isOpen={isOpen} name={name} payload={payload}>
       <DrawerSuspense>
         <BrandingTemplatesContent />
       </DrawerSuspense>

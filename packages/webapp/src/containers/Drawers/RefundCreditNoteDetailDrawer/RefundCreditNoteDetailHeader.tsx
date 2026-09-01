@@ -1,8 +1,8 @@
 // @ts-nocheck
+import { defaultTo } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { defaultTo } from 'lodash';
-
+import { useRefundCreditNoteDrawerContext } from './RefundCreditNoteDrawerProvider';
 import {
   CommercialDocHeader,
   FormatDate,
@@ -10,9 +10,7 @@ import {
   DetailItem,
 } from '@/components';
 
-import { useRefundCreditNoteDrawerContext } from './RefundCreditNoteDrawerProvider';
-
-export default function RefundCreditNoteDetailHeader() {
+export function RefundCreditNoteDetailHeader() {
   const { refundCreditTransaction } = useRefundCreditNoteDrawerContext();
 
   return (

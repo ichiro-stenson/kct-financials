@@ -1,23 +1,28 @@
-// @ts-nocheck
-import React from 'react';
-
+import { lazy } from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const VendorOpeningBalanceDialogContent = React.lazy(
-  () => import('./VendorOpeningBalanceDialogContent'),
+const VendorOpeningBalanceDialogContent = lazy(() =>
+  import('./VendorOpeningBalanceDialogContent').then((m) => ({
+    default: m.VendorOpeningBalanceDialogContent,
+  })),
 );
+
+interface VendorOpeningBalanceDialogProps extends DialogBaseProps {
+  dialogName: string;
+}
 
 /**
  * Vendor Opening balance dialog.
- * @returns
  */
 function VendorOpeningBalanceDialog({
   dialogName,
-  payload: { vendorId },
+  payload,
   isOpen,
-}) {
+}: VendorOpeningBalanceDialogProps) {
+  const vendorId = (payload.vendorId as number | undefined) ?? undefined;
   return (
     <Dialog
       name={dialogName}
@@ -36,4 +41,4 @@ function VendorOpeningBalanceDialog({
     </Dialog>
   );
 }
-export default compose(withDialogRedux())(VendorOpeningBalanceDialog);
+export const index = compose(withDialogRedux())(VendorOpeningBalanceDialog);

@@ -1,11 +1,13 @@
 // @ts-nocheck
-import React from 'react';
 import * as R from 'ramda';
+import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 
-const ReceiptCustomizeDrawerBody = React.lazy(
-  () => import('./ReceiptCustomizeDrawerBody'),
+const ReceiptCustomizeDrawerBody = React.lazy(() =>
+  import('./ReceiptCustomizeDrawerBody').then((m) => ({
+    default: m.ReceiptCustomizeDrawerBody,
+  })),
 );
 
 /**

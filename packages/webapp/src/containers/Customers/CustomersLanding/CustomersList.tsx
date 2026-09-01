@@ -1,23 +1,29 @@
-// @ts-nocheck
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import '@/style/pages/Customers/List.scss';
 
-import { DashboardPageContent } from '@/components';
-
-import CustomersActionsBar from './CustomersActionsBar';
-import CustomersTable from './CustomersTable';
+import { CustomersActionsBar } from './CustomersActionsBar';
+import { CustomersListDialogs } from './CustomersListDialogs';
 import { CustomersListProvider } from './CustomersListProvider';
-
+import { CustomersTable } from './CustomersTable';
 import { withCustomers } from './withCustomers';
+import type { WithCustomersProps } from './withCustomers';
 import { withCustomersActions } from './withCustomersActions';
-
+import type { WithCustomersActionsProps } from './withCustomersActions';
+import { DashboardPageContent } from '@/components';
 import { compose } from '@/utils';
+
+interface CustomersListInnerProps
+  extends Pick<
+      WithCustomersProps,
+      'customersTableState' | 'customersTableStateChanged'
+    >,
+    WithCustomersActionsProps {}
 
 /**
  * Customers list.
  */
-function CustomersList({
+function CustomersListInner({
   // #withCustomers
   customersTableState,
   customersTableStateChanged,
@@ -25,7 +31,7 @@ function CustomersList({
   // #withCustomersActions
   resetCustomersTableState,
   resetCustomersSelectedRows,
-}) {
+}: CustomersListInnerProps) {
   // Resets the accounts table state once the page unmount.
   useEffect(
     () => () => {
@@ -41,6 +47,7 @@ function CustomersList({
       tableStateChanged={customersTableStateChanged}
     >
       <CustomersActionsBar />
+      <CustomersListDialogs />
 
       <DashboardPageContent>
         <CustomersTable />
@@ -49,10 +56,10 @@ function CustomersList({
   );
 }
 
-export default compose(
+export const CustomersList = compose(
   withCustomers(({ customersTableState, customersTableStateChanged }) => ({
     customersTableState,
     customersTableStateChanged,
   })),
   withCustomersActions,
-)(CustomersList);
+)(CustomersListInner);

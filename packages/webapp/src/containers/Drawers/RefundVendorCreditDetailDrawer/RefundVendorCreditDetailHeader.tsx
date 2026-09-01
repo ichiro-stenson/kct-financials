@@ -1,8 +1,8 @@
 // @ts-nocheck
+import { defaultTo } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { defaultTo } from 'lodash';
-
+import { useRefundVendorCreditNoteDrawerContext } from './RefundVendorCreditDrawerProvider';
 import {
   CommercialDocHeader,
   FormatDate,
@@ -10,9 +10,7 @@ import {
   DetailItem,
 } from '@/components';
 
-import { useRefundVendorCreditNoteDrawerContext } from './RefundVendorCreditDrawerProvider';
-
-export default function RefundVendorCreditDetailHeader() {
+export function RefundVendorCreditDetailHeader() {
   const { refundVendorTransaction } = useRefundVendorCreditNoteDrawerContext();
 
   return (
@@ -24,7 +22,9 @@ export default function RefundVendorCreditDetailHeader() {
             <FormatDate value={refundVendorTransaction.formatted_date} />
           }
         />
-        <DetailItem label={intl.get('refund_vendor_credit.drawer.label.amount')}>
+        <DetailItem
+          label={intl.get('refund_vendor_credit.drawer.label.amount')}
+        >
           <strong>{refundVendorTransaction.formtted_amount}</strong>
         </DetailItem>
         <DetailItem
@@ -36,10 +36,14 @@ export default function RefundVendorCreditDetailHeader() {
           label={intl.get('refund_vendor_credit.drawer.label.deposit_account')}
           children={refundVendorTransaction.deposit_account.name}
         />
-        <DetailItem label={intl.get('refund_vendor_credit.drawer.label.reference_no')}>
+        <DetailItem
+          label={intl.get('refund_vendor_credit.drawer.label.reference_no')}
+        >
           {defaultTo(refundVendorTransaction.reference_no, '—')}
         </DetailItem>
-        <DetailItem label={intl.get('refund_vendor_credit.drawer.label.description')}>
+        <DetailItem
+          label={intl.get('refund_vendor_credit.drawer.label.description')}
+        >
           {defaultTo(refundVendorTransaction.description, '—')}
         </DetailItem>
       </DetailsMenu>

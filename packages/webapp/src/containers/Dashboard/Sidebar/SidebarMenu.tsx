@@ -1,10 +1,9 @@
 // @ts-nocheck
-import React from 'react';
 import { Intent, Menu } from '@blueprintjs/core';
-
+import React from 'react';
+import { useIsSidebarMenuItemActive } from './hooks';
 import { MenuItem, MenuItemLabel } from '@/components';
 import { ISidebarMenuItemType } from '@/containers/Dashboard/Sidebar/interfaces';
-import { useIsSidebarMenuItemActive } from './hooks';
 
 /**
  * Sidebar menu item.
@@ -42,9 +41,9 @@ function SidebarMenuItemComposer({ item, index }) {
   return SidebarMenuItem.ItemTypes.indexOf(item.type) !== -1 ? (
     <SidebarMenuItem item={item} index={index} />
   ) : // Group item type.
-    item.type === ISidebarMenuItemType.Group ? (
-      <MenuItemLabel text={item.text} />
-    ) : null;
+  item.type === ISidebarMenuItemType.Group ? (
+    <MenuItemLabel text={item.text} />
+  ) : null;
 }
 
 /**

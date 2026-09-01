@@ -1,14 +1,14 @@
 // @ts-nocheck
-import * as R from 'ramda';
 import { Button, Classes, Intent } from '@blueprintjs/core';
+import * as R from 'ramda';
+import { BrandingTemplateActionsBar } from './BrandingTemplatesActionsBar';
 import { BrandingTemplatesBoot } from './BrandingTemplatesBoot';
+import { BrandingTemplatesTable } from './BrandingTemplatesTable';
 import { Box, Card, DrawerHeaderContent, Group } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
-import { BrandingTemplatesTable } from './BrandingTemplatesTable';
-import { BrandingTemplateActionsBar } from './BrandingTemplatesActionsBar';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-export default function BrandingTemplateContent() {
+export function BrandingTemplateContent() {
   return (
     <Box>
       <DrawerHeaderContent
@@ -28,19 +28,19 @@ export default function BrandingTemplateContent() {
   );
 }
 
-const BrandingTemplateHeader = R.compose(withDrawerActions)(
-  ({ openDrawer }) => {
-    const handleCreateBtnClick = () => {
-      openDrawer(DRAWERS.INVOICE_CUSTOMIZE);
-    };
-    return (
-      <Group>
-        <Button intent={Intent.PRIMARY} onClick={handleCreateBtnClick}>
-          Create Invoice Branding
-        </Button>
-      </Group>
-    );
-  },
-);
+const BrandingTemplateHeader = R.compose(withDrawerActions)(({
+  openDrawer,
+}) => {
+  const handleCreateBtnClick = () => {
+    openDrawer(DRAWERS.INVOICE_CUSTOMIZE);
+  };
+  return (
+    <Group>
+      <Button intent={Intent.PRIMARY} onClick={handleCreateBtnClick}>
+        Create Invoice Branding
+      </Button>
+    </Group>
+  );
+});
 
 BrandingTemplateHeader.displayName = 'BrandingTemplateHeader';

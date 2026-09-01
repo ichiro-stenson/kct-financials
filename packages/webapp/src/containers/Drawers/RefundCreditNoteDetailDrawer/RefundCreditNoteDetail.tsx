@@ -1,18 +1,17 @@
 // @ts-nocheck
+import { Tab } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Tab } from '@blueprintjs/core';
-
+import { RefundCreditNoteDetailActionsBar } from './RefundCreditNoteDetailActionsBar';
+import { RefundCreditNoteDetailTab } from './RefundCreditNoteDetailTab';
 import { DrawerMainTabs } from '@/components';
-import RefundCreditNoteDetailTab from './RefundCreditNoteDetailTab';
-import RefundCreditNoteDetailActionsBar from './RefundCreditNoteDetailActionsBar';
 
 /**
  * Refund credit note detail.
  * @returns {React.JSX}
  */
-export default function RefundCreditNoteDetail() {
+export function RefundCreditNoteDetail() {
   return (
     <RefundCreditNoteDetailRoot>
       <RefundCreditNoteDetailActionsBar />

@@ -1,18 +1,16 @@
 // @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
 import { Intent, Alert } from '@blueprintjs/core';
+import * as R from 'ramda';
+import React from 'react';
 import { AppToaster, FormattedMessage as T } from '@/components';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useCancelMainSubscription } from '@/hooks/query/subscription';
 
 /**
  * Cancel Unlocking partial transactions alerts.
  */
-function CancelMainSubscriptionAlert({
+function CancelMainSubscriptionAlertInner({
   name,
 
   // #withAlertStoreConnect
@@ -41,13 +39,7 @@ function CancelMainSubscriptionAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {},
-      )
+      .catch(({ data: { errors } }) => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -75,7 +67,7 @@ function CancelMainSubscriptionAlert({
   );
 }
 
-export default R.compose(
+export const CancelMainSubscriptionAlert = R.compose(
   withAlertStoreConnect(),
   withAlertActions,
-)(CancelMainSubscriptionAlert);
+)(CancelMainSubscriptionAlertInner);

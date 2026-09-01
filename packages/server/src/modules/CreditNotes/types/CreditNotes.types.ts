@@ -95,7 +95,7 @@ export type ICreditNoteGLCommonEntry = Pick<
 >;
 
 export interface GetCreditNotesResponse {
-  creditNotes: CreditNote[];
+  data: CreditNote[];
   pagination: IPaginationMeta;
   filterMeta: IFilterMeta;
 }

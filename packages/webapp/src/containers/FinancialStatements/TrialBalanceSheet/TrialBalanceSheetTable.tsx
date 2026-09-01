@@ -1,24 +1,28 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
+import { getReportRowTestId } from '../reportTestIds';
+import { useTrialBalanceSheetTableColumns } from './hooks';
+import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
+import { ReportDataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
 import { tableRowTypesToClassnames } from '@/utils';
-import { ReportDataTable, FinancialSheet } from '@/components';
 
-import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
-import { useTrialBalanceSheetTableColumns } from './hooks';
+interface TrialBalanceSheetTableProps {
+  companyName: string;
+}
 
 /**
  * Trial Balance sheet data table.
  */
-export default function TrialBalanceSheetTable({ companyName }) {
+export function TrialBalanceSheetTable({
+  companyName,
+}: TrialBalanceSheetTableProps) {
   // Trial balance sheet context.
-  const {
-    trialBalanceSheet: { table, query, meta },
-    isLoading,
-  } = useTrialBalanceSheetContext();
+  const { trialBalanceSheet } = useTrialBalanceSheetContext();
+
+  const table = (trialBalanceSheet as any)?.table;
+  const meta = (trialBalanceSheet as any)?.meta;
 
   // Trial balance sheet table columns.
   const columns = useTrialBalanceSheetTableColumns();
@@ -27,19 +31,18 @@ export default function TrialBalanceSheetTable({ companyName }) {
     <FinancialSheet
       companyName={companyName}
       sheetType={intl.get('trial_balance_sheet')}
-      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
-      name="trial-balance"
-      loading={isLoading}
+      dateText={meta?.formattedDateRange ?? meta?.formattedAsDate}
       basis={'cash'}
     >
       <TrialBalanceDataTable
         columns={columns}
-        data={table.rows}
+        data={table?.rows}
         expandable={true}
         expandToggleColumn={1}
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('trial-balance')}
         styleName={TableStyle.Constrant}
       />
     </FinancialSheet>

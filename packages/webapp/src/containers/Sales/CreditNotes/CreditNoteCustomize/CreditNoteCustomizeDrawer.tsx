@@ -1,11 +1,13 @@
 // @ts-nocheck
-import React from 'react';
 import * as R from 'ramda';
+import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 
-const CreditNoteCustomizeDrawerBody = React.lazy(
-  () => import('./CreditNoteCustomizeDrawerBody'),
+const CreditNoteCustomizeDrawerBody = React.lazy(() =>
+  import('./CreditNoteCustomizeDrawerBody').then((m) => ({
+    default: m.CreditNoteCustomizeDrawerBody,
+  })),
 );
 
 /**

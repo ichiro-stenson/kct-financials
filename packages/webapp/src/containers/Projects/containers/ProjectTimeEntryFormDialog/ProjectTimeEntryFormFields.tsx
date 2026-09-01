@@ -1,10 +1,16 @@
 // @ts-nocheck
+import { Classes, Intent, Position } from '@blueprintjs/core';
+import classNames from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Classes, Intent, Position } from '@blueprintjs/core';
-import { CLASSES } from '@/constants/classes';
-import classNames from 'classnames';
+import {
+  ProjectsSelect,
+  ProjectTaskSelect,
+  ProjectSelectButton,
+} from '../../components';
+import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
+import { useSetProjectToForm } from './utils';
 import {
   If,
   FFormGroup,
@@ -12,29 +18,23 @@ import {
   FDateInput,
   FTextArea,
   FieldRequiredHint,
-  FormattedMessage as T,
   Stack,
 } from '@/components';
-import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
-import {
-  ProjectsSelect,
-  ProjectTaskSelect,
-  ProjectSelectButton,
-} from '../../components';
-import { momentFormatter } from '@/utils';
-import { useSetProjectToForm } from './utils';
+import { CLASSES } from '@/constants/classes';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Project time entry form fields.
  * @returns
  */
-function ProjectTimeEntryFormFields() {
+export function ProjectTimeEntryFormFields() {
   // time entry form dialog context.
   const { projectTasks, projects, projectId } =
     useProjectTimeEntryFormContext();
 
   // Sets the project id.
   useSetProjectToForm();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -46,9 +46,8 @@ function ProjectTimeEntryFormFields() {
           className={classNames(CLASSES.FILL, 'form-group--date')}
         >
           <FDateInput
-            {...momentFormatter('YYYY/MM/DD')}
+            {...dateInputFormatter}
             name="date"
-            formatDate={(date) => date.toLocaleString()}
             popoverProps={{
               position: Position.BOTTOM,
               minimal: true,
@@ -59,7 +58,7 @@ function ProjectTimeEntryFormFields() {
         {/*------------ Project -----------*/}
         <FFormGroup
           name={'project_id'}
-          label={<T id={'project_time_entry.dialog.project'} />}
+          label={intl.get('project_time_entry.dialog.project')}
           labelInfo={<FieldRequiredHint />}
           className={classNames('form-group--select-list', Classes.FILL)}
         >
@@ -73,7 +72,7 @@ function ProjectTimeEntryFormFields() {
         {/*------------ Task -----------*/}
         <FFormGroup
           name={'task_id'}
-          label={<T id={'project_time_entry.dialog.task'} />}
+          label={intl.get('project_time_entry.dialog.task')}
           labelInfo={<FieldRequiredHint />}
           className={classNames('form-group--select-list', Classes.FILL)}
         >
@@ -109,9 +108,6 @@ function ProjectTimeEntryFormFields() {
     </div>
   );
 }
-
-export default ProjectTimeEntryFormFields;
-
 const DurationInputGroup = styled(FInputGroup)`
   .bp4-input {
     width: 150px;

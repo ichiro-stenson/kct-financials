@@ -1,30 +1,25 @@
 // @ts-nocheck
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-
-import { compose } from '@/utils';
+import { useReceiptsTableColumns, ActionsMenu } from './components';
+import { ReceiptsEmptyStatus } from './ReceiptsEmptyStatus';
+import { useReceiptsListContext } from './ReceiptsListProvider';
+import { withReceipts } from './withReceipts';
+import { withReceiptsActions } from './withReceiptsActions';
 import {
   DataTable,
   DashboardContentTable,
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
-import { TABLES } from '@/constants/tables';
-
-import ReceiptsEmptyStatus from './ReceiptsEmptyStatus';
-
-import { withReceipts } from './withReceipts';
-import { withReceiptsActions } from './withReceiptsActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-
-import { useReceiptsListContext } from './ReceiptsListProvider';
-import { useReceiptsTableColumns, ActionsMenu } from './components';
-import { useMemorizedColumnsWidths } from '@/hooks';
-import { DRAWERS } from '@/constants/drawers';
 import { DialogsName } from '@/constants/dialogs';
+import { DRAWERS } from '@/constants/drawers';
+import { TABLES } from '@/constants/tables';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useMemorizedColumnsWidths } from '@/hooks';
+import { compose } from '@/utils';
 
 /**
  * Sale receipts datatable.
@@ -36,6 +31,7 @@ function ReceiptsDataTable({
 
   // #withReceipts
   receiptTableState,
+  receiptSelectedRows,
 
   // #withAlertActions
   openAlert,
@@ -45,9 +41,6 @@ function ReceiptsDataTable({
 
   // #withDialogAction
   openDialog,
-
-  // #withSettings
-  receiptsTableSize,
 }) {
   const history = useHistory();
 
@@ -58,7 +51,9 @@ function ReceiptsDataTable({
     isReceiptsFetching,
     isReceiptsLoading,
     isEmptyStatus,
+    receiptSettings,
   } = useReceiptsListContext();
+  const receiptsTableSize = receiptSettings?.tableSize;
 
   // Receipts table columns.
   const columns = useReceiptsTableColumns();
@@ -113,10 +108,13 @@ function ReceiptsDataTable({
     openDrawer(DRAWERS.RECEIPT_DETAILS, { receiptId: cell.row.original.id });
   };
   // Handle selected rows change.
-  const handleSelectedRowsChange = (selectedRows) => {
-    const selectedIds = selectedRows?.map((row) => row.original.id) || [];
-    setReceiptsSelectedRows(selectedIds);
-  };
+  const handleSelectedRowsChange = useCallback(
+    (selectedRows) => {
+      const selectedIds = selectedRows?.map((row) => row.original.id) || [];
+      setReceiptsSelectedRows(selectedIds);
+    },
+    [setReceiptsSelectedRows],
+  );
 
   if (isEmptyStatus) {
     return <ReceiptsEmptyStatus />;
@@ -126,7 +124,7 @@ function ReceiptsDataTable({
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={receipts}
+        data={receipts ?? []}
         loading={isReceiptsLoading}
         headerLoading={isReceiptsLoading}
         progressBarLoading={isReceiptsFetching}
@@ -136,8 +134,8 @@ function ReceiptsDataTable({
         noInitialFetch={true}
         sticky={true}
         pagination={true}
-        initialPageSize={receiptTableState.pageSize}
-        pagesCount={pagination.pagesCount}
+        initialPageSize={receiptTableState?.pageSize ?? 10}
+        rowsCount={pagination?.total ?? 0}
         manualPagination={true}
         autoResetSortBy={false}
         autoResetPage={false}
@@ -149,6 +147,8 @@ function ReceiptsDataTable({
         onColumnResizing={handleColumnResizing}
         size={receiptsTableSize}
         onSelectedRowsChange={handleSelectedRowsChange}
+        selectedRowsIds={receiptSelectedRows}
+        autoResetSelectedRows={false}
         payload={{
           onEdit: handleEditReceipt,
           onDelete: handleDeleteReceipt,
@@ -162,13 +162,13 @@ function ReceiptsDataTable({
   );
 }
 
-export default compose(
+export const ReceiptsTable = compose(
   withAlertActions,
   withReceiptsActions,
   withDrawerActions,
   withDialogActions,
-  withReceipts(({ receiptTableState }) => ({ receiptTableState })),
-  withSettings(({ receiptSettings }) => ({
-    receiptsTableSize: receiptSettings?.tableSize,
+  withReceipts(({ receiptTableState, receiptSelectedRows }) => ({
+    receiptTableState,
+    receiptSelectedRows,
   })),
 )(ReceiptsDataTable);

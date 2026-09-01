@@ -1,14 +1,12 @@
-// @ts-nocheck
 import React from 'react';
-import { Card } from '@/components';
-
 import { useCreditNoteDetailDrawerContext } from '../CreditNoteDetailDrawerProvider';
-import { useTransactionsByReference } from '@/hooks/query';
 import { useJournalEntriesTransactionsColumns } from './components';
-
-import JournalEntriesTable, {
+import { Card } from '@/components';
+import {
   AmountDisplayedBaseCurrencyMessage,
+  JournalEntriesTable,
 } from '@/containers/JournalEntriesTable/JournalEntriesTable';
+import { useTransactionsByReference } from '@/hooks/query';
 
 /**
  * Journal entries table.
@@ -20,16 +18,14 @@ export function CreditNoteGLEntriesTable() {
   const columns = useJournalEntriesTransactionsColumns();
 
   // Handle fetch transaction by reference.
-  const {
-    data: { transactions },
-    isLoading: isTransactionLoading,
-  } = useTransactionsByReference(
+  const { data, isLoading: isTransactionLoading } = useTransactionsByReference(
     {
-      reference_id: creditNoteId,
-      reference_type: 'creditNote',
+      referenceId: creditNoteId ?? 0,
+      referenceType: 'CreditNote',
     },
     { enabled: !!creditNoteId },
   );
+  const transactions = data?.transactions ?? [];
 
   return (
     <Card>
@@ -37,7 +33,7 @@ export function CreditNoteGLEntriesTable() {
 
       <JournalEntriesTable
         columns={columns}
-        data={transactions}
+        transactions={transactions}
         loading={isTransactionLoading}
       />
     </Card>

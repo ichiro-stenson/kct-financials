@@ -50,12 +50,12 @@ export class GetBillPaymentsService {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transformes the bill payments models to POJO.
-    const billPayments = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new BillPaymentTransformer(),
     );
     return {
-      billPayments,
+      data,
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };

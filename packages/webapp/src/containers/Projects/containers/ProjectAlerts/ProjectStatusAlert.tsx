@@ -1,21 +1,19 @@
 // @ts-nocheck
+import { Intent, Alert } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
 import { useProjectStatus } from '../../hooks';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
+import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { compose } from '@/utils';
 
 /**
  * Project status alert.
  * @returns
  */
-function ProjectStatusAlert({
+function ProjectStatusAlertInner({
   name,
   isOpen,
   payload: { projectId, status },
@@ -43,13 +41,7 @@ function ProjectStatusAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {},
-      )
+      .catch(({ data: { errors } }) => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -70,7 +62,7 @@ function ProjectStatusAlert({
   );
 }
 
-export default compose(
+export const ProjectStatusAlert = compose(
   withAlertStoreConnect(),
   withAlertActions,
-)(ProjectStatusAlert);
+)(ProjectStatusAlertInner);

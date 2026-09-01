@@ -4,7 +4,9 @@ import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const RuleFormContent = React.lazy(() => import('./RuleFormContent'));
+const RuleFormContent = React.lazy(() =>
+  import('./RuleFormContent').then((m) => ({ default: m.RuleFormContent })),
+);
 
 /**
  * Payment mail dialog.
@@ -23,7 +25,7 @@ function RuleFormDialogRoot({
       autoFocus={true}
       style={{ width: 600 }}
     >
-      <DialogSuspense>
+      <DialogSuspense testId={'rule-form-dialog'}>
         <RuleFormContent dialogName={dialogName} bankRuleId={bankRuleId} />
       </DialogSuspense>
     </Dialog>

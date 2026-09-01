@@ -1,8 +1,4 @@
 // @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import styled from 'styled-components';
-
 import {
   Menu,
   MenuDivider,
@@ -11,6 +7,9 @@ import {
   Intent,
   ProgressBar,
 } from '@blueprintjs/core';
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
 import {
   Icon,
   FormatDate,
@@ -28,7 +27,9 @@ import { safeCallback, firstLettersArgs, calculateStatus } from '@/utils';
 export function ProjectStatus({ row }) {
   return (
     <ProjectStatusRoot>
-      <ProjectStatusTaskAmount>{row.total_expenses_formatted}</ProjectStatusTaskAmount>
+      <ProjectStatusTaskAmount>
+        {row.total_expenses_formatted}
+      </ProjectStatusTaskAmount>
       <ProjectProgressBar
         animate={false}
         stripes={false}
@@ -43,9 +44,7 @@ export function ProjectStatus({ row }) {
  * status accessor.
  */
 export const StatusAccessor = (row) => {
-  return (
-    <ProjectStatus row={row} />
-  );
+  return <ProjectStatus row={row} />;
 };
 
 /**

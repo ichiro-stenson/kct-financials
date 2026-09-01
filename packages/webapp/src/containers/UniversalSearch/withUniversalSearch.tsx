@@ -1,11 +1,21 @@
-// @ts-nocheck
 import { connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
+import { ApplicationState } from '@/store/reducers';
 
-export const withUniversalSearch = (mapState) => {
-  const mapStateToProps = (state, props) => {
+export interface WithUniversalSearchProps {
+  globalSearchShow: boolean;
+  defaultUniversalResourceType: string;
+  searchSelectedResourceType: unknown;
+  searchSelectedResourceId: unknown;
+}
+
+export const withUniversalSearch = <Props,>(
+  mapState?: MapState<WithUniversalSearchProps, Props>,
+) => {
+  const mapStateToProps = (state: ApplicationState, props: Props) => {
     const { globalSearch } = state;
 
-    const mapped = {
+    const mapped: WithUniversalSearchProps = {
       globalSearchShow: globalSearch.isOpen,
       defaultUniversalResourceType: globalSearch.defaultResourceType,
 

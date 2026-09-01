@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -10,20 +8,35 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { DashboardActionsBar, Icon, FormattedMessage as T } from '@/components';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
-import { withSalesByItems } from './withSalesByItems';
-import { withSalesByItemsActions } from './withSalesByItemsActions';
-
-import { compose, saveInvoke } from '@/utils';
-import { useSalesByItemsContext } from './SalesByItemProvider';
+import React from 'react';
 import { SalesByItemsSheetExportMenu } from './components';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useSalesByItemsContext } from './SalesByItemProvider';
+import { withSalesByItems } from './withSalesByItems';
+import {
+  withSalesByItemsActions,
+  WithSalesByItemsActionsProps,
+} from './withSalesByItemsActions';
+import { DashboardActionsBar, Icon, FormattedMessage as T } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { DialogsName } from '@/constants/dialogs';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import { compose, saveInvoke } from '@/utils';
 
-function SalesByItemsActionsBar({
+interface SalesByItemsActionsBarOwnProps {
+  numberFormat: Record<string, unknown>;
+  onNumberFormatSubmit: (values: Record<string, unknown>) => void;
+}
+
+type SalesByItemsActionsBarProps = {
+  salesByItemsDrawerFilter: boolean;
+} & Pick<WithSalesByItemsActionsProps, 'toggleSalesByItemsFilterDrawer'> &
+  WithDialogActionsProps &
+  SalesByItemsActionsBarOwnProps;
+
+function SalesByItemsActionsBarInner({
   // #withSalesByItems
   salesByItemsDrawerFilter,
 
@@ -36,7 +49,7 @@ function SalesByItemsActionsBar({
   // #ownProps
   numberFormat,
   onNumberFormatSubmit,
-}) {
+}: SalesByItemsActionsBarProps) {
   const { refetchSheet, isLoading } = useSalesByItemsContext();
 
   // Handle filter toggle click.
@@ -49,7 +62,7 @@ function SalesByItemsActionsBar({
   };
 
   // Handle number format submit.
-  const handleNumberFormatSubmit = (values) => {
+  const handleNumberFormatSubmit = (values: Record<string, unknown>) => {
     saveInvoke(onNumberFormatSubmit, values);
   };
 
@@ -125,10 +138,10 @@ function SalesByItemsActionsBar({
   );
 }
 
-export default compose(
+export const SalesByItemsActionsBar = compose(
   withSalesByItems(({ salesByItemsDrawerFilter }) => ({
     salesByItemsDrawerFilter,
   })),
   withSalesByItemsActions,
   withDialogActions,
-)(SalesByItemsActionsBar);
+)(SalesByItemsActionsBarInner);

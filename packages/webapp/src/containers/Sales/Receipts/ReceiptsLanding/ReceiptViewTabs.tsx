@@ -1,18 +1,16 @@
 // @ts-nocheck
-import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-
-import { DashboardViewsTabs } from '@/components';
-import { withReceiptActions } from './withReceiptsActions';
-import { withReceipts } from './withReceipts';
-
-import { compose, transfromViewsToTabs } from '@/utils';
+import React from 'react';
 import { useReceiptsListContext } from './ReceiptsListProvider';
+import { withReceipts } from './withReceipts';
+import { withReceiptActions } from './withReceiptsActions';
+import { DashboardViewsTabs } from '@/components';
+import { compose, transfromViewsToTabs } from '@/utils';
 
 /**
  * Receipts views tabs.
  */
-function ReceiptViewTabs({
+function ReceiptViewTabsInner({
   // #withReceiptActions
   setReceiptsTableState,
 
@@ -45,9 +43,9 @@ function ReceiptViewTabs({
   );
 }
 
-export default compose(
+export const ReceiptViewTabs = compose(
   withReceiptActions,
   withReceipts(({ receiptTableState }) => ({
     receiptsCurrentView: receiptTableState.viewSlug,
   })),
-)(ReceiptViewTabs);
+)(ReceiptViewTabsInner);

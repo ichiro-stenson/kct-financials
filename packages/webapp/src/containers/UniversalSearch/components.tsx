@@ -1,9 +1,8 @@
 // @ts-nocheck
-import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
-
-import { highlightText } from '@/utils';
+import React from 'react';
 import { getUniversalSearchBind } from './utils';
+import { highlightText } from '@/utils';
 
 /**
  * Default univesal search item component.
@@ -37,9 +36,9 @@ function UniversalSearchItemDetail(item, { handleClick, modifiers, query }) {
  * @returns
  */
 export const DashboardUniversalSearchItem = (props, actions) => {
-    const itemRenderer = getUniversalSearchBind(props._type, 'itemRenderer');
+  const itemRenderer = getUniversalSearchBind(props._type, 'itemRenderer');
 
-    return typeof itemRenderer !== 'undefined'
-      ? itemRenderer(props, actions)
-      : UniversalSearchItemDetail(props, actions);
-  };
+  return typeof itemRenderer !== 'undefined'
+    ? itemRenderer(props, actions)
+    : UniversalSearchItemDetail(props, actions);
+};

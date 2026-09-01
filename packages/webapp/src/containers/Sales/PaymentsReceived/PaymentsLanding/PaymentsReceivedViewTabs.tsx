@@ -1,20 +1,18 @@
 // @ts-nocheck
+import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
+import { pick } from 'lodash';
 import React from 'react';
 import { useHistory } from 'react-router';
-import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { FormattedMessage as T, DashboardViewsTabs } from '@/components';
-import { pick } from 'lodash';
-
+import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
 import { withPaymentsReceived } from './withPaymentsReceived';
 import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
-import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
-
+import { FormattedMessage as T, DashboardViewsTabs } from '@/components';
 import { compose } from '@/utils';
 
 /**
  * Payment receive view tabs.
  */
-function PaymentsReceivedViewTabs({
+function PaymentsReceivedViewTabsInner({
   // #withPaymentsReceivedActions
   addPaymentReceivesTableQueries,
 
@@ -55,9 +53,9 @@ function PaymentsReceivedViewTabs({
   );
 }
 
-export default compose(
+export const PaymentsReceivedViewTabs = compose(
   withPaymentsReceivedActions,
   withPaymentsReceived(({ paymentReceivesTableState }) => ({
     paymentReceivesTableState,
   })),
-)(PaymentsReceivedViewTabs);
+)(PaymentsReceivedViewTabsInner);

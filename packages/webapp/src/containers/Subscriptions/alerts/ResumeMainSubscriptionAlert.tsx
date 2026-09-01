@@ -1,17 +1,16 @@
 // @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
 import { Intent, Alert } from '@blueprintjs/core';
+import * as R from 'ramda';
+import React from 'react';
 import { AppToaster, FormattedMessage as T } from '@/components';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useResumeMainSubscription } from '@/hooks/query/subscription';
 
 /**
  * Resume Unlocking partial transactions alerts.
  */
-function ResumeMainSubscriptionAlert({
+function ResumeMainSubscriptionAlertInner({
   name,
 
   // #withAlertStoreConnect
@@ -40,13 +39,7 @@ function ResumeMainSubscriptionAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {},
-      )
+      .catch(({ data: { errors } }) => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -73,7 +66,7 @@ function ResumeMainSubscriptionAlert({
   );
 }
 
-export default R.compose(
+export const ResumeMainSubscriptionAlert = R.compose(
   withAlertStoreConnect(),
   withAlertActions,
-)(ResumeMainSubscriptionAlert);
+)(ResumeMainSubscriptionAlertInner);

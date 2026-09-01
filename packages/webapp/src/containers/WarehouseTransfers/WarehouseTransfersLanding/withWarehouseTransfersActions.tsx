@@ -1,14 +1,23 @@
-// @ts-nocheck
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import type { TableQuery } from '@/store/store.types';
 import {
   setWarehouseTransferTableState,
   resetWarehouseTransferTableState,
-} from '@/store/WarehouseTransfer/warehouseTransfer.actions';
+} from '@/store/warehouse-transfer/warehouse-transfer.actions';
 
-const mapDipatchToProps = (dispatch) => ({
-  setWarehouseTransferTableState: (queries) =>
+export interface WithWarehouseTransfersActionsProps {
+  setWarehouseTransferTableState: (queries: Partial<TableQuery>) => void;
+  resetWarehouseTransferTableState: () => void;
+}
+
+export const mapDipatchToProps = (
+  dispatch: Dispatch,
+): WithWarehouseTransfersActionsProps => ({
+  setWarehouseTransferTableState: (queries: Partial<TableQuery>) =>
     dispatch(setWarehouseTransferTableState(queries)),
-  resetWarehouseTransferTableState: () => dispatch(resetWarehouseTransferTableState()),
+  resetWarehouseTransferTableState: () =>
+    dispatch(resetWarehouseTransferTableState()),
 });
 
 export const withWarehouseTransfersActions = connect(null, mapDipatchToProps);

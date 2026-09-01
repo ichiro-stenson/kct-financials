@@ -23,10 +23,10 @@ function TransactionsLockingProvider({ ...props }) {
 
   // Locking type controlled from response.
   useWatchImmediate(() => {
-    if (transactionsLocking.locking_type) {
+    if (transactionsLocking?.locking_type) {
       setTransactionLockingType(transactionsLocking.locking_type);
     }
-  }, transactionsLocking.locking_type);
+  }, transactionsLocking?.locking_type);
 
   // Provider
   const provider = {

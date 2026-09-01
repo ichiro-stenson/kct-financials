@@ -1,4 +1,5 @@
 import app from './app';
+import auth from './auth';
 import systemDatabase from './system-database';
 import tenantDatabase from './tenant-database';
 import signup from './signup';
@@ -13,6 +14,7 @@ import signupConfirmation from './signup-confirmation';
 import signupRestrictions from './signup-restrictions';
 import jwt from './jwt';
 import mail from './mail';
+import sms from './sms';
 import loops from './loops';
 import bankfeed from './bankfeed';
 import throttle from './throttle';
@@ -23,6 +25,7 @@ import bullBoard from './bull-board';
 
 export const config = [
   app,
+  auth,
   systemDatabase,
   cloud,
   tenantDatabase,
@@ -38,6 +41,7 @@ export const config = [
   signupRestrictions,
   jwt,
   mail,
+  sms,
   loops,
   bankfeed,
   throttle,

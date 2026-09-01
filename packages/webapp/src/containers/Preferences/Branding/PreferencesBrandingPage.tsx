@@ -1,16 +1,23 @@
-// @ts-nocheck
 import * as R from 'ramda';
 import { useEffect } from 'react';
-import { Stack } from '@/components';
 import { PreferencesBrandingBoot } from './PreferencesBrandingBoot';
 import { PreferencesBrandingForm } from './PreferencesBrandingForm';
 import {
   PreferencesBrandingFormContent,
   PreferencesBrandingFormFooter,
 } from './PreferencesBrandingFormContent';
+import { Stack } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 
-function PreferencesBrandingPageRoot({ changePreferencesPageTitle }) {
+type PreferencesBrandingPageRootProps = Pick<
+  WithDashboardActionsProps,
+  'changePreferencesPageTitle'
+>;
+
+function PreferencesBrandingPageRoot({
+  changePreferencesPageTitle,
+}: PreferencesBrandingPageRootProps) {
   useEffect(() => {
     changePreferencesPageTitle('Branding');
   }, [changePreferencesPageTitle]);
@@ -29,4 +36,6 @@ function PreferencesBrandingPageRoot({ changePreferencesPageTitle }) {
   );
 }
 
-export default R.compose(withDashboardActions)(PreferencesBrandingPageRoot);
+export const PreferencesBrandingPage = R.compose(withDashboardActions)(
+  PreferencesBrandingPageRoot,
+);

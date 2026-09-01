@@ -1,7 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-
 import {
   Button,
   NavbarGroup,
@@ -9,13 +5,10 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { useBillDrawerContext } from './BillDrawerProvider';
-
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
+import { BillMenuItem } from './utils';
 import {
   Can,
   If,
@@ -23,17 +16,34 @@ import {
   DrawerActionsBar,
   FormattedMessage as T,
 } from '@/components';
+import { Features } from '@/constants';
 import {
   BillAction,
   PaymentMadeAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
-import { BillMenuItem } from './utils';
-
-import { safeCallback, compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+import { useFeatureCan } from '@/hooks/state';
+import { safeCallback, compose } from '@/utils';
 
-function BillDetailActionsBar({
+interface BillDetailActionsBarInnerProps
+  extends WithDialogActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps {}
+
+function BillDetailActionsBarInner({
   // #withDialogActions
   openDialog,
 
@@ -42,10 +52,14 @@ function BillDetailActionsBar({
 
   // #withDrawerActions
   closeDrawer,
-}) {
+}: BillDetailActionsBarInnerProps) {
   const history = useHistory();
 
   const { billId, bill } = useBillDrawerContext();
+
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isLandedCostEnabled = featureCan(Features.LandedCost);
 
   // Handle edit bill.
   const onEditBill = () => {
@@ -89,7 +103,7 @@ function BillDetailActionsBar({
           <NavbarDivider />
         </Can>
         <Can I={PaymentMadeAction.Create} a={AbilitySubject.PaymentMade}>
-          <If condition={bill.is_open && !bill.is_fully_paid}>
+          <If condition={!!bill?.isOpen && !bill?.isFullyPaid}>
             <Button
               className={Classes.MINIMAL}
               icon={<Icon icon="arrow-upward" iconSize={16} />}
@@ -111,6 +125,7 @@ function BillDetailActionsBar({
         <Can I={BillAction.Edit} a={AbilitySubject.Bill}>
           <NavbarDivider />
           <BillMenuItem
+            isLandedCostEnabled={isLandedCostEnabled}
             payload={{
               onConvert: handleConvertToVendorCredit,
               onAllocateLandedCost: handleAllocateCostClick,
@@ -122,8 +137,8 @@ function BillDetailActionsBar({
   );
 }
 
-export default compose(
+export const BillDetailActionsBar = compose(
   withDialogActions,
   withDrawerActions,
   withAlertActions,
-)(BillDetailActionsBar);
+)(BillDetailActionsBarInner);

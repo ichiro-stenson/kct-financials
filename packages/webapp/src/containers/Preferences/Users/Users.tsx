@@ -1,23 +1,20 @@
-// @ts-nocheck
+import { Tabs, Tab } from '@blueprintjs/core';
+import classNames from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 import styled from 'styled-components';
-import { Tabs, Tab } from '@blueprintjs/core';
 
 import '@/style/pages/Preferences/Users.scss';
-
 import { Card } from '@/components';
-import { CLASSES } from '@/constants/classes';
 import PreferencesSubContent from '@/components/Preferences/PreferencesSubContent';
+import { CLASSES } from '@/constants/classes';
+import {
+  withDialogActions,
+  type WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
 
-import { withUserPreferences } from '@/containers/Preferences/Users/withUserPreferences';
-
-/**
- * Preferences page - Users page.
- */
-function UsersPreferences({ openDialog }) {
-  const onChangeTabs = (currentTabId) => {};
+function UsersPreferences({ openDialog }: WithDialogActionsProps) {
+  const onChangeTabs = (currentTabId: string) => {};
 
   return (
     <div
@@ -46,7 +43,7 @@ function UsersPreferences({ openDialog }) {
   );
 }
 
-export default withUserPreferences(UsersPreferences);
+export const Users = withDialogActions(UsersPreferences);
 
 const UsersPereferencesCard = styled(Card)`
   padding: 0;

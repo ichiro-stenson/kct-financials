@@ -59,12 +59,12 @@ export class GetVendorsService {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transform the vendors.
-    const transformedVendors = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new VendorTransfromer(),
     );
     return {
-      vendors: transformedVendors,
+      data,
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };

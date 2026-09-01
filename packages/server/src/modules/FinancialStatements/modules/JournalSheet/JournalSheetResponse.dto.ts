@@ -1,9 +1,14 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
-  FinancialReportTotalDto,
+  FinancialTableColumnDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  JOURNAL_COLUMN_KEYS,
+  JournalColumnKey,
+} from '../../common/constants/tableColumnKeys';
+import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 
 export class JournalEntryDto {
   @ApiProperty({ description: 'Entry index', type: Number })
@@ -99,18 +104,24 @@ export class JournalSheetQueryResponseDto {
   @ApiProperty({ description: 'Account IDs to include', type: [Number] })
   accountsIds: number[];
 
-  @ApiProperty({ description: 'Number format settings', type: Object })
-  numberFormat: {
-    noCents: boolean;
-    divideOn1000: boolean;
-  };
+  @ApiProperty({
+    description: 'Number format settings',
+    type: NumberFormatQueryDto,
+  })
+  numberFormat: NumberFormatQueryDto;
 }
 
 export class JournalSheetResponseDto {
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: JournalSheetQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: JournalSheetQueryResponseDto,
+  })
   query: JournalSheetQueryResponseDto;
 
-  @ApiProperty({ description: 'Journal transactions', type: [JournalTransactionDto] })
+  @ApiProperty({
+    description: 'Journal transactions',
+    type: [JournalTransactionDto],
+  })
   data: JournalTransactionDto[];
 
   @ApiProperty({ description: 'Report metadata', type: JournalSheetMetaDto })
@@ -121,15 +132,35 @@ export class JournalSheetResponseDto {
 export {
   FinancialTableCellDto as JournalSheetTableCellDto,
   FinancialTableRowDto as JournalSheetTableRowDto,
-  FinancialTableColumnDto as JournalSheetTableColumnDto,
-  FinancialTableDataDto as JournalSheetTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
 
-export class JournalSheetTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: () => FinancialTableDataDto })
-  table: FinancialTableDataDto;
+export class JournalSheetTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(JOURNAL_COLUMN_KEYS),
+  })
+  key: JournalColumnKey;
+}
 
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: JournalSheetQueryResponseDto })
+export class JournalSheetTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [JournalSheetTableColumnDto],
+  })
+  columns: JournalSheetTableColumnDto[];
+}
+
+export class JournalSheetTableResponseDto {
+  @ApiProperty({
+    description: 'Table data structure',
+    type: () => JournalSheetTableDataDto,
+  })
+  table: JournalSheetTableDataDto;
+
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: JournalSheetQueryResponseDto,
+  })
   query: JournalSheetQueryResponseDto;
 
   @ApiProperty({ description: 'Report metadata', type: JournalSheetMetaDto })

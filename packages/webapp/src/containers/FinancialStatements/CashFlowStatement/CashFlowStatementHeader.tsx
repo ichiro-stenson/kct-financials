@@ -1,42 +1,49 @@
-// @ts-nocheck
-import React from 'react';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
-import moment from 'moment';
-import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
-
-import FinancialStatementHeader from '../FinancialStatementHeader';
-import CashFlowStatementGeneralPanel from './CashFlowStatementGeneralPanel';
-import CashFlowStatementDimensionsPanel from './CashFlowStatementDimensionsPanel';
-
-import { withCashFlowStatement } from './withCashFlowStatement';
-import { withCashFlowStatementActions } from './withCashFlowStatementActions';
-
+import moment from 'moment';
+import React from 'react';
+import intl from 'react-intl-universal';
+import * as Yup from 'yup';
+import { FinancialStatementHeader } from '../FinancialStatementHeader';
+import { CashFlowStatementDimensionsPanel } from './CashFlowStatementDimensionsPanel';
+import { CashFlowStatementHeaderGeneralPanel as CashFlowStatementGeneralPanel } from './CashFlowStatementGeneralPanel';
 import { getDefaultCashFlowSheetQuery } from './utils';
-import { compose, transformToForm } from '@/utils';
-import { useFeatureCan } from '@/hooks/state';
+import {
+  withCashFlowStatement,
+  WithCashFlowStatementProps,
+} from './withCashFlowStatement';
+import {
+  withCashFlowStatementActions,
+  WithCashFlowStatementActionsProps,
+} from './withCashFlowStatementActions';
+import type { FormikHelpers } from 'formik';
+import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
+import { compose, transformToForm } from '@/utils';
 
-/**
- * Cash flow statement header.
- */
-function CashFlowStatementHeader({
-  // #ownProps
+type CashFlowSheetFormValues = ReturnType<typeof getDefaultCashFlowSheetQuery>;
+
+interface CashFlowStatementHeaderOwnProps {
+  onSubmitFilter: (values: CashFlowSheetFormValues) => void;
+  pageFilter: CashFlowSheetFormValues;
+}
+
+type CashFlowStatementHeaderProps = CashFlowStatementHeaderOwnProps &
+  Pick<WithCashFlowStatementProps, 'cashFlowStatementDrawerFilter'> &
+  Pick<
+    WithCashFlowStatementActionsProps,
+    'toggleCashFlowStatementFilterDrawer'
+  >;
+
+function CashFlowStatementHeaderInner({
   onSubmitFilter,
   pageFilter,
-
-  // #withCashFlowStatement
-  isFilterDrawerOpen,
-
-  // #withCashStatementActions
+  cashFlowStatementDrawerFilter: isFilterDrawerOpen,
   toggleCashFlowStatementFilterDrawer,
-}) {
-  // Filter form default values.
+}: CashFlowStatementHeaderProps) {
   const defaultValues = getDefaultCashFlowSheetQuery();
 
-  // Initial form values.
   const initialValues = transformToForm(
     {
       ...pageFilter,
@@ -44,8 +51,8 @@ function CashFlowStatementHeader({
       toDate: moment(pageFilter.toDate).toDate(),
     },
     defaultValues,
-  );
-  // Validation schema.
+  ) as CashFlowSheetFormValues;
+
   const validationSchema = Yup.object().shape({
     dateRange: Yup.string().optional(),
     fromDate: Yup.date().required().label(intl.get('fromDate')),
@@ -56,20 +63,20 @@ function CashFlowStatementHeader({
     displayColumnsType: Yup.string(),
   });
 
-  // Handle form submit.
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = (
+    values: CashFlowSheetFormValues,
+    { setSubmitting }: FormikHelpers<CashFlowSheetFormValues>,
+  ) => {
     onSubmitFilter(values);
     toggleCashFlowStatementFilterDrawer(false);
     setSubmitting(false);
   };
 
-  // Handle drawer close action.
   const handleDrawerClose = () => {
     toggleCashFlowStatementFilterDrawer(false);
   };
 
   const { featureCan } = useFeatureCan();
-
   const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (
@@ -98,7 +105,7 @@ function CashFlowStatementHeader({
             )}
           </Tabs>
 
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>
@@ -112,9 +119,9 @@ function CashFlowStatementHeader({
   );
 }
 
-export default compose(
+export const CashFlowStatementHeader = compose(
   withCashFlowStatement(({ cashFlowStatementDrawerFilter }) => ({
-    isFilterDrawerOpen: cashFlowStatementDrawerFilter,
+    cashFlowStatementDrawerFilter,
   })),
   withCashFlowStatementActions,
-)(CashFlowStatementHeader);
+)(CashFlowStatementHeaderInner);

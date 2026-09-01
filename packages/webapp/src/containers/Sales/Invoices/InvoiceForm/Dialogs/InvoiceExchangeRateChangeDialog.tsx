@@ -1,19 +1,24 @@
-// @ts-nocheck
-import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
+import { Button, Classes, Intent } from '@blueprintjs/core';
+import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
-import { Button, Classes, Intent } from '@blueprintjs/core';
+
+type InvoiceExchangeRateChangeDialogInnerProps = {
+  dialogName: string;
+  isOpen: boolean;
+  closeDialog: (name: string) => void;
+};
 
 /**
  * Invoice number dialog.
  */
-function InvoiceExchangeRateChangeDialog({
+function InvoiceExchangeRateChangeDialogInner({
   dialogName,
   isOpen,
   // #withDialogActions
   closeDialog,
-}) {
+}: InvoiceExchangeRateChangeDialogInnerProps) {
   const handleConfirm = () => {
     closeDialog(dialogName);
   };
@@ -50,7 +55,7 @@ function InvoiceExchangeRateChangeDialog({
   );
 }
 
-export default compose(
+export const InvoiceExchangeRateChangeDialog = compose(
   withDialogRedux(),
   withDialogActions,
-)(InvoiceExchangeRateChangeDialog);
+)(InvoiceExchangeRateChangeDialogInner);

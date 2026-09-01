@@ -1,16 +1,9 @@
-// @ts-nocheck
 import React from 'react';
+import { DialogsName } from './dialogs';
 import { FormattedMessage as T } from '@/components';
-import { Features } from '@/constants/features';
-import {
-  ISidebarMenuItemType,
-  ISidebarMenuOverlayIds,
-} from '@/containers/Dashboard/Sidebar/interfaces';
 import {
   ReportsAction,
   AbilitySubject,
-  ItemAction,
-  InventoryAdjustmentAction,
   SaleEstimateAction,
   SaleInvoiceAction,
   SaleReceiptAction,
@@ -24,11 +17,37 @@ import {
   ExpenseAction,
   CashflowAction,
   PreferencesAbility,
-  TaxRateAction,
 } from '@/constants/abilityOption';
-import { DialogsName } from './dialogs';
+import {
+  ISidebarMenuItemType,
+  ISidebarMenuOverlayIds,
+} from '@/containers/Dashboard/Sidebar/interfaces';
 
-export const SidebarMenu = [
+// KCT Financials — stripped sidebar.
+// Removed: Inventory/Items, Inventory reports, Tax Rates (intl tax complexity),
+//          Taxes > Sales Tax Liability Summary, Inventory reports group.
+// POS and Manufacturing are not present in BigCapital upstream.
+
+export interface SidebarMenuItemPermission {
+  subject: string;
+  ability: string;
+}
+
+export interface SidebarMenuItem {
+  text: React.ReactNode;
+  type: ISidebarMenuItemType;
+  disabled?: boolean;
+  href?: string;
+  matchExact?: boolean;
+  overlayId?: ISidebarMenuOverlayIds;
+  dialogName?: DialogsName;
+  divider?: boolean;
+  feature?: string;
+  permission?: SidebarMenuItemPermission;
+  children?: SidebarMenuItem[];
+}
+
+export const SidebarMenu: SidebarMenuItem[] = [
   // ---------------
   // # Homepage
   // ---------------
@@ -38,101 +57,6 @@ export const SidebarMenu = [
     disabled: false,
     href: '/',
     matchExact: true,
-  },
-  // ---------------
-  // # Sales & Inventory
-  // ---------------
-  {
-    text: <T id={'sidebar.sales_inventory'} />,
-    type: ISidebarMenuItemType.Group,
-    children: [
-      {
-        text: <T id={'sidebar.items'} />,
-        type: ISidebarMenuItemType.Overlay,
-        overlayId: ISidebarMenuOverlayIds.Items,
-        children: [
-          {
-            text: <T id={'sidebar.items'} />,
-            type: ISidebarMenuItemType.Group,
-            children: [
-              {
-                text: <T id={'sidebar.items'} />,
-                href: '/items',
-                type: ISidebarMenuItemType.Link,
-                permission: {
-                  subject: AbilitySubject.Item,
-                  ability: ItemAction.View,
-                },
-              },
-              {
-                text: <T id={'sidebar.inventory_adjustments'} />,
-                href: '/inventory-adjustments',
-                type: ISidebarMenuItemType.Link,
-                permission: {
-                  subject: AbilitySubject.InventoryAdjustment,
-                  ability: InventoryAdjustmentAction.View,
-                },
-              },
-              {
-                text: <T id={'categories_list'} />,
-                href: '/items/categories',
-                type: ISidebarMenuItemType.Link,
-                permission: {
-                  subject: AbilitySubject.Item,
-                  ability: ItemAction.View,
-                },
-              },
-              {
-                text: <T id={'sidebar.warehouse_transfer'} />,
-                href: '/warehouses-transfers',
-                type: ISidebarMenuItemType.Link,
-                feature: Features.Warehouses,
-              },
-            ],
-          },
-          {
-            text: <T id={'sidebar.new_tasks'} />,
-            type: ISidebarMenuItemType.Group,
-            children: [
-              {
-                text: <T id={'sidebar.new_inventory_item'} />,
-                href: '/items/new',
-                type: ISidebarMenuItemType.Link,
-                permission: {
-                  subject: AbilitySubject.Item,
-                  ability: ItemAction.Create,
-                },
-              },
-              {
-                text: <T id={'sidebar.new_service'} />,
-                href: '/items/new',
-                type: ISidebarMenuItemType.Link,
-                permission: {
-                  subject: AbilitySubject.Item,
-                  ability: ItemAction.Create,
-                },
-              },
-              {
-                text: <T id={'sidebar.new_item_category'} />,
-                href: '/items/categories/new',
-                type: ISidebarMenuItemType.Dialog,
-                dialogName: DialogsName.ItemCategoryForm,
-                permission: {
-                  subject: AbilitySubject.Item,
-                  ability: ItemAction.Create,
-                },
-              },
-              {
-                text: <T id={'sidebar.new_warehouse_transfer'} />,
-                href: '/warehouses-transfers/new',
-                type: ISidebarMenuItemType.Link,
-                feature: Features.Warehouses,
-              },
-            ],
-          },
-        ],
-      },
-    ],
   },
   // ---------------
   // # Sales
@@ -407,15 +331,8 @@ export const SidebarMenu = [
                 href: '/transactions-locking',
                 type: ISidebarMenuItemType.Link,
               },
-              {
-                text: 'Tax Rates',
-                href: '/tax-rates',
-                type: ISidebarMenuItemType.Link,
-                permission: {
-                  subject: AbilitySubject.TaxRate,
-                  ability: TaxRateAction.View,
-                },
-              },
+              // KCT: Tax Rates hidden (international tax complexity not needed for ISP ops)
+              // Re-enable by adding the Tax Rates entry here if needed later.
             ],
           },
           {
@@ -438,7 +355,7 @@ export const SidebarMenu = [
     ],
   },
   // ---------------
-  // # Cashflow
+  // # Banking / Cashflow
   // ---------------
   {
     text: <T id={'sidebar.banking'} />,
@@ -554,62 +471,6 @@ export const SidebarMenu = [
       },
     ],
   },
-  // ---------------------
-  // # Projects Management
-  // ---------------------
-  // {
-  //   text: <T id={'sidebar.projects'} />,
-  //   type: ISidebarMenuItemType.Overlay,
-  //   overlayId: ISidebarMenuOverlayIds.Projects,
-  //   children: [
-  //     {
-  //       text: <T id={'sidebar.projects'} />,
-  //       type: ISidebarMenuItemType.Group,
-  //       children: [
-  //         {
-  //           text: <T id={'sidebar.projects'} />,
-  //           href: '/projects',
-  //           type: ISidebarMenuItemType.Link,
-  //           permission: {
-  //             subject: AbilitySubject.Project,
-  //             ability: ProjectAction.View,
-  //           },
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       text: <T id={'sidebar.new_tasks'} />,
-  //       type: ISidebarMenuItemType.Group,
-  //       children: [
-  //         {
-  //           text: <T id={'sidebar.new_project'} />,
-  //           type: ISidebarMenuItemType.Dialog,
-  //           dialogName: 'project-form',
-  //           permission: {
-  //             subject: AbilitySubject.Project,
-  //             ability: ProjectAction.Create,
-  //           },
-  //         },
-  //         {
-  //           text: <T id={'sidebar.new_time_entry'} />,
-  //           type: ISidebarMenuItemType.Dialog,
-  //           dialogName: 'project-time-entry-form',
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       text: <T id={'sidebar.reports'} />,
-  //       type: ISidebarMenuItemType.Group,
-  //       children: [
-  //         {
-  //           text: <T id={'sidebar.project_profitability_summary'} />,
-  //           href: '/financial-reports/project-profitability-summary',
-  //           type: ISidebarMenuItemType.Link,
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
   // ---------------
   // # Reports
   // ---------------
@@ -701,24 +562,6 @@ export const SidebarMenu = [
         type: ISidebarMenuItemType.Group,
         children: [
           {
-            text: <T id={'sidebar.purchases_by_items'} />,
-            type: ISidebarMenuItemType.Link,
-            href: '/financial-reports/purchases-by-items',
-            permission: {
-              subject: AbilitySubject.Report,
-              ability: ReportsAction.READ_PURCHASES_BY_ITEMS,
-            },
-          },
-          {
-            text: <T id={'sidebar.sales_by_items'} />,
-            href: '/financial-reports/sales-by-items',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Report,
-              ability: ReportsAction.READ_SALES_BY_ITEMS,
-            },
-          },
-          {
             text: <T id={'sidebar.customers_transactions'} />,
             href: '/financial-reports/transactions-by-customers',
             type: ISidebarMenuItemType.Link,
@@ -756,45 +599,9 @@ export const SidebarMenu = [
           },
         ],
       },
-      {
-        text: 'Taxes',
-        type: ISidebarMenuItemType.Group,
-        children: [
-          {
-            text: 'Sales Tax Liability Summary',
-            href: '/financial-reports/sales-tax-liability-summary',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Report,
-              ability: ReportsAction.READ_SALES_TAX_LIABILITY_SUMMARY,
-            },
-          },
-        ],
-      },
-      {
-        text: <T id={'sidebar.inventory'} />,
-        type: ISidebarMenuItemType.Group,
-        children: [
-          {
-            text: <T id={'sidebar.inventory_item_details'} />,
-            href: '/financial-reports/inventory-item-details',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Report,
-              ability: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
-            },
-          },
-          {
-            text: <T id={'sidebar.inventory_valuation'} />,
-            href: '/financial-reports/inventory-valuation',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Report,
-              ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
-            },
-          },
-        ],
-      },
+      // KCT: Inventory reports group hidden (no physical inventory for ISPs).
+      // KCT: Taxes > Sales Tax Liability Summary hidden (international tax not needed).
+      // Re-enable by restoring these groups from git history if needed.
     ],
   },
   {

@@ -5,8 +5,10 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const ProjectDialogContent = React.lazy(
-  () => import('./ProjectFormDialogContent'),
+const ProjectDialogContent = React.lazy(() =>
+  import('./ProjectFormDialogContent').then((m) => ({
+    default: m.ProjectFormDialogContent,
+  })),
 );
 
 /**
@@ -40,7 +42,7 @@ function ProjectFormDialog({
   );
 }
 
-export default compose(withDialogRedux())(ProjectFormDialog);
+export const index = compose(withDialogRedux())(ProjectFormDialog);
 
 const ProjectFormDialogRoot = styled(Dialog)`
   .bp4-dialog-body {

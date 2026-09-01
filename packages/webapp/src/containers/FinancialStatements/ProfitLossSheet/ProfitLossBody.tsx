@@ -1,22 +1,12 @@
-// @ts-nocheck
 import React from 'react';
-
-import ProfitLossSheetTable from './ProfitLossSheetTable';
-import { FinancialSheetSkeleton } from '@/components';
 import { FinancialReportBody } from '../FinancialReportPage';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
+import { ProfitLossSheetTable } from './ProfitLossSheetTable';
+import { FinancialSheetSkeleton } from '@/components';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-
-import { compose } from '@/utils';
-
-/**
- * @returns {React.JSX}
- */
-function ProfitLossBodyJSX({
-  // #withPreferences
-  organizationName,
-}) {
+function ProfitLossBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
   const { isLoading } = useProfitLossSheetContext();
 
   return (
@@ -30,8 +20,4 @@ function ProfitLossBodyJSX({
   );
 }
 
-export const ProfitLossBody = compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(ProfitLossBodyJSX);
+export const ProfitLossBody = ProfitLossBodyJSX;

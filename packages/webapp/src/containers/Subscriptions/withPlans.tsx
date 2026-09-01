@@ -1,4 +1,5 @@
 import { MapStateToProps, connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import {
   getPlansPeriodSelector,
   getPlansSelector,
@@ -10,13 +11,9 @@ export interface WithPlansProps {
   plansPeriod: ReturnType<ReturnType<typeof getPlansPeriodSelector>>;
 }
 
-type MapState<Props> = (
-  mapped: WithPlansProps,
-  state: ApplicationState,
-  props: Props,
-) => any;
-
-export function withPlans<Props>(mapState?: MapState<Props>) {
+export function withPlans<Props = unknown>(
+  mapState?: MapState<WithPlansProps, Props>,
+) {
   const mapStateToProps: MapStateToProps<
     WithPlansProps,
     Props,
@@ -25,11 +22,13 @@ export function withPlans<Props>(mapState?: MapState<Props>) {
     const getPlans = getPlansSelector();
     const getPlansPeriod = getPlansPeriodSelector();
 
-    const mapped = {
+    const mapped: WithPlansProps = {
       plans: getPlans(state),
       plansPeriod: getPlansPeriod(state),
     };
-    return mapState ? mapState(mapped, state, props) : mapped;
+    return mapState
+      ? (mapState(mapped, state, props) as WithPlansProps)
+      : mapped;
   };
   return connect(mapStateToProps);
 }

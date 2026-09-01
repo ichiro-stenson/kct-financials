@@ -1,21 +1,19 @@
 // @ts-nocheck
+import { Intent, Alert } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
 import { useDeleteProjectTimeEntry } from '../../hooks';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
+import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { compose } from '@/utils';
 
 /**
  * Project timesheet delete alert.
  * @returns
  */
-function ProjectTimesheetDeleteAlert({
+function ProjectTimesheetDeleteAlertInner({
   name,
 
   // #withAlertStoreConnect
@@ -42,13 +40,7 @@ function ProjectTimesheetDeleteAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {},
-      )
+      .catch(({ data: { errors } }) => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -73,7 +65,7 @@ function ProjectTimesheetDeleteAlert({
     </Alert>
   );
 }
-export default compose(
+export const ProjectTimesheetDeleteAlert = compose(
   withAlertStoreConnect(),
   withAlertActions,
-)(ProjectTimesheetDeleteAlert);
+)(ProjectTimesheetDeleteAlertInner);

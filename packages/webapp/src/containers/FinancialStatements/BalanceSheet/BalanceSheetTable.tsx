@@ -1,46 +1,46 @@
-// @ts-nocheck
 import React from 'react';
-import styled from 'styled-components';
 import intl from 'react-intl-universal';
-
-import { TableStyle } from '@/constants';
-import { ReportDataTable, FinancialSheet } from '@/components';
+import styled from 'styled-components';
+import { getReportCellTestId, getReportRowTestId } from '../reportTestIds';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 import { useBalanceSheetColumns } from './components';
+import { ReportDataTable, FinancialSheet } from '@/components';
+import { TableStyle } from '@/constants';
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
-/**
- * Balance sheet table.
- */
-export default function BalanceSheetTable({
-  // #ownProps
-  companyName,
-}) {
+interface BalanceSheetTableProps {
+  companyName: string;
+}
+
+export function BalanceSheetTable({ companyName }: BalanceSheetTableProps) {
   // Balance sheet context.
-  const {
-    balanceSheet: { table, query, meta },
-  } = useBalanceSheetContext();
+  const { balanceSheet } = useBalanceSheetContext();
 
   // Retrieve the database columns.
   const tableColumns = useBalanceSheetColumns();
 
   // Retrieve default expanded rows of balance sheet.
   const expandedRows = React.useMemo(
-    () => defaultExpanderReducer(table.rows, 3),
-    [table],
+    () => defaultExpanderReducer(balanceSheet?.table?.rows ?? [], 3),
+    [balanceSheet?.table],
   );
 
   return (
     <FinancialSheet
       companyName={companyName}
       sheetType={intl.get('balance_sheet')}
-      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
-      basis={query.basis}
+      dateText={
+        balanceSheet?.meta?.formattedDateRange ??
+        balanceSheet?.meta?.formattedAsDate
+      }
+      basis={balanceSheet?.query.basis}
     >
       <BalanceSheetDataTable
         columns={tableColumns}
-        data={table.rows}
+        data={balanceSheet?.table?.rows ?? []}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('balance-sheet')}
+        cellTestId={getReportCellTestId('balance-sheet')}
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}

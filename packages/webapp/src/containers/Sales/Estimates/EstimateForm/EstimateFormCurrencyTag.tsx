@@ -1,13 +1,13 @@
 // @ts-nocheck
 import React from 'react';
-import { BaseCurrency, BaseCurrencyRoot } from '@/components';
 import { useEstimateFormContext } from './EstimateFormProvider';
+import { BaseCurrency, BaseCurrencyRoot } from '@/components';
 
 /**
  * Estimate form currency tag.
  * @returns
  */
-export default function EstimateFromCurrencyTag() {
+export function EstimateFromCurrencyTag() {
   const { isForeignCustomer, selectCustomer } = useEstimateFormContext();
 
   if (!isForeignCustomer) {

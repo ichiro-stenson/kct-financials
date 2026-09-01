@@ -1,11 +1,11 @@
-// @ts-nocheck
-import * as Yup from 'yup';
-import intl from 'react-intl-universal';
-import moment from 'moment';
-import { transformToForm } from '@/utils';
+import { TransactionsByCustomersTableQuery } from '@bigcapital/sdk-ts';
 import { castArray } from 'lodash';
+import moment from 'moment';
 import { useMemo } from 'react';
+import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 import { useAppQueryString } from '@/hooks';
+import { transformToForm } from '@/utils';
 
 export const getCustomersTransactionsQuerySchema = () => {
   return Yup.object().shape({
@@ -20,11 +20,14 @@ export const getCustomersTransactionsQuerySchema = () => {
 export const getCustomersTransactionsDefaultQuery = () => ({
   fromDate: moment().startOf('month').format('YYYY-MM-DD'),
   toDate: moment().format('YYYY-MM-DD'),
-  customersIds: [],
+  customersIds: [] as string[],
   filterByOption: 'with-transactions',
+  numberFormat: {},
 });
 
-const parseCustomersTransactionsQuery = (query) => {
+const parseCustomersTransactionsQuery = (
+  query: Record<string, any>,
+): TransactionsByCustomersTableQuery => {
   const defaultQuery = getCustomersTransactionsDefaultQuery();
 
   const transformedQuery = {
@@ -33,7 +36,7 @@ const parseCustomersTransactionsQuery = (query) => {
   };
   return {
     ...transformedQuery,
-    customersIds: castArray(transformedQuery.customersIds),
+    customersIds: castArray(transformedQuery.customersIds).map(Number),
   };
 };
 
@@ -44,5 +47,5 @@ export const useCustomersTransactionsQuery = () => {
     () => parseCustomersTransactionsQuery(locationQuery),
     [locationQuery],
   );
-  return [query, setLocationQuery];
+  return [query, setLocationQuery] as const;
 };

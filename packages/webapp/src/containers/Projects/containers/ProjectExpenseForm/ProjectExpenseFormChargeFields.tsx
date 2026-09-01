@@ -1,9 +1,9 @@
 // @ts-nocheck
+import { Classes, ControlGroup } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Classes, ControlGroup } from '@blueprintjs/core';
 import { FFormGroup, FInputGroup, Choose } from '@/components';
-import { useFormikContext } from 'formik';
 
 function PercentageFormField() {
   return (
@@ -39,7 +39,7 @@ function CustomPirceField() {
  * Expense form charge fields.
  * @returns
  */
-export default function ExpenseFormChargeFields() {
+export function ExpenseFormChargeFields() {
   const { values } = useFormikContext();
 
   return (

@@ -42,7 +42,4 @@ export interface IItemCategoriesFilter extends IDynamicListFilter {
   filterQuery?: (trx: Knex.Transaction) => void;
 }
 
-export interface GetItemCategoriesResponse {
-  data: ItemCategory[];
-  // filterMeta: IFilterMeta;
-}
+export type GetItemCategoriesResponse = ItemCategory[];

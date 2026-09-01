@@ -3,14 +3,14 @@ import React from 'react';
 
 import '@/style/components/Drawers/CashflowTransactionDrawer.scss';
 
-import { DrawerBody } from '@/components';
+import { CashflowTransactionDrawerDetails } from './CashflowTransactionDrawerDetails';
 import { CashflowTransactionDrawerProvider } from './CashflowTransactionDrawerProvider';
-import CashflowTransactionDrawerDetails from './CashflowTransactionDrawerDetails';
+import { DrawerBody } from '@/components';
 
 /**
  * Cash flow transction drawer content.
  */
-export default function CashflowTransactionDrawerContent({
+export function CashflowTransactionDrawerContent({
   // #ownProp
   referenceId,
 }) {

@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { useMemo } from 'react';
 import { Intent, Tag } from '@blueprintjs/core';
+import { useMemo } from 'react';
 
 const applyToTypeAccessor = (rule) => {
   return rule.apply_if_transaction_type === 'deposit' ? (
@@ -15,9 +15,7 @@ const applyToTypeAccessor = (rule) => {
 };
 
 const conditionsAccessor = (rule) => (
-  <span style={{ fontSize: 12 }}>
-    {rule.conditions_formatted}
-  </span>
+  <span style={{ fontSize: 12 }}>{rule.conditions_formatted}</span>
 );
 
 const applyToAccessor = (rule) => (

@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { Classes } from '@blueprintjs/core';
+import { Overlay } from '../../Invoices/InvoiceCustomize/Overlay';
 import {
   FFormGroup,
   FInputGroup,
@@ -9,7 +10,6 @@ import {
 } from '@/components';
 import { FColorInput } from '@/components/Forms/FColorInput';
 import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
-import { Overlay } from '../../Invoices/InvoiceCustomize/Overlay';
 import { BrandingCompanyLogoUploadField } from '@/containers/ElementCustomize/components/BrandingCompanyLogoUploadField';
 
 export function EstimateCustomizeGeneralField() {
@@ -40,7 +40,7 @@ export function EstimateCustomizeGeneralField() {
       <Overlay visible={!isTemplateNameFilled}>
         <Stack spacing={0}>
           <FFormGroup
-            name={'primaryColor'} 
+            name={'primaryColor'}
             label={'Primary Color'}
             style={{ justifyContent: 'space-between' }}
             inline

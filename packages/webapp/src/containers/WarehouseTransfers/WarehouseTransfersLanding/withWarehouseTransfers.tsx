@@ -1,18 +1,35 @@
-// @ts-nocheck
 import { connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
+import { ApplicationState } from '@/store/reducers';
 import {
   getWarehouseTransfersTableStateFactory,
   isWarehouseTransferTableStateChangedFactory,
-} from '@/store/WarehouseTransfer/warehouseTransfer.selector';
+} from '@/store/warehouse-transfer/warehouse-transfer.selector';
 
-export const withWarehouseTransfers = (mapState) => {
-  const getWarehouseTransferTableState = getWarehouseTransfersTableStateFactory();
-  const isWarehouseTransferTableChanged = isWarehouseTransferTableStateChangedFactory();
+export interface WithWarehouseTransfersProps {
+  warehouseTransferTableState: ReturnType<
+    ReturnType<typeof getWarehouseTransfersTableStateFactory>
+  >;
+  warehouseTransferTableStateChanged: ReturnType<
+    ReturnType<typeof isWarehouseTransferTableStateChangedFactory>
+  >;
+}
 
-  const mapStateToProps = (state, props) => {
-    const mapped = {
+export const withWarehouseTransfers = <
+  Props extends { location?: { search: string } },
+>(
+  mapState?: MapState<WithWarehouseTransfersProps, Props>,
+) => {
+  const getWarehouseTransferTableState =
+    getWarehouseTransfersTableStateFactory();
+  const isWarehouseTransferTableChanged =
+    isWarehouseTransferTableStateChangedFactory();
+
+  const mapStateToProps = (state: ApplicationState, props: Props) => {
+    const mapped: WithWarehouseTransfersProps = {
       warehouseTransferTableState: getWarehouseTransferTableState(state, props),
-      warehouseTransferTableStateChanged: isWarehouseTransferTableChanged(state, props),
+      warehouseTransferTableStateChanged:
+        isWarehouseTransferTableChanged(state),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

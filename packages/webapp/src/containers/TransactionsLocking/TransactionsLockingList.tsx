@@ -1,16 +1,15 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
-import { Paragraph, FormattedMessage as T } from '@/components';
-import { TransactionsLockingProvider } from './TransactionsLockingProvider';
-import { TransactionsLockingHeader } from './TransactionsLockingHeader';
 import { TransactionsLockingBody } from './TransactionsLockingBody';
+import { TransactionsLockingHeader } from './TransactionsLockingHeader';
+import { TransactionsLockingProvider } from './TransactionsLockingProvider';
+import { Paragraph, FormattedMessage as T } from '@/components';
 
 /**
  * Transactions locking list.
  */
-export default function TransactionsLockingListPage() {
+export function TransactionsLockingListPage() {
   return (
     <TransactionsLockingProvider>
       <TransactionsLocking>

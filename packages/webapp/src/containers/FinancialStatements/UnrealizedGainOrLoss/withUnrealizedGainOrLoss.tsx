@@ -1,10 +1,19 @@
-// @ts-nocheck
 import { connect } from 'react-redux';
-import { getUnrealizedGainOrLossFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
+import type { MapState } from '@/containers/hoc.types';
+import { getUnrealizedGainOrLossFilterDrawer } from '@/store/financial-statement/financial-statements.selectors';
+import { ApplicationState } from '@/store/reducers';
 
-export const withUnrealizedGainOrLoss = (mapState) => {
-  const mapStateToProps = (state, props) => {
-    const mapped = {
+export interface WithUnrealizedGainOrLossProps {
+  unrealizedGainOrLossDrawerFilter: ReturnType<
+    typeof getUnrealizedGainOrLossFilterDrawer
+  >;
+}
+
+export const withUnrealizedGainOrLoss = <Props,>(
+  mapState?: MapState<WithUnrealizedGainOrLossProps, Props>,
+) => {
+  const mapStateToProps = (state: ApplicationState, props: Props) => {
+    const mapped: WithUnrealizedGainOrLossProps = {
       unrealizedGainOrLossDrawerFilter:
         getUnrealizedGainOrLossFilterDrawer(state),
     };

@@ -1,51 +1,47 @@
 // @ts-nocheck
 
-import React from 'react';
-import { useFormikContext } from 'formik';
 import { Classes, Position } from '@blueprintjs/core';
+import classNames from 'classnames';
+import { useFormikContext } from 'formik';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { ProjectBillableTypeSuggestField } from '../../components';
+import { billableTypeOption } from '../common';
+import { ProjectRowDivider, BillableEntiresBox } from './components';
+import { useProjectBillableEntriesFormContext } from './ProjectBillableEntriesFormProvider';
 import {
   FFormGroup,
   FInputGroup,
   FDateInput,
   FieldRequiredHint,
-  FormattedMessage as T,
 } from '@/components';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
-import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
-import { ProjectBillableTypeSuggestField } from '../../components';
-import { billableTypeOption } from '../common';
-import { ProjectRowDivider, BillableEntiresBox } from './components';
-import { useProjectBillableEntriesFormContext } from './ProjectBillableEntriesFormProvider';
+import { useDateInputFormatter } from '@/hooks';
+import { inputIntent, tansformDateValue, handleDateChange } from '@/utils';
 
 /**
  * Project billable entries form fields.
  * @returns
  */
-export default function ProjectBillableEntriesFormFields() {
+export function ProjectBillableEntriesFormFields() {
   // Formik context.
   const { values } = useFormikContext();
 
   const { billableEntries } = useProjectBillableEntriesFormContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Filter by Date -----------*/}
       <FFormGroup
         name={'date'}
-        label={<T id={'project_billable_entries.dialog.filter_by_date'} />}
+        label={intl.get('project_billable_entries.dialog.filter_by_date')}
         labelInfo={<FieldRequiredHint />}
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
         <FDateInput
-          {...momentFormatter('YYYY/MM/DD')}
+          {...dateInputFormatter}
           name="date"
-          formatDate={(date) => date.toLocaleString()}
           popoverProps={{
             position: Position.BOTTOM,
             minimal: true,
@@ -58,7 +54,7 @@ export default function ProjectBillableEntriesFormFields() {
       {/*------------ Filter by Type -----------*/}
       <FFormGroup
         name={'billableType'}
-        label={<T id={'project_billable_entries.dialog.filter_by_type'} />}
+        label={intl.get('project_billable_entries.dialog.filter_by_type')}
         labelInfo={<FieldRequiredHint />}
       >
         <ProjectBillableTypeSuggestField

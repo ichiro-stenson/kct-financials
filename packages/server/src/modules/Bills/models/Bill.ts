@@ -3,7 +3,6 @@ import * as R from 'ramda';
 import type { Knex } from 'knex';
 import { Model, raw } from 'objection';
 import { castArray, difference, defaultTo } from 'lodash';
-import { BaseModel, PaginationQueryBuilderType } from '@/models/Model';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
 import { DiscountType } from '@/common/types/Discount';
@@ -11,9 +10,11 @@ import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { BillMeta } from './Bill.meta';
+import { sanitizeSortDirection } from '@/modules/DynamicListing/DynamicFilter/sanitizeSortDirection';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
 import { BillDefaultViews } from '../Bills.constants';
 import { InjectAttachable } from '@/modules/Attachments/decorators/InjectAttachable.decorator';
+import { TaxRateTransaction } from '@/modules/TaxRates/models/TaxRateTransaction.model';
 
 @InjectAttachable()
 @ExportableModel()
@@ -55,6 +56,8 @@ export class Bill extends TenantBaseModel {
   public entries?: ItemEntry[];
   public attachments!: Document[];
   public locatedLandedCosts?: BillLandedCost[];
+  public taxes!: Array<TaxRateTransaction>;
+
   /**
    * Timestamps columns.
    */
@@ -407,7 +410,8 @@ export class Bill extends TenantBaseModel {
        * Sort the bills by full-payment bills.
        */
       sortByStatus(query, order) {
-        query.orderByRaw(`PAYMENT_AMOUNT = AMOUNT ${order}`);
+        const dir = sanitizeSortDirection(order);
+        query.orderByRaw(`PAYMENT_AMOUNT = AMOUNT ${dir}`);
       },
 
       /**
@@ -636,7 +640,7 @@ export class Bill extends TenantBaseModel {
 
     return this.query(trx)
       .where('id', billId)
-    [changeMethod]('payment_amount', Math.abs(amount));
+      [changeMethod]('payment_amount', Math.abs(amount));
   }
 
   /**

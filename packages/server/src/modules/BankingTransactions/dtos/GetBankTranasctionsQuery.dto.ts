@@ -16,7 +16,7 @@ export class GetBankTransactionsQueryDto {
     description: 'Page number for pagination',
     required: false,
     type: Number,
-    example: 1
+    example: 1,
   })
   page: number;
 
@@ -27,7 +27,7 @@ export class GetBankTransactionsQueryDto {
     description: 'Number of items per page',
     required: false,
     type: Number,
-    example: 10
+    example: 10,
   })
   pageSize: number;
 
@@ -38,15 +38,10 @@ export class GetBankTransactionsQueryDto {
     description: 'Bank account ID',
     required: true,
     type: Number,
-    example: 1
+    example: 1,
   })
   accountId: number;
 
   @IsOptional()
-  @ApiProperty({
-    description: 'Number format options',
-    required: false,
-    type: NumberFormatQueryDto
-  })
   numberFormat: NumberFormatQueryDto;
 }

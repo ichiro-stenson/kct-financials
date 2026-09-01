@@ -1,12 +1,12 @@
 // @ts-nocheck
-import { useEffect } from 'react';
 import * as R from 'ramda';
+import { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
+import { withAlertActions } from '../Alert/withAlertActions';
+import { withDashboardActions } from '../Dashboard/withDashboardActions';
 import { BillingPageBoot } from './BillingPageBoot';
 import { BillingPageContent } from './BillingPageContent';
 import { useDashboardMeta } from '@/hooks/query';
-import { withAlertActions } from '../Alert/withAlertActions';
-import { withDashboardActions } from '../Dashboard/withDashboardActions';
 
 function BillingPageRoot({
   openAlert,
@@ -23,7 +23,7 @@ function BillingPageRoot({
   }, [changePreferencesPageTitle]);
 
   // In case the edition is not Bigcapital Cloud, redirect to the homepage.
-  if (!dashboardMeta.is_bigcapital_cloud) {
+  if (!dashboardMeta.isBigcapitalCloud) {
     return <Redirect to={{ pathname: '/' }} />;
   }
 
@@ -34,7 +34,7 @@ function BillingPageRoot({
   );
 }
 
-export default R.compose(
+export const BillingPage = R.compose(
   withAlertActions,
   withDashboardActions,
 )(BillingPageRoot);

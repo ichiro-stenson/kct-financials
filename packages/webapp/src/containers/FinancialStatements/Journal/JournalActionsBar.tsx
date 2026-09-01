@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -7,25 +5,29 @@ import {
   NavbarDivider,
   Popover,
   PopoverInteractionKind,
-  Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-
-import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
-
-import { withJournalActions } from './withJournalActions';
-import { withJournal } from './withJournal';
-
-import { compose } from '@/utils';
-import { useJournalSheetContext } from './JournalProvider';
+import React from 'react';
 import { JournalSheetExportMenu } from './components';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useJournalSheetContext } from './JournalProvider';
+import { withJournal } from './withJournal';
+import { withJournalActions } from './withJournalActions';
+import type { WithJournalActionsProps } from './withJournalActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { compose } from '@/utils';
+
+type JournalActionsBarProps = {
+  isFilterDrawerOpen: boolean;
+} & Pick<WithJournalActionsProps, 'toggleJournalSheetFilter'> &
+  WithDialogActionsProps;
 
 /**
  * Journal sheeet - Actions bar.
  */
-function JournalActionsBar({
+function JournalActionsBarInner({
   // #withJournal
   isFilterDrawerOpen,
 
@@ -34,7 +36,7 @@ function JournalActionsBar({
 
   // #withDialogActions
   openDialog,
-}) {
+}: JournalActionsBarProps) {
   const { refetchSheet } = useJournalSheetContext();
 
   // Handle filter toggle click.
@@ -101,10 +103,10 @@ function JournalActionsBar({
   );
 }
 
-export default compose(
+export const JournalActionsBar = compose(
   withJournal(({ journalSheetDrawerFilter }) => ({
     isFilterDrawerOpen: journalSheetDrawerFilter,
   })),
   withJournalActions,
   withDialogActions,
-)(JournalActionsBar);
+)(JournalActionsBarInner);

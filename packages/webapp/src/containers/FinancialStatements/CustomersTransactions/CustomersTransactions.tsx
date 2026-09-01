@@ -1,32 +1,33 @@
-// @ts-nocheck
-import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-
-import { FinancialStatement, DashboardPageContent } from '@/components';
-
-import CustomersTransactionsHeader from './CustomersTransactionsHeader';
-import CustomersTransactionsActionsBar from './CustomersTransactionsActionsBar';
-
-import { withCustomersTransactionsActions } from './withCustomersTransactionsActions';
-import { CustomersTransactionsLoadingBar } from './components';
-import { CustomersTransactionsBody } from './CustomersTransactionsBody';
-import { CustomersTransactionsProvider } from './CustomersTransactionsProvider';
-
-import { compose } from '@/utils';
+import React, { useEffect } from 'react';
 import { useCustomersTransactionsQuery } from './_utils';
+import { CustomersTransactionsLoadingBar } from './components';
+import { CustomersTransactionsActionsBar } from './CustomersTransactionsActionsBar';
+import { CustomersTransactionsBody } from './CustomersTransactionsBody';
 import { CustomersTransactionsDialogs } from './CustomersTransactionsDialogs';
+import { CustomersTransactionsHeader } from './CustomersTransactionsHeader';
+import { CustomersTransactionsProvider } from './CustomersTransactionsProvider';
+import {
+  withCustomersTransactionsActions,
+  WithCustomersTransactionsActionsProps,
+} from './withCustomersTransactionsActions';
+import { FinancialStatement, DashboardPageContent } from '@/components';
+import { compose } from '@/utils';
+
+interface CustomersTransactionsProps
+  extends WithCustomersTransactionsActionsProps {}
 
 /**
  * Customers transactions.
  */
-function CustomersTransactions({
+function CustomersTransactionsInner({
   //#withCustomersTransactionsActions
   toggleCustomersTransactionsFilterDrawer,
-}) {
+}: CustomersTransactionsProps) {
   // filter
   const [filter, setFilter] = useCustomersTransactionsQuery();
 
-  const handleFilterSubmit = (filter) => {
+  const handleFilterSubmit = (filter: Record<string, any>) => {
     const _filter = {
       ...filter,
       fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
@@ -36,7 +37,7 @@ function CustomersTransactions({
   };
 
   // Handle number format submit.
-  const handleNumberFormatSubmit = (values) => {
+  const handleNumberFormatSubmit = (values: Record<string, unknown>) => {
     setFilter({
       ...filter,
       numberFormat: values,
@@ -71,4 +72,6 @@ function CustomersTransactions({
     </CustomersTransactionsProvider>
   );
 }
-export default compose(withCustomersTransactionsActions)(CustomersTransactions);
+export const CustomersTransactions = compose(withCustomersTransactionsActions)(
+  CustomersTransactionsInner,
+);

@@ -1,7 +1,4 @@
-// @ts-nocheck
-
 import intl from 'react-intl-universal';
-
 
 export const displayColumnsByOptions = [
   { key: 'total', name: intl.get('total'), type: 'total', by: '' },
@@ -139,4 +136,4 @@ export const filterInventoryValuationOptions = [
     key: 'with-only-active',
     name: intl.get('items.option.only_active'),
   },
-]
+];

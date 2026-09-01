@@ -1,13 +1,3 @@
-// @ts-nocheck
-import React, { useRef } from 'react';
-import intl from 'react-intl-universal';
-import * as R from 'ramda';
-import classNames from 'classnames';
-
-import { AppToaster, If, Stack } from '@/components';
-import { Align } from '@/constants';
-import FinancialLoadingBar from '../FinancialLoadingBar';
-import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import {
   Classes,
   Intent,
@@ -16,6 +6,19 @@ import {
   ProgressBar,
   Text,
 } from '@blueprintjs/core';
+import classNames from 'classnames';
+import * as R from 'ramda';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { FinancialLoadingBar } from '../FinancialLoadingBar';
+import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
+import type { CustomersBalanceColumnKey } from '@bigcapital/sdk-ts';
+import type {
+  CustomerBalanceXlsxQuery,
+  CustomerBalanceCsvQuery,
+} from '@bigcapital/sdk-ts';
+import { AppToaster, If, Stack } from '@/components';
+import { Align } from '@/constants';
 import {
   useCustomerBalanceSummaryCsvExport,
   useCustomerBalanceSummaryXlsxExport,
@@ -25,13 +28,13 @@ import {
  * Retrieve customers balance summary columns.
  */
 export const useCustomersSummaryColumns = () => {
-  const {
-    CustomerBalanceSummary: { table },
-  } = useCustomersBalanceSummaryContext();
+  const { CustomerBalanceSummary } = useCustomersBalanceSummaryContext();
 
   return React.useMemo(() => {
-    return dynamicColumns(table.columns || []);
-  }, [table.columns]);
+    return dynamicColumns(
+      (CustomerBalanceSummary as any)?.table?.columns ?? [],
+    );
+  }, [(CustomerBalanceSummary as any)?.table?.columns]);
 };
 
 /**
@@ -66,15 +69,14 @@ const percentageColumnAccessor = () => ({
   align: Align.Right,
 });
 
+const isColumnKey = (key: CustomersBalanceColumnKey) => R.pathEq(['key'], key);
+
 const dynamicColumns = (columns) => {
   return R.map(
     R.compose(
-      R.when(R.pathEq(['key'], 'name'), accountNameColumnAccessor),
-      R.when(R.pathEq(['key'], 'total'), totalColumnAccessor),
-      R.when(
-        R.pathEq(['key'], 'percentage_of_column'),
-        percentageColumnAccessor,
-      ),
+      R.when(isColumnKey('name'), accountNameColumnAccessor),
+      R.when(isColumnKey('total'), totalColumnAccessor),
+      R.when(isColumnKey('percentage_of_column'), percentageColumnAccessor),
     ),
   )(columns);
 };
@@ -96,76 +98,57 @@ export function CustomersBalanceLoadingBar() {
  * Customer balance summary export menu.
  */
 export function CustomerBalanceSummaryExportMenu() {
-  const toastKey = useRef(null);
   const commonToastConfig = {
     isCloseButtonShown: true,
     timeout: 2000,
   };
   const { query } = useCustomersBalanceSummaryContext();
 
-  const openProgressToast = (amount: number) => {
+  const renderToast = (done: boolean) => {
     return (
       <Stack spacing={8}>
-        <Text>The report has been exported successfully.</Text>
+        <Text>
+          {done
+            ? 'The report has been exported successfully.'
+            : 'Exporting the report…'}
+        </Text>
         <ProgressBar
           className={classNames('toast-progress', {
-            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+            [Classes.PROGRESS_NO_STRIPES]: done,
           })}
-          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
-          value={amount / 100}
+          intent={done ? Intent.SUCCESS : Intent.PRIMARY}
+          value={done ? 1 : undefined}
         />
       </Stack>
     );
   };
-  // Export the report to xlsx.
+
   const { mutateAsync: xlsxExport } = useCustomerBalanceSummaryXlsxExport(
-    query,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
-    },
+    query as CustomerBalanceXlsxQuery,
   );
-  // Export the report to csv.
-  const { mutateAsync: csvExport } = useCustomerBalanceSummaryCsvExport(query, {
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
-    },
-  });
-  // Handle csv export button click.
-  const handleCsvExportBtnClick = () => {
-    csvExport();
+  const { mutateAsync: csvExport } = useCustomerBalanceSummaryCsvExport(
+    query as CustomerBalanceCsvQuery,
+  );
+
+  const runExport = async (mutate: () => Promise<unknown>) => {
+    const key = AppToaster.show({
+      message: renderToast(false),
+      ...commonToastConfig,
+      timeout: 0,
+    });
+    try {
+      await mutate();
+      AppToaster.show(
+        { message: renderToast(true), ...commonToastConfig },
+        key,
+      );
+    } catch {
+      AppToaster.dismiss(key);
+    }
   };
-  // Handle xlsx export button click.
-  const handleXlsxExportBtnClick = () => {
-    xlsxExport();
-  };
+
+  const handleCsvExportBtnClick = () => runExport(csvExport);
+  const handleXlsxExportBtnClick = () => runExport(xlsxExport);
 
   return (
     <Menu>

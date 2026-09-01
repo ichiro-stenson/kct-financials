@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React from 'react';
-import { useCustomers } from '@/hooks/query';
 import { useCreateProject, useEditProject, useProject } from '../../hooks';
 import { DialogContent } from '@/components';
+import { useCustomers } from '@/hooks/query';
 
 const ProjectFormContext = React.createContext();
 
@@ -26,16 +26,15 @@ function ProjectFormProvider({
   });
 
   // Handle fetch customers data table or list
-  const {
-    data: { customers },
-    isLoading: isCustomersLoading,
-  } = useCustomers({ page_size: 10000 });
+  const { data: customersData, isLoading: isCustomersLoading } = useCustomers({
+    page_size: 10000,
+  });
 
   const isNewMode = !projectId;
 
   // State provider.
   const provider = {
-    customers,
+    customers: customersData?.data,
     dialogName,
     project,
     projectId,

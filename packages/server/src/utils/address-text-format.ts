@@ -1,4 +1,5 @@
-import { Contact } from "@/modules/Contacts/models/Contact";
+import * as sanitizeHtml from 'sanitize-html';
+import { Contact } from '@/modules/Contacts/models/Contact';
 
 interface OrganizationAddressFormatArgs {
   organizationName?: string;
@@ -11,6 +12,10 @@ interface OrganizationAddressFormatArgs {
   phone?: string;
 }
 
+const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
+  allowedTags: ['b', 'strong'],
+  allowedAttributes: { a: ['href'] },
+};
 export const defaultOrganizationAddressFormat = `
 <strong>{ORGANIZATION_NAME}</strong>
 {ADDRESS_1}
@@ -32,9 +37,11 @@ export const defaultOrganizationAddressFormat = `
 const formatText = (message: string, replacements: Record<string, string>) => {
   let formattedMessage = Object.entries(replacements).reduce(
     (msg, [key, value]) => {
-      return msg.split(`{${key}}`).join(value || '');
+      return msg
+        .split(`{${key}}`)
+        .join(sanitizeHtml(value || '', SANITIZE_OPTIONS));
     },
-    message
+    message,
   );
   // Removes any empty lines.
   formattedMessage = formattedMessage.replace(/^\s*[\r\n]/gm, '');
@@ -47,7 +54,7 @@ const formatText = (message: string, replacements: Record<string, string>) => {
 
 export const organizationAddressTextFormat = (
   message: string,
-  args: OrganizationAddressFormatArgs
+  args: OrganizationAddressFormatArgs,
 ) => {
   const replacements: Record<string, string> = {
     ORGANIZATION_NAME: args.organizationName || '',
@@ -84,7 +91,7 @@ export const defaultContactAddressFormat = `{CONTACT_NAME}
 
 export const contactAddressTextFormat = (
   contact: Contact,
-  message: string = defaultContactAddressFormat
+  message: string = defaultContactAddressFormat,
 ) => {
   const args = {
     displayName: contact.displayName,

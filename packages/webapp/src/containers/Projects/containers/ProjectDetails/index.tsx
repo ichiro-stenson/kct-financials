@@ -1,10 +1,10 @@
 // @ts-nocheck
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import ProjectDetailActionsBar from './ProjectDetailActionsBar';
-import ProjectDetailTabs from './ProjectDetailTabs';
-import { DashboardPageContent } from '@/components';
+import { ProjectDetailActionsBar } from './ProjectDetailActionsBar';
 import { ProjectDetailProvider } from './ProjectDetailProvider';
+import { ProjectDetailTabs } from './ProjectDetailTabs';
+import { DashboardPageContent } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { compose } from '@/utils';
 
@@ -34,4 +34,4 @@ function ProjectTabs({
   );
 }
 
-export default compose(withDashboardActions)(ProjectTabs);
+export const index = compose(withDashboardActions)(ProjectTabs);

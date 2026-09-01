@@ -1,5 +1,12 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 
 export class TransactionsByReferenceQueryDto {
   @IsString()
@@ -19,4 +26,9 @@ export class TransactionsByReferenceQueryDto {
     required: true,
   })
   referenceId: number;
+
+  @ValidateNested()
+  @Type(() => NumberFormatQueryDto)
+  @IsOptional()
+  numberFormat: NumberFormatQueryDto;
 }

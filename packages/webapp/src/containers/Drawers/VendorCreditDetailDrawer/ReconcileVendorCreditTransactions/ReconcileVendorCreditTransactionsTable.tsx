@@ -1,30 +1,32 @@
-// @ts-nocheck
 import React from 'react';
-import { DataTable, Card } from '@/components';
-
-import { TableStyle } from '@/constants';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
 import { useVendorCreditDetailDrawerContext } from '../VendorCreditDetailDrawerProvider';
 import {
   useReconcileVendorCreditTransactionsTableColumns,
   ActionsMenu,
 } from './components';
+import { DataTable, Card } from '@/components';
+import { TableStyle } from '@/constants';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
 import { compose } from '@/utils';
+
+interface ReconcileVendorCreditTransactionsTableInnerProps
+  extends WithAlertActionsProps {}
 
 /**
  * Reconcile vendor credit transactions table.
  */
-function ReconcileVendorCreditTransactionsTable({
+function ReconcileVendorCreditTransactionsTableInner({
   // #withAlertActions
   openAlert,
-}) {
+}: ReconcileVendorCreditTransactionsTableInnerProps) {
   const columns = useReconcileVendorCreditTransactionsTableColumns();
-
   const { reconcileVendorCredits } = useVendorCreditDetailDrawerContext();
 
   // Handle delete reconile credit.
-  const handleDeleteReconcileVendorCredit = ({ id }) => {
+  const handleDeleteReconcileVendorCredit = ({ id }: { id: number }) => {
     openAlert('reconcile-vendor-delete', { vendorCreditId: id });
   };
 
@@ -43,6 +45,6 @@ function ReconcileVendorCreditTransactionsTable({
   );
 }
 
-export default compose(withAlertActions)(
-  ReconcileVendorCreditTransactionsTable,
+export const ReconcileVendorCreditTransactionsTable = compose(withAlertActions)(
+  ReconcileVendorCreditTransactionsTableInner,
 );

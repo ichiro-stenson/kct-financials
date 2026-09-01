@@ -28,7 +28,10 @@ import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { flatToNestedArray } from '@/utils/flat-to-nested-array';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 
 export default class ProfitLossSheet extends R.pipe(
   ProfitLossSheetPreviousYear,
@@ -101,12 +104,10 @@ export default class ProfitLossSheet extends R.pipe(
   private accountNodeMapper = (
     account: ModelObject<Account>,
   ): IProfitLossSheetAccountNode => {
-    // Retrieves the children account ids of the given account id.
-    const childrenAccountIds = this.repository.accountsGraph.dependenciesOf(
+    // Retrieves the account ids including its children account ids.
+    const accountIds = this.repository.getAccountsIdsIncludingChildren(
       account.id,
     );
-    // Concat the children and the given account id.
-    const accountIds = R.uniq(R.append(account.id, childrenAccountIds));
 
     // Retrieves the closing balance of the account included children accounts.
     const total = this.repository.totalAccountsLedger

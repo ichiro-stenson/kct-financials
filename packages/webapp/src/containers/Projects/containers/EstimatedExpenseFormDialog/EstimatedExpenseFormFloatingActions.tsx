@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React from 'react';
-import { useFormikContext } from 'formik';
 import { Intent, Button, Classes } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
+import { useFormikContext } from 'formik';
+import React from 'react';
 import { useEstimatedExpenseFormContext } from './EstimatedExpenseFormProvider';
+import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
@@ -11,7 +11,7 @@ import { compose } from '@/utils';
  * Estimated expense form floating actions.
  * @returns
  */
-function EstimatedExpenseFormFloatingActions({
+function EstimatedExpenseFormFloatingActionsInner({
   // #withDialogActions
   closeDialog,
 }) {
@@ -45,4 +45,6 @@ function EstimatedExpenseFormFloatingActions({
   );
 }
 
-export default compose(withDialogActions)(EstimatedExpenseFormFloatingActions);
+export const EstimatedExpenseFormFloatingActions = compose(withDialogActions)(
+  EstimatedExpenseFormFloatingActionsInner,
+);

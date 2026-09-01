@@ -1,17 +1,30 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
+import React from 'react';
 import intl from 'react-intl-universal';
-
-import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-import { useBulkDeleteItems } from '@/hooks/query/items';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithItemsActionsProps } from '@/containers/Items/withItemsActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { withItemsActions } from '@/containers/Items/withItemsActions';
+import { useBulkDeleteItems } from '@/hooks/query/items';
 import { compose } from '@/utils';
 
-function ItemBulkDeleteDialog({
+interface ItemBulkDeleteDialogProps
+  extends WithDialogActionsProps,
+    WithItemsActionsProps {
+  dialogName: string;
+  isOpen: boolean;
+  payload: {
+    ids?: number[];
+    deletableCount?: number;
+    undeletableCount?: number;
+    totalSelected?: number;
+  };
+}
+
+function ItemBulkDeleteDialogInner({
   dialogName,
   isOpen,
   payload: {
@@ -20,14 +33,10 @@ function ItemBulkDeleteDialog({
     undeletableCount = 0,
     totalSelected = ids.length,
   } = {},
-
-  // #withItemsActions
-  setItemsSelectedRows,
-
-  // #withDialogActions
+  resetItemsSelectedRows,
   closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteItems, isLoading } = useBulkDeleteItems();
+}: ItemBulkDeleteDialogProps): React.ReactElement {
+  const { mutateAsync: bulkDeleteItems, isPending } = useBulkDeleteItems();
 
   const handleCancel = () => {
     closeDialog(dialogName);
@@ -43,7 +52,7 @@ function ItemBulkDeleteDialog({
           message: intl.get('the_items_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setItemsSelectedRows([]);
+        resetItemsSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {
@@ -64,8 +73,8 @@ function ItemBulkDeleteDialog({
       }
       isOpen={isOpen}
       onClose={handleCancel}
-      canEscapeKeyClose={!isLoading}
-      canOutsideClickClose={!isLoading}
+      canEscapeKeyClose={!isPending}
+      canOutsideClickClose={!isPending}
     >
       <BulkDeleteDialogContent
         totalSelected={totalSelected}
@@ -77,15 +86,15 @@ function ItemBulkDeleteDialog({
 
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button onClick={handleCancel} disabled={isLoading}>
+          <Button onClick={handleCancel} disabled={isPending}>
             <T id={'cancel'} />
           </Button>
 
           <Button
             intent={Intent.DANGER}
             onClick={handleConfirmBulkDelete}
-            loading={isLoading}
-            disabled={deletableCount === 0 || isLoading}
+            loading={isPending}
+            disabled={deletableCount === 0 || isPending}
           >
             <T id={'delete_count'} values={{ count: deletableCount }} />
           </Button>
@@ -95,9 +104,8 @@ function ItemBulkDeleteDialog({
   );
 }
 
-export default compose(
+export const ItemBulkDeleteDialog = compose(
   withDialogRedux(),
   withDialogActions,
   withItemsActions,
-)(ItemBulkDeleteDialog);
-
+)(ItemBulkDeleteDialogInner);

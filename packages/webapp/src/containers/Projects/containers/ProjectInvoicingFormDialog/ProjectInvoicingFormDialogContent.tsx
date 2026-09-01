@@ -1,14 +1,13 @@
 // @ts-nocheck
 import React from 'react';
-
+import { ProjectInvoicingForm } from './ProjectInvoicingForm';
 import { ProjectInvoicingFormProvider } from './ProjectInvoicingFormProvider';
-import ProjectInvoicingForm from './ProjectInvoicingForm';
 
 /**
  * Project Invoicing form dialog content.
  * @returns
  */
-export default function ProjectInvoicingFormDialogContent({
+export function ProjectInvoicingFormDialogContent({
   // #ownProps
   dialogName,
 }) {

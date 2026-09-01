@@ -1,20 +1,16 @@
-// @ts-nocheck
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import intl from 'react-intl-universal';
-
+import { UsersDataTable } from './UsersDataTable';
 import { UsersListProvider } from './UsersProvider';
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-
-import UsersDataTable from './UsersDataTable';
+import {
+  withDashboardActions,
+  type WithDashboardActionsProps,
+} from '@/containers/Dashboard/withDashboardActions';
 import { compose } from '@/utils';
 
-/**
- * Users list.
- */
 function UsersListPreferences({
-  // #withDashboardActions
   changePreferencesPageTitle,
-}) {
+}: WithDashboardActionsProps) {
   useEffect(() => {
     changePreferencesPageTitle(intl.get('users'));
   }, [changePreferencesPageTitle]);
@@ -26,4 +22,4 @@ function UsersListPreferences({
   );
 }
 
-export default compose(withDashboardActions)(UsersListPreferences);
+export const UsersList = compose(withDashboardActions)(UsersListPreferences);

@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React from 'react';
 import { Formik } from 'formik';
-import { AppToaster } from '@/components';
+import React from 'react';
 import { CreateEstimatedExpenseFormSchema } from './EstimatedExpense.schema';
-import EstimatedExpenseFormConent from './EstimatedExpenseFormConent';
+import { EstimatedExpenseFormConent } from './EstimatedExpenseFormConent';
+import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
@@ -19,7 +19,7 @@ const defaultInitialValues = {
  * Estimated expense form dialog.
  * @returns
  */
-function EstimatedExpenseForm({
+function EstimatedExpenseFormInner({
   //#withDialogActions
   closeDialog,
 }) {
@@ -35,11 +35,7 @@ function EstimatedExpenseForm({
     };
 
     // Handle request response errors.
-    const onError = ({
-      response: {
-        data: { errors },
-      },
-    }) => {
+    const onError = ({ data: { errors } }) => {
       setSubmitting(false);
     };
   };
@@ -54,4 +50,6 @@ function EstimatedExpenseForm({
   );
 }
 
-export default compose(withDialogActions)(EstimatedExpenseForm);
+export const EstimatedExpenseForm = compose(withDialogActions)(
+  EstimatedExpenseFormInner,
+);

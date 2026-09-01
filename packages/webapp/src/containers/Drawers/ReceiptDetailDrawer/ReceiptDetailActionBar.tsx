@@ -1,7 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-
 import {
   Button,
   NavbarGroup,
@@ -9,27 +5,41 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { ReceiptMoreMenuItems } from './components';
+import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import {
   Can,
   Icon,
   FormattedMessage as T,
   DrawerActionsBar,
 } from '@/components';
-import { ReceiptMoreMenuItems } from './components';
-import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
-import { safeCallback, compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+import { safeCallback, compose } from '@/utils';
+
+interface ReceiptDetailActionBarInnerProps
+  extends WithDialogActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps {}
 
 /**
  * Receipt details actions bar.
- * @returns {React.JSX}
  */
-function ReceiptDetailActionBar({
+function ReceiptDetailActionBarInner({
   // #withDialogActions
   openDialog,
 
@@ -38,8 +48,8 @@ function ReceiptDetailActionBar({
 
   // #withDrawerActions
   closeDrawer,
-  openDrawer
-}) {
+  openDrawer,
+}: ReceiptDetailActionBarInnerProps) {
   const history = useHistory();
   const { receiptId } = useReceiptDetailDrawerContext();
 
@@ -114,8 +124,8 @@ function ReceiptDetailActionBar({
   );
 }
 
-export default compose(
+export const ReceiptDetailActionBar = compose(
   withDialogActions,
   withDrawerActions,
   withAlertActions,
-)(ReceiptDetailActionBar);
+)(ReceiptDetailActionBarInner);
