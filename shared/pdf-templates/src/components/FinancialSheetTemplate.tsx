@@ -1,5 +1,5 @@
-import { x } from '@xstyled/emotion';
-import { Box } from '../lib/layout/Box';
+import { x } from "@xstyled/emotion";
+import { Box } from "../lib/layout/Box";
 
 export interface TableColumn {
   key: string;
@@ -91,6 +91,7 @@ export function FinancialSheetTemplate({
           </x.tbody>
         </x.table>
       </Box>
+      {customCSS && <x.style dangerouslySetInnerHTML={{ __html: customCSS }} />}
     </Box>
   );
 }

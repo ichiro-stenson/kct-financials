@@ -46,7 +46,8 @@ function JournalInner({
   );
 
   return (
-    <JournalSheetProvider query={query}>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    <JournalSheetProvider query={query as any}>
       <JournalActionsBar />
 
       <DashboardPageContent>

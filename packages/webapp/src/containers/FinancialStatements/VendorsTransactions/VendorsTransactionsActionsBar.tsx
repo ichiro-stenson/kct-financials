@@ -64,7 +64,7 @@ function VendorsTransactionsActionsBarInner({
 
   // Handle filter toggle click.
   const handleFilterToggleClick = () => {
-    toggleVendorsTransactionsFilterDrawer();
+    toggleVendorsTransactionsFilterDrawer(!isFilterDrawerOpen);
   };
 
   // Handle recalculate the report button.

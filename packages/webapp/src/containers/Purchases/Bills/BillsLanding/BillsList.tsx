@@ -1,6 +1,6 @@
+/* eslint-disable import/order */
 import React, { useEffect } from 'react';
 import { DashboardPageContent } from '@/components';
-
 import '@/style/pages/Bills/List.scss';
 import { BillsActionsBar } from './BillsActionsBar';
 import { BillsListDialogs } from './BillsListDialogs';

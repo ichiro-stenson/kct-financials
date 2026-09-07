@@ -1,9 +1,9 @@
 // @ts-nocheck
+/* eslint-disable import/order */
 import { Dialog } from '@blueprintjs/core';
 import React from 'react';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
-
 import '@/style/components/Dialog/Dialog.scss';
 import { DialogProvider } from './DialogProvider';
 

@@ -186,10 +186,11 @@ export function useAccountTransactionsInfinity(
     ...props,
     queryKey: cashflowAccountsKeys.transactionsInfinity(accountId, query),
     queryFn: ({ pageParam }) =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       fetchAccountTransactionsInfinity(fetcher, accountId, {
         ...query,
         page: pageParam,
-      }),
+      } as any),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => lastPage?.pagination?.nextPage,
   });

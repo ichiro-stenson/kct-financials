@@ -3,8 +3,8 @@ import { Popover2 } from '@blueprintjs/popover2';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useJournalIsForeign, type MakeJournalFormValues } from './utils';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
+import { useJournalIsForeign, type MakeJournalFormValues } from './utils';
 import {
   ExchangeRateInputGroup,
   Icon,
@@ -38,7 +38,6 @@ export function ContactHeaderCell() {
     <>
       <T id={'contact'} />
       <Hint
-        // @ts-expect-error Hint.content is typed as string but renders ReactNode via Tooltip
         content={<T id={'contact_column_hint'} />}
         position={Position.LEFT_BOTTOM}
       />

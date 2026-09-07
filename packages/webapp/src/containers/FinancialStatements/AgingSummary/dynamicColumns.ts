@@ -77,7 +77,8 @@ const dynamicColumnMapper = R.curry(
     const customerNameAccessorColumn = contactNameAccessor(data);
     const agingPeriodAccessorColumn = agingPeriodAccessor(data);
 
-    return R.compose(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (R.compose as any)(
       R.when(isColumnKey('total'), totalAccessorColumn),
       R.when(isColumnKey('current'), currentAccessorColumn),
       R.when(isColumnKey('customer_name'), customerNameAccessorColumn),

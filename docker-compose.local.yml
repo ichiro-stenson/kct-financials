@@ -1,0 +1,23 @@
+# Local image override — use images built from source instead of Docker Hub.
+# Usage: docker compose -f docker-compose.prod.yml -f docker-compose.local.yml up -d
+#
+# Build images first:
+#   docker build -t kct-financials/webapp:local -f packages/webapp/Dockerfile .
+#   docker build -t kct-financials/server:local -f packages/server/Dockerfile .
+
+services:
+  webapp:
+    image: kct-financials/webapp:local
+
+  server:
+    image: kct-financials/server:local
+    environment:
+      - THROTTLE_GLOBAL_LIMIT=50000
+      - THROTTLE_GLOBAL_TTL=60000
+      - THROTTLE_AUTH_LIMIT=50000
+      - THROTTLE_AUTH_TTL=60000
+
+  # Disable watchtower — we don't want Docker Hub auto-updates overwriting local builds
+  auto-update:
+    profiles:
+      - disabled

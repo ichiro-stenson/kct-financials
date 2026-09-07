@@ -1,5 +1,5 @@
-import { Html, Head, Body, Preview, Tailwind } from '@react-email/components';
-import { CSSProperties } from 'react';
+import { Html, Head, Body, Preview, Tailwind } from "@react-email/components";
+import { CSSProperties } from "react";
 
 interface EmailTemplateLayoutProps {
   children?: React.ReactNode;
@@ -22,8 +22,8 @@ export const EmailTemplateLayout = ({
 };
 
 const bodyStyle: CSSProperties = {
-  backgroundColor: '#F5F5F5',
+  backgroundColor: "#F5F5F5",
   fontFamily:
     '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
-  padding: '40px 0',
+  padding: "40px 0",
 };

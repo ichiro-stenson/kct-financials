@@ -3,8 +3,8 @@ import { ACCOUNT_TYPES } from '../Accounts.constants';
 export const AccountMeta = {
   defaultFilterField: 'name',
   defaultSort: {
-    sortOrder: 'DESC',
-    sortField: 'name',
+    sortOrder: 'ASC',
+    sortField: 'code',
   },
   importable: true,
   exportable: true,

@@ -1,11 +1,11 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from "@storybook/react";
 import {
   ReceiptEmailTemplate,
   ReceiptEmailTemplateProps,
-} from './ReceiptPaymentEmail';
+} from "./ReceiptPaymentEmail";
 
 export default {
-  title: 'Email/ReceiptPaymentEmail',
+  title: "Email/ReceiptPaymentEmail",
   component: ReceiptEmailTemplate,
 } as Meta;
 
@@ -28,6 +28,6 @@ If you have any questions, please let us know.
 
 Thanks,
 Bigcapital`,
-  adjustment: '$100.00',
-  discount: '$100.00',
+  adjustment: "$100.00",
+  discount: "$100.00",
 };

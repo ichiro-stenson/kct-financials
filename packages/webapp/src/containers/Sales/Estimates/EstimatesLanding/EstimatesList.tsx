@@ -1,6 +1,6 @@
+/* eslint-disable import/order */
 import React from 'react';
 import { DashboardPageContent } from '@/components';
-
 import '@/style/pages/SaleEstimate/List.scss';
 import { EstimatesActionsBar } from './EstimatesActionsBar';
 import { EstimatesDataTable } from './EstimatesDataTable';

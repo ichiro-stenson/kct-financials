@@ -9,7 +9,8 @@ import { useProfitLossSheetPdf } from '@/hooks/query';
 
 export function ProfitLossSheetPdfDialogContent() {
   const { httpQuery } = useProfitLossSheetContext();
-  const { isLoading, pdfUrl } = useProfitLossSheetPdf(httpQuery);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { isLoading, pdfUrl } = useProfitLossSheetPdf(httpQuery as any);
 
   return (
     <DialogContent>

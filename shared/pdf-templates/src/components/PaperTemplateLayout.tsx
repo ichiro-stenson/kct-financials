@@ -1,7 +1,7 @@
-import { CacheProvider, ThemeProvider } from '@emotion/react';
-import { EmotionCache } from '@emotion/cache';
-import { defaultTheme } from '@xstyled/system';
-import { createGlobalStyle, Preflight } from '@xstyled/emotion';
+import { CacheProvider, ThemeProvider } from "@emotion/react";
+import { EmotionCache } from "@emotion/cache";
+import { defaultTheme } from "@xstyled/system";
+import { createGlobalStyle, Preflight } from "@xstyled/emotion";
 
 const theme = {
   ...defaultTheme,

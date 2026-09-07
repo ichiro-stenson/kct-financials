@@ -1,10 +1,10 @@
-import React from 'react';
-import clsx from 'classnames';
-import { get, isFunction } from 'lodash';
-import { x } from '@xstyled/emotion';
-import { css } from '@emotion/css';
-import { Box, BoxProps } from '../lib/layout/Box';
-import { Group, GroupProps } from '../lib/layout/Group';
+import React from "react";
+import clsx from "classnames";
+import { get, isFunction } from "lodash";
+import { x } from "@xstyled/emotion";
+import { css } from "@emotion/css";
+import { Box, BoxProps } from "../lib/layout/Box";
+import { Group, GroupProps } from "../lib/layout/Group";
 
 export interface PaperTemplateProps extends BoxProps {
   primaryColor?: string;
@@ -37,7 +37,7 @@ export function PaperTemplate({
             width: auto !important;
             height: auto !important;
           }
-        `
+        `,
       )}
     >
       <style>{`:root { --invoice-primary-color: ${primaryColor}; --invoice-secondary-color: ${secondaryColor}; }`}</style>
@@ -53,11 +53,11 @@ interface PaperTemplateBigTitleProps {
 PaperTemplate.BigTitle = ({ title }: PaperTemplateBigTitleProps) => {
   return (
     <x.h1
-      fontSize={'30px'}
+      fontSize={"30px"}
       margin={0}
       lineHeight={1}
       fontWeight={500}
-      color={'#333'}
+      color={"#333"}
     >
       {title}
     </x.h1>
@@ -70,12 +70,12 @@ interface PaperTemplateLogoProps {
 
 PaperTemplate.Logo = ({ logoUri }: PaperTemplateLogoProps) => {
   return (
-    <x.div overflow={'hidden'}>
+    <x.div overflow={"hidden"}>
       <x.img
-        width={'100%'}
-        height={'100%'}
-        maxWidth={'260px'}
-        maxHeight={'100px'}
+        width={"100%"}
+        height={"100%"}
+        maxWidth={"260px"}
+        maxHeight={"100px"}
         alt=""
         src={logoUri}
       />
@@ -85,13 +85,15 @@ PaperTemplate.Logo = ({ logoUri }: PaperTemplateLogoProps) => {
 
 interface PaperTemplateTableProps {
   columns: Array<{
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     accessor: string | ((data: Record<string, any>) => JSX.Element);
     label: string;
     value?: JSX.Element;
-    align?: 'left' | 'center' | 'right';
+    align?: "left" | "center" | "right";
     thStyle?: React.CSSProperties;
     visible?: boolean;
   }>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Array<Record<string, any>>;
 }
 
@@ -152,7 +154,7 @@ PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
       </thead>
 
       <tbody>
-        {data.map((_data: any) => (
+        {data.map((_data) => (
           <tr>
             {filteredColumns.map((column, index) => (
               <x.td textAlign={column.align} key={index}>
@@ -169,18 +171,18 @@ PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
 };
 
 export enum PaperTemplateTotalBorder {
-  Gray = 'gray',
-  Dark = 'dark',
+  Gray = "gray",
+  Dark = "dark",
 }
 
 PaperTemplate.Totals = ({ children }: { children: React.ReactNode }) => {
   return (
     <x.div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        marginLeft: 'auto',
-        width: '300px',
+        display: "flex",
+        flexDirection: "column",
+        marginLeft: "auto",
+        width: "300px",
       }}
     >
       {children}
@@ -204,12 +206,12 @@ PaperTemplate.TotalLine = ({
   label: string;
   amount: string;
   border?: PaperTemplateTotalBorder;
-  style?: any;
+  style?: React.CSSProperties;
 }) => {
   return (
     <x.div
-      display={'flex'}
-      padding={'4px 0'}
+      display={"flex"}
+      padding={"4px 0"}
       className={clsx({
         [totalBottomBordered]: border === PaperTemplateTotalBorder.Dark,
         [totalBottomGrayBordered]: border === PaperTemplateTotalBorder.Gray,
@@ -217,7 +219,7 @@ PaperTemplate.TotalLine = ({
       style={style}
     >
       <x.div min-w="160px">{label}</x.div>
-      <x.div flex={'1 1 auto'} textAlign={'right'}>
+      <x.div flex={"1 1 auto"} textAlign={"right"}>
         {amount}
       </x.div>
     </x.div>
@@ -228,7 +230,7 @@ PaperTemplate.AddressesGroup = (props: GroupProps) => {
   return (
     <Group
       spacing={10}
-      align={'flex-start'}
+      align={"flex-start"}
       {...props}
       className={css`
         > div {
@@ -251,8 +253,8 @@ PaperTemplate.Statement = ({
   children: React.ReactNode;
 }) => {
   return (
-    <x.div mb={'20px'}>
-      {label && <x.div color={'#666'}>{label}</x.div>}
+    <x.div mb={"20px"}>
+      {label && <x.div color={"#666"}>{label}</x.div>}
       <x.div>{children}</x.div>
     </x.div>
   );
@@ -260,7 +262,7 @@ PaperTemplate.Statement = ({
 
 PaperTemplate.TermsList = ({ children }: { children: React.ReactNode }) => {
   return (
-    <x.div display={'flex'} flexDirection={'column'} gap={'4px'}>
+    <x.div display={"flex"} flexDirection={"column"} gap={"4px"}>
       {children}
     </x.div>
   );
@@ -275,7 +277,7 @@ PaperTemplate.TermsItem = ({
 }) => {
   return (
     <Group spacing={12}>
-      <x.div minWidth={'120px'} color={'#333'}>
+      <x.div minWidth={"120px"} color={"#333"}>
         {label}
       </x.div>
       <x.div>{children}</x.div>

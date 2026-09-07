@@ -1,11 +1,11 @@
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from "@storybook/react";
 import {
   CreditNoteEmailProps,
   CreditNoteEmailTemplate,
-} from './CreditNoteEmailTemplate';
+} from "./CreditNoteEmailTemplate";
 
 export default {
-  title: 'Email/CreditNoteEmailTemplate',
+  title: "Email/CreditNoteEmailTemplate",
   component: CreditNoteEmailTemplate,
 } as Meta;
 
@@ -16,8 +16,8 @@ const Template: StoryFn<CreditNoteEmailProps> = (args) => (
 export const Default: StoryFn<CreditNoteEmailProps> = Template.bind({});
 
 Default.args = {
-  total: '$1,000.00',
-  items: [{ label: 'Swaniawski Muller', quantity: '1', rate: '$1,000.00' }],
+  total: "$1,000.00",
+  items: [{ label: "Swaniawski Muller", quantity: "1", rate: "$1,000.00" }],
   message: `Hi Ahmed Bouhuolia,
 
 Here's invoice # INV-00005 for $1,000.00
@@ -30,7 +30,7 @@ If you have any questions, please let us know.
 
 Thanks,
 Bigcapital`,
-  subtotal: '$1,000.00',
-  discount: '$1,000.00',
-  adjustment: '$1,000.00'
+  subtotal: "$1,000.00",
+  discount: "$1,000.00",
+  adjustment: "$1,000.00",
 };

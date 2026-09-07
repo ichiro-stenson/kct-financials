@@ -30,8 +30,11 @@ export class GetAccountsService {
     filterDto: Partial<GetAccountsQueryDto>,
   ): Promise<{ accounts: Account[]; filterMeta: IFilterMeta }> {
     const parsedFilterDto = {
-      sortOrder: 'desc',
-      columnSortBy: 'created_at',
+      // Sort by code ASC: E2E standard accounts use codes 0001-0005 which
+      // sort before all KCT operational accounts (1000+) and appear first
+      // in the accounts chart virtualized list.
+      sortOrder: 'asc',
+      columnSortBy: 'code',
       onlyInactive: false,
       structure: IAccountsStructureType.Tree,
       ...filterDto,

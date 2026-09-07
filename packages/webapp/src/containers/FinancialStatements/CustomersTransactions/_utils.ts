@@ -37,7 +37,7 @@ const parseCustomersTransactionsQuery = (
   return {
     ...transformedQuery,
     customersIds: castArray(transformedQuery.customersIds).map(Number),
-  };
+  } as TransactionsByCustomersTableQuery;
 };
 
 export const useCustomersTransactionsQuery = () => {

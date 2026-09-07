@@ -1,14 +1,11 @@
 import {
   ExportResourceTableTemplate,
   ExportResourceTableTemplateProps,
-} from '../components/ExportResourceTableTemplate';
-import { renderSSR } from './render-ssr';
+} from "../components/ExportResourceTableTemplate";
+import { renderSSR } from "./render-ssr";
 
 export const renderExportResourceTableTemplateHtml = (
-  props: ExportResourceTableTemplateProps
+  props: ExportResourceTableTemplateProps,
 ) => {
-  return renderSSR(
-    <ExportResourceTableTemplate {...props} />
-  );
+  return renderSSR(<ExportResourceTableTemplate {...props} />);
 };
-

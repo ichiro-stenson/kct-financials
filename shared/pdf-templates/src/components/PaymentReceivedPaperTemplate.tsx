@@ -1,15 +1,15 @@
-import { Box } from '../lib/layout/Box';
-import { Stack } from '../lib/layout/Stack';
-import { Group } from '../lib/layout/Group';
+import { Box } from "../lib/layout/Box";
+import { Stack } from "../lib/layout/Stack";
+import { Group } from "../lib/layout/Group";
 import {
   PaperTemplate,
   PaperTemplateProps,
   PaperTemplateTotalBorder,
-} from './PaperTemplate';
+} from "./PaperTemplate";
 import {
   DefaultPdfTemplateAddressBilledFrom,
   DefaultPdfTemplateAddressBilledTo,
-} from './_constants';
+} from "./_constants";
 
 export interface PaymentReceivedPaperTemplateProps extends PaperTemplateProps {
   // # Company logo
@@ -65,9 +65,6 @@ export function PaymentReceivedPaperTemplate({
   showCompanyLogo = true,
   companyLogoUri,
 
-  // # Company name
-  companyName = 'Bigcapital Technology, Inc.',
-
   // # Customer address
   showCustomerAddress = true,
   customerAddress = DefaultPdfTemplateAddressBilledTo,
@@ -76,37 +73,37 @@ export function PaymentReceivedPaperTemplate({
   showCompanyAddress = true,
   companyAddress = DefaultPdfTemplateAddressBilledFrom,
 
-  billedToLabel = 'Billed To',
+  billedToLabel = "Billed To",
 
-  total = '$1000.00',
-  totalLabel = 'Total',
+  total = "$1000.00",
+  totalLabel = "Total",
   showTotal = true,
 
-  subtotal = '1000/00',
-  subtotalLabel = 'Subtotal',
+  subtotal = "1000/00",
+  subtotalLabel = "Subtotal",
   showSubtotal = true,
 
   lines = [
     {
-      invoiceNumber: 'INV-00001',
-      invoiceAmount: '$1000.00',
-      paidAmount: '$1000.00',
+      invoiceNumber: "INV-00001",
+      invoiceAmount: "$1000.00",
+      paidAmount: "$1000.00",
     },
   ],
   showPaymentReceivedNumber = true,
-  paymentReceivedNumberLabel = 'Payment Number',
-  paymentReceivedNumebr = '346D3D40-0001',
+  paymentReceivedNumberLabel = "Payment Number",
+  paymentReceivedNumebr = "346D3D40-0001",
 
-  paymentReceivedDate = 'September 3, 2024',
+  paymentReceivedDate = "September 3, 2024",
   showPaymentReceivedDate = true,
-  paymentReceivedDateLabel = 'Payment Date',
+  paymentReceivedDateLabel = "Payment Date",
 }: PaymentReceivedPaperTemplateProps) {
   return (
     <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
       <Stack spacing={24}>
-        <Group align={'start'} spacing={10}>
+        <Group align={"start"} spacing={10}>
           <Stack flex={1}>
-            <PaperTemplate.BigTitle title={'Payment'} />
+            <PaperTemplate.BigTitle title={"Payment"} />
 
             <PaperTemplate.TermsList>
               {showPaymentReceivedNumber && (
@@ -146,13 +143,13 @@ export function PaymentReceivedPaperTemplate({
         <Stack spacing={0}>
           <PaperTemplate.Table
             columns={[
-              { label: 'Invoice #', accessor: 'invoiceNumber' },
+              { label: "Invoice #", accessor: "invoiceNumber" },
               {
-                label: 'Invoice Amount',
-                accessor: 'invoiceAmount',
-                align: 'right',
+                label: "Invoice Amount",
+                accessor: "invoiceAmount",
+                align: "right",
               },
-              { label: 'Paid Amount', accessor: 'paidAmount', align: 'right' },
+              { label: "Paid Amount", accessor: "paidAmount", align: "right" },
             ]}
             data={lines}
           />

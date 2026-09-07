@@ -1,6 +1,6 @@
-import React from 'react';
-import { x } from '@xstyled/emotion';
-import { Box } from '../lib/layout/Box';
+import React from "react";
+import { x } from "@xstyled/emotion";
+import { Box } from "../lib/layout/Box";
 
 export interface ExportResourceTableColumn {
   accessor: string;
@@ -36,12 +36,22 @@ export function ExportResourceTableTemplate({
   customCSS,
 }: ExportResourceTableTemplateProps) {
   return (
-    <Box fontSize="12px" lineHeight="1.4" fontFamily='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"'>
+    <Box
+      fontSize="12px"
+      lineHeight="1.4"
+      fontFamily='system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"'
+    >
       <Box p="20px">
         {(sheetTitle || sheetDescription) && (
           <Box mb="18px" className="sheet__title">
             {sheetTitle && (
-              <x.h2 m={0} mb="10px" fontSize="16px" lineHeight="1" className="sheetTitle">
+              <x.h2
+                m={0}
+                mb="10px"
+                fontSize="16px"
+                lineHeight="1"
+                className="sheetTitle"
+              >
                 {sheetTitle}
               </x.h2>
             )}
@@ -116,4 +126,3 @@ export function ExportResourceTableTemplate({
     </Box>
   );
 }
-
