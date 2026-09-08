@@ -1,0 +1,9 @@
+{
+  "name": "kct-scripts",
+  "version": "1.0.0",
+  "description": "Standalone automation scripts for KCT Financials",
+  "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "^2.116.0"
+  }
+}

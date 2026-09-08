@@ -14,3 +14,4 @@ e2e/.auth/
 
 
 .pnpm-storelogs/
+scripts/node_modules/
