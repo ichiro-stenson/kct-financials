@@ -413,8 +413,8 @@ async function main() {
 
   const weekEndStr   = ymd(weekEndDate);
   const weekStartStr = ymd(addDays(weekEndDate, -6)); // Saturday
-  const invoiceDate  = ymd(addDays(weekEndDate, -3)); // Tuesday
-  const dueDate      = weekEndStr;                    // Friday
+  const invoiceDate  = ymd(addDays(weekEndDate, -3)); // Tuesday (statement release day)
+  const dueDate      = ymd(addDays(weekEndDate, 7));  // Friday +1 week (ACH settlement day)
   const weekYear     = weekEndDate.getUTCFullYear();
   const weekNum      = String(isoWeek(weekEndDate)).padStart(2, '0');
 
