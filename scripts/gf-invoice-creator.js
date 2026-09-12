@@ -51,13 +51,13 @@ function loadEnv(path) {
 // ──────────────────────────────────────────────────────────────────────────────
 
 const CSA_MAP = {
-  '300665': { terminal: 'Billings',         code: 'BIL', entity: 'KCT-1', customerId: 4 },
-  '300948': { terminal: 'Bismarck',         code: 'BIS', entity: 'KCT-1', customerId: 4 },
-  '304830': { terminal: 'Cody',             code: 'COD', entity: 'KCT-1', customerId: 4 },
-  '307033': { terminal: 'Springfield',      code: 'SPR', entity: 'KCT-2', customerId: 1 }, // KCT Logistics LLC — confirmed 2026-09-12
-  '308940': { terminal: 'Milwaukee',        code: 'MIL', entity: 'KCT-1', customerId: 4 },
-  '309059': { terminal: 'Madison',          code: 'MAD', entity: 'KCT-1', customerId: 4 },
-  '308765': { terminal: 'Unknown-308765',   code: 'UNK', entity: 'KCT-1', customerId: 4 },
+  '300665': { terminal: 'Billings',         code: 'BIL', entity: 'KCT-1', customerId: 1 },
+  '300948': { terminal: 'Bismarck',         code: 'BIS', entity: 'KCT-1', customerId: 1 },
+  '304830': { terminal: 'Cody',             code: 'COD', entity: 'KCT-1', customerId: 1 },
+  '307033': { terminal: 'Springfield',      code: 'SPR', entity: 'KCT-2', customerId: 2 }, // KCT Logistics LLC
+  '308940': { terminal: 'Milwaukee',        code: 'MIL', entity: 'KCT-1', customerId: 1 },
+  '309059': { terminal: 'Madison',          code: 'MAD', entity: 'KCT-1', customerId: 1 },
+  '308765': { terminal: 'Unknown-308765',   code: 'UNK', entity: 'KCT-1', customerId: 1 },
 };
 
 // ──────────────────────────────────────────────────────────────────────────────
