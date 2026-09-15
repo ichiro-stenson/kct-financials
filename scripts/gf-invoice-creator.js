@@ -36,6 +36,9 @@ const { createClient } = require(path.join(__dirname, 'node_modules', '@supabase
 const ENV_FILE = '/Users/ichiro/.openclaw/workspace/.env.fedex';
 const SUPABASE_URL = 'https://iprxetnntchgsekdbyon.supabase.co';
 
+/** Directory containing downloaded GF CSV files (from scraper run). */
+const GF_CSV_DIR = '/Users/ichiro/.openclaw/workspace/data';
+
 /** Parse .env file */
 function loadEnv(path) {
   const env = {};
@@ -91,6 +94,7 @@ const ITEM_ID = {
   'Ecommerce Stop':                 1031,  // (4113)
   'Fuel Surcharge - ISP':           1032,  // (4114)
   'Large Package Mix Charge':       1033,  // (4115)
+  'Large Package Fixed':            1023,  // (4007) FedEx one-time large pkg charge → Large Package Mix Revenue
   // Fallback
   '_other':                         1016,  // Other FedEx Settlement Income (4090)
 };
@@ -243,39 +247,74 @@ async function fetchWeeklyTotals(sb, csa, weekStart, weekEnd) {
 }
 
 /**
- * Fetch OTHERS for a CSA that belong to this week's batch.
- * Strategy: filter by created_at within ±24h of the weekly_totals batch.
- * Deduplicate by type (keep the one with highest totalamount).
+ * Parse OTHERS section directly from the downloaded GF CSV file for a given CSA + week-end date.
+ *
+ * Filename pattern: GF_STMT_*_<csa>_<MM-DD-YYYY>.csv (vendor ID is not hardcoded — glob by CSA).
+ * Groups by TYPE and sums amounts, so multi-row types (e.g. two Additional Charge lines,
+ * two Large Package Fixed lines) are correctly combined into one entry.
+ *
+ * Returns array of {type, totalamount, description, description_ext} — same shape as the old
+ * Supabase approach, compatible with buildOthersEntries().
  */
-async function fetchOthers(sb, csa, batchCreatedAt) {
-  if (!batchCreatedAt) return [];
+function parseOthersFromCsv(csvDir, csa, weekEndStr) {
+  // Convert YYYY-MM-DD → MM-DD-YYYY (GF filename format)
+  const [yyyy, mm, dd] = weekEndStr.split('-');
+  const weekEndFormatted = `${mm}-${dd}-${yyyy}`;
 
-  // ±24h window around the batch insertion time
-  const batchMs = new Date(batchCreatedAt).getTime();
-  const from = new Date(batchMs - 24 * 3600 * 1000).toISOString();
-  const to   = new Date(batchMs + 24 * 3600 * 1000).toISOString();
+  // Find the CSV file (vendor ID varies per CSA — match any)
+  const fileRe = new RegExp(`^GF_STMT_[^_]+_${csa}_${weekEndFormatted}\.csv$`);
+  const files = fs.readdirSync(csvDir).filter((f) => fileRe.test(f));
 
-  const { data, error } = await sb
-    .from('gf_statement_others')
-    .select('type, totalamount, description, description_ext, startdate, created_at')
-    .eq('csa', csa)
-    .gte('created_at', from)
-    .lte('created_at', to)
-    .gt('totalamount', 0);
-
-  if (error) throw new Error(`others query failed: ${error.message}`);
-  if (!data || data.length === 0) return [];
-
-  // Deduplicate by type — keep max totalamount per type
-  const byType = {};
-  for (const r of data) {
-    const key = r.type;
-    if (!byType[key] || r.totalamount > byType[key].totalamount) {
-      byType[key] = r;
-    }
+  if (files.length === 0) {
+    console.warn(`│  ⚠  No GF CSV found for CSA ${csa} week-end ${weekEndFormatted} in ${csvDir}`);
+    return [];
   }
 
-  return Object.values(byType).filter((r) => !OTHERS_SKIP_TYPES.has(r.type));
+  const filePath = path.join(csvDir, files[0]);
+  const lines = fs.readFileSync(filePath, 'utf8').split('\n');
+
+  // Parse a quoted-CSV row into an array of field strings
+  const parseRow = (line) =>
+    (line.match(/"([^"]*)"/g) ?? []).map((c) => c.slice(1, -1));
+
+  // Walk lines, collect OTHERS section rows, sum by type
+  let inOthers = false;
+  const byType = {}; // type → cumulative amount
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    const cols = parseRow(trimmed);
+    if (cols.length === 0) continue;
+
+    const col0 = cols[0];
+
+    if (!inOthers) {
+      if (col0 === 'OTHER P&D CHARGES') inOthers = true;
+      continue;
+    }
+
+    // End of OTHERS section
+    if (col0 === 'OTHER P&D CHARGES TOTAL:' || col0 === 'TOTAL CHARGES:') break;
+
+    // Skip header and label rows
+    if (col0 === 'TYPE' || OTHERS_SKIP_TYPES.has(col0) || !col0) continue;
+
+    // Amount is at column index 12 ("$ TOTAL AMT" in the 14-column GF layout)
+    const amtStr = (cols[12] ?? '').replace(/[^0-9.-]/g, '');
+    const amt = parseFloat(amtStr) || 0;
+    if (amt === 0) continue;
+
+    byType[col0] = (byType[col0] || 0) + amt;
+  }
+
+  return Object.entries(byType).map(([type, totalamount]) => ({
+    type,
+    totalamount,
+    description: type,
+    description_ext: null,
+  }));
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -468,9 +507,9 @@ async function main() {
 
     console.log(`│  Weekly totals: ${wt.totalstops} stops  $${wt.totalamt.toFixed(2)} raw total`);
 
-    // Fetch OTHERS
-    const others = await fetchOthers(sb, csa, wt.batchCreatedAt);
-    console.log(`│  Others: ${others.length} line items (non-zero, deduped)`);
+    // Fetch OTHERS — parsed directly from the downloaded GF CSV (no Supabase date-filter issues)
+    const others = parseOthersFromCsv(GF_CSV_DIR, csa, weekEndStr);
+    console.log(`│  Others: ${others.length} types from CSV (non-zero, summed by type)`);
 
     // Build entries
     const wtEntries     = buildWeeklyEntries(wt);
