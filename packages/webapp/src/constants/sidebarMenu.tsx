@@ -57,129 +57,45 @@ export const SidebarMenu: SidebarMenuItem[] = [
   },
 
   // ---------------
-  // # FedEx Revenue
-  // FedEx settlement charge statements only.
+  // # Revenue
+  // Direct link to invoice list — no submenu.
   // ---------------
   {
-    text: 'FedEx Revenue',
-    type: ISidebarMenuItemType.Overlay,
-    overlayId: ISidebarMenuOverlayIds.Sales,
-    children: [
-      {
-        text: 'FedEx Revenue',
-        type: ISidebarMenuItemType.Group,
-        children: [
-          {
-            text: 'Charge Statements',
-            href: '/invoices',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Invoice,
-              ability: SaleInvoiceAction.View,
-            },
-          },
-        ],
-      },
-      {
-        text: <T id={'sidebar.new_tasks'} />,
-        type: ISidebarMenuItemType.Group,
-        children: [
-          {
-            text: 'New Charge Statement',
-            href: '/invoices/new',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Invoice,
-              ability: SaleInvoiceAction.Create,
-            },
-          },
-        ],
-      },
-    ],
+    text: 'Revenue',
+    type: ISidebarMenuItemType.Link,
+    href: '/invoices',
+    permission: {
+      subject: AbilitySubject.Invoice,
+      ability: SaleInvoiceAction.View,
+    },
   },
 
   // ---------------
-  // # Asset Purchases
-  // Depreciable assets: trucks, iPads, scanners, hand carts, etc.
+  // # Assets
+  // Direct link to bills list — no submenu.
   // ---------------
   {
-    text: 'Asset Purchases',
-    type: ISidebarMenuItemType.Overlay,
-    overlayId: ISidebarMenuOverlayIds.Purchases,
-    children: [
-      {
-        text: 'Asset Purchases',
-        type: ISidebarMenuItemType.Group,
-        children: [
-          {
-            text: 'Asset Purchases',
-            href: '/bills',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Bill,
-              ability: BillAction.View,
-            },
-          },
-        ],
-      },
-      {
-        text: <T id={'sidebar.new_tasks'} />,
-        type: ISidebarMenuItemType.Group,
-        children: [
-          {
-            text: 'New Asset Purchase',
-            href: '/bills/new',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Bill,
-              ability: BillAction.Create,
-            },
-          },
-        ],
-      },
-    ],
+    text: 'Assets',
+    type: ISidebarMenuItemType.Link,
+    href: '/bills',
+    permission: {
+      subject: AbilitySubject.Bill,
+      ability: BillAction.View,
+    },
   },
 
   // ---------------
-  // # Suppliers
-  // Vendors we purchase assets from (vehicle dealers, tech suppliers, etc.)
+  // # Vendors
+  // Direct link to vendor list — no submenu.
   // ---------------
   {
     text: 'Vendors',
-    type: ISidebarMenuItemType.Overlay,
-    overlayId: ISidebarMenuOverlayIds.Contacts,
-    children: [
-      {
-        text: 'Vendors',
-        type: ISidebarMenuItemType.Group,
-        children: [
-          {
-            text: 'Vendors',
-            href: '/vendors',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Vendor,
-              ability: VendorAction.View,
-            },
-          },
-        ],
-      },
-      {
-        text: <T id={'sidebar.new_tasks'} />,
-        type: ISidebarMenuItemType.Group,
-        children: [
-          {
-            text: 'New Vendor',
-            href: '/vendors/new',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Vendor,
-              ability: VendorAction.Create,
-            },
-          },
-        ],
-      },
-    ],
+    type: ISidebarMenuItemType.Link,
+    href: '/vendors',
+    permission: {
+      subject: AbilitySubject.Vendor,
+      ability: VendorAction.View,
+    },
   },
 
   // ---------------
