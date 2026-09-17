@@ -22,6 +22,7 @@ function DrawerComponent(props) {
       size={'700px'}
       canOutsideClickClose={true}
       canEscapeKeyClose={true}
+      hasBackdrop={false}
       position={Position.RIGHT}
       onClose={handleClose}
       portalClassName={'drawer-portal'}
