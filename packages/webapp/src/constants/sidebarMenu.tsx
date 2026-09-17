@@ -145,16 +145,16 @@ export const SidebarMenu: SidebarMenuItem[] = [
   // Vendors we purchase assets from (vehicle dealers, tech suppliers, etc.)
   // ---------------
   {
-    text: 'Suppliers',
+    text: 'Vendors',
     type: ISidebarMenuItemType.Overlay,
     overlayId: ISidebarMenuOverlayIds.Contacts,
     children: [
       {
-        text: 'Suppliers',
+        text: 'Vendors',
         type: ISidebarMenuItemType.Group,
         children: [
           {
-            text: 'Suppliers',
+            text: 'Vendors',
             href: '/vendors',
             type: ISidebarMenuItemType.Link,
             permission: {
@@ -169,7 +169,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
         type: ISidebarMenuItemType.Group,
         children: [
           {
-            text: 'New Supplier',
+            text: 'New Vendor',
             href: '/vendors/new',
             type: ISidebarMenuItemType.Link,
             permission: {

@@ -4,7 +4,9 @@
 $ns: bp4;
 
 :root {
-  --color-primary: #8abbff;
+  --color-primary: #E8A020;
+  --color-primary-navy: #1B3A6B;
+  --color-accent: #E8A020;
   --color-danger: red;
 
   // Green colors
@@ -81,15 +83,16 @@ $ns: bp4;
   --color-ui-menu-select-item-hover-background: #edeff2;
   --color-ui-menu-select-item-active-background: var(--color-primary);
 
-  --color-app-body: #fff;
+  --color-app-body: #F5F7FA;
+  --color-text-primary: #1A1A2E;
 
   // Splash screen.
   --color-splash-screen-background: #fff;
 
   // Main Dashboard.
-  --color-dashboard-insider-background: #fbfbfb;
+  --color-dashboard-insider-background: #F5F7FA;
   --color-dashboard-topbar-background: #fff;
-  --color-dashboard-fallback-loading-background: #fbfbfb;
+  --color-dashboard-fallback-loading-background: #F5F7FA;
   --color-dashboard-topbar-border-color: #c7d5db;
   --color-dashboard-datatable-background: #fff;
   --color-dashboard-datatable-border: #d2dce2;
@@ -132,11 +135,11 @@ $ns: bp4;
   --color-datatable-empty-status-description: #1f3255;
 
   --color-dashboard-card-background: #fff;
-  --color-dashboard-card-border: #d2dce2;
+  --color-dashboard-card-border: #e0e6ef;
 
   // Sidebar
   --color-sidebar-toggle: #6b8193;
-  --color-sidebar-background: #01115e;
+  --color-sidebar-background: #1B3A6B;
   --color-sidebar-text: #fff;
   --color-sidebar-scrollbars-background: rgba(255, 255, 255, 0.25);
   
@@ -147,7 +150,7 @@ $ns: bp4;
   --color-sidebar-menu-item-text-hover: rgb(255, 255, 255);
   --color-sidebar-menu-item-active-background: rgba(255, 255, 255, 0.2);
   --color-sidebar-menu-item-active-text: rgb(255, 255, 255);
-  --color-sidebar-menu-item-focus-background: #01143e;
+  --color-sidebar-menu-item-focus-background: #0f2447;
   --color-sidebar-menu-label-color: rgba(255, 255, 255, 0.5);
 
   // Sidebar overlay
@@ -174,7 +177,7 @@ $ns: bp4;
 
   // Card
   --color-card-background: #fff;
-  --color-card-border: #d2dce2;
+  --color-card-border: #e0e6ef;
 
   // Bank accounts.
   --color-bank-account-card-background: #fff;

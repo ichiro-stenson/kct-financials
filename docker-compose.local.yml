@@ -8,16 +8,30 @@
 services:
   webapp:
     image: kct-financials/webapp:local
+    networks:
+      - kct-financials_bigcapital_network
 
   server:
+    container_name: bigcapital-server
     image: kct-financials/server:local
+    env_file:
+      - .env
     environment:
       - THROTTLE_GLOBAL_LIMIT=50000
       - THROTTLE_GLOBAL_TTL=60000
       - THROTTLE_AUTH_LIMIT=50000
       - THROTTLE_AUTH_TTL=60000
+    networks:
+      - bigcapital_default
+      - kct-financials_bigcapital_network
 
   # Disable watchtower — we don't want Docker Hub auto-updates overwriting local builds
   auto-update:
     profiles:
       - disabled
+
+networks:
+  bigcapital_default:
+    external: true
+  kct-financials_bigcapital_network:
+    external: true

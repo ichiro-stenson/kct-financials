@@ -113,10 +113,10 @@ export function InvoicePaymentPage({
   payInvoiceButtonProps,
 
   // # Buy note
-  buyNote = 'By confirming your payment, you allow Bigcapital Technology, Inc. to charge you for this payment and save your payment information in accordance with their terms.',
+  buyNote = 'By confirming your payment, you allow King Capital Services to charge you for this payment and save your payment information in accordance with their terms.',
 
   // # Copyright
-  copyrightText = `© 2024 Bigcapital Technology, Inc. <br /> All rights reserved.`,
+  copyrightText = `© 2024 King Capital Services <br /> All rights reserved.`,
   classNames,
 }: PaymentPageProps) {
   return (

@@ -9,25 +9,12 @@ export const PreferencesMenu: PreferencesMenuItem[] = [
     href: '/preferences/general',
   },
   {
-    text: 'Branding',
-    disabled: false,
-    href: '/preferences/branding',
-  },
-  // {
-  //   text: 'Billing',
-  //   href: '/preferences/billing',
-  // },
-  {
     text: <T id={'users'} />,
     href: '/preferences/users',
   },
   {
     text: 'Payment Methods',
     href: '/preferences/payment-methods',
-  },
-  {
-    text: <T id={'preferences.estimates'} />,
-    href: '/preferences/estimates',
   },
   {
     text: <T id={'preferences.invoices'} />,
@@ -42,16 +29,14 @@ export const PreferencesMenu: PreferencesMenuItem[] = [
     href: '/preferences/credit-notes',
   },
   {
-    text: <T id={'currencies'} />,
-    href: '/preferences/currencies',
+    text: <T id={'items'} />,
+    disabled: false,
+    href: '/preferences/items',
   },
   {
-    text: <T id={'branches.label'} />,
-    href: '/preferences/branches',
-  },
-  {
-    text: <T id={'warehouses.label'} />,
-    href: '/preferences/warehouses',
+    text: 'API Keys',
+    disabled: false,
+    href: '/preferences/api-keys',
   },
   {
     text: <T id={'accountant'} />,
@@ -63,24 +48,4 @@ export const PreferencesMenu: PreferencesMenuItem[] = [
     disabled: false,
     href: '/preferences/features',
   },
-  {
-    text: <T id={'items'} />,
-    disabled: false,
-    href: '/preferences/items',
-  },
-  // {
-  //   text: 'Integrations',
-  //   disabled: false,
-  //   href: '/preferences/integrations'
-  // },
-  {
-    text: 'API Keys',
-    disabled: false,
-    href: '/preferences/api-keys',
-  },
-  // {
-  //   text: <T id={'sms_integration.label'} />,
-  //   disabled: false,
-  //   href: '/preferences/sms-message',
-  // },
 ];

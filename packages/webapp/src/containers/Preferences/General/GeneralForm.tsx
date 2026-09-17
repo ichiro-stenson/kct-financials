@@ -79,6 +79,24 @@ export function PreferencesGeneralForm({
         <FInputGroup medium={true} name={'taxNumber'} fastField={true} />
       </FFormGroup>
 
+      {/* ---------- FedEx V Number ----------  */}
+      <FFormGroup
+        name={'vendorNumber'}
+        label={'FedEx V Number'}
+        inline={true}
+        helperText={
+          'FedEx-assigned vendor number for this entity (e.g. V12345)'
+        }
+        fastField={true}
+      >
+        <FInputGroup
+          medium={true}
+          name={'vendorNumber'}
+          placeholder={'V12345'}
+          fastField={true}
+        />
+      </FFormGroup>
+
       {/* ---------- Industry ----------  */}
       <FFormGroup
         name={'industry'}
