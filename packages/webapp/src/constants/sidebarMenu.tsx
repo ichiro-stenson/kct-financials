@@ -421,12 +421,82 @@ export const SidebarMenu: SidebarMenuItem[] = [
     children: [
       {
         text: <T id={'sidebar.preferences'} />,
-        href: '/preferences',
-        type: ISidebarMenuItemType.Link,
+        type: ISidebarMenuItemType.Overlay,
+        overlayId: ISidebarMenuOverlayIds.Preferences,
         permission: {
           subject: AbilitySubject.Preferences,
           ability: PreferencesAbility.Mutate,
         },
+        children: [
+          {
+            text: 'Settings',
+            type: ISidebarMenuItemType.Group,
+            children: [
+              {
+                text: 'General',
+                href: '/preferences/general',
+                type: ISidebarMenuItemType.Link,
+              },
+              {
+                text: 'Users',
+                href: '/preferences/users',
+                type: ISidebarMenuItemType.Link,
+              },
+              {
+                text: 'Payment Methods',
+                href: '/preferences/payment-methods',
+                type: ISidebarMenuItemType.Link,
+              },
+              {
+                text: 'API Keys',
+                href: '/preferences/api-keys',
+                type: ISidebarMenuItemType.Link,
+              },
+            ],
+          },
+          {
+            text: 'Documents',
+            type: ISidebarMenuItemType.Group,
+            children: [
+              {
+                text: 'Invoices',
+                href: '/preferences/invoices',
+                type: ISidebarMenuItemType.Link,
+              },
+              {
+                text: 'Receipts',
+                href: '/preferences/receipts',
+                type: ISidebarMenuItemType.Link,
+              },
+              {
+                text: 'Credit Notes',
+                href: '/preferences/credit-notes',
+                type: ISidebarMenuItemType.Link,
+              },
+            ],
+          },
+          {
+            text: 'Advanced',
+            type: ISidebarMenuItemType.Group,
+            children: [
+              {
+                text: 'Items',
+                href: '/preferences/items',
+                type: ISidebarMenuItemType.Link,
+              },
+              {
+                text: 'Accountant',
+                href: '/preferences/accountant',
+                type: ISidebarMenuItemType.Link,
+              },
+              {
+                text: 'Features',
+                href: '/preferences/features',
+                type: ISidebarMenuItemType.Link,
+              },
+            ],
+          },
+        ],
       },
     ],
   },
