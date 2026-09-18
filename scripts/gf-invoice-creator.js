@@ -534,6 +534,7 @@ async function main() {
       dueDate,
       invoiceNo,
       referenceNo,
+      delivered: true,
       note: `GF settlement week ${weekStartStr}–${weekEndStr} (CSA ${csa})`,
       entries: entries.map((e, idx) => ({ ...e, index: idx + 1 })),
     };
