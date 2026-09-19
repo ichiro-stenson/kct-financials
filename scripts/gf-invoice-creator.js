@@ -36,6 +36,20 @@ const { createClient } = require(path.join(__dirname, 'node_modules', '@supabase
 const ENV_FILE = '/Users/ichiro/.openclaw/workspace/.env.fedex';
 const SUPABASE_URL = 'https://iprxetnntchgsekdbyon.supabase.co';
 
+/** BigCapital organization IDs — used for logging/routing decisions */
+const TENANT_KCT         = '8on8u91mti2udiv';  // King Capital Transport (Tenant 1, default)
+const TENANT_KCT_LOGISTICS = 'kjmwhhwbgjuo2p2'; // KCT Logistics Inc     (Tenant 2)
+
+/**
+ * FedEx terminal numbers that belong to KCT Logistics Inc.
+ * Invoices for these terminals are posted to the KCT Logistics BigCapital tenant
+ * using BIGCAPITAL_API_KEY_KCT_LOGISTICS.
+ *
+ * 658 = Springfield (CSA 307033) — confirmed
+ * 672, 633 = pending CSA mapping; add entries to CSA_MAP once confirmed
+ */
+const KCT_LOGISTICS_TERMINAL_NOS = new Set(['658', '672', '633']);
+
 /** Directory containing downloaded GF CSV files (from scraper run). */
 const GF_CSV_DIR = '/Users/ichiro/.openclaw/workspace/data';
 
@@ -54,13 +68,17 @@ function loadEnv(path) {
 // ──────────────────────────────────────────────────────────────────────────────
 
 const CSA_MAP = {
-  '300665': { terminal: 'Billings',         code: 'BIL', entity: 'KCT-1', customerId: 1 },
-  '300948': { terminal: 'Bismarck',         code: 'BIS', entity: 'KCT-1', customerId: 1 },
-  '304830': { terminal: 'Cody',             code: 'COD', entity: 'KCT-1', customerId: 1 },
-  '307033': { terminal: 'Springfield',      code: 'SPR', entity: 'KCT-2', customerId: 2 }, // KCT Logistics LLC
-  '308940': { terminal: 'Milwaukee',        code: 'MIL', entity: 'KCT-1', customerId: 1 },
-  '309059': { terminal: 'Madison',          code: 'MAD', entity: 'KCT-1', customerId: 1 },
-  '308765': { terminal: 'Unknown-308765',   code: 'UNK', entity: 'KCT-1', customerId: 1 },
+  // ── King Capital Transport terminals ──────────────────────────────────────
+  '300665': { terminal: 'Billings',         code: 'BIL', entity: 'KCT-1', customerId: 1, terminalNo: '590' },
+  '300948': { terminal: 'Bismarck',         code: 'BIS', entity: 'KCT-1', customerId: 1, terminalNo: '585' },
+  '304830': { terminal: 'Cody',             code: 'COD', entity: 'KCT-1', customerId: 1, terminalNo: '824' },
+  '308940': { terminal: 'Milwaukee',        code: 'MIL', entity: 'KCT-1', customerId: 1, terminalNo: '532' },
+  '309059': { terminal: 'Madison',          code: 'MAD', entity: 'KCT-1', customerId: 1, terminalNo: '537' },
+  '308765': { terminal: 'Unknown-308765',   code: 'UNK', entity: 'KCT-1', customerId: 1, terminalNo: null  },
+  // ── KCT Logistics Inc terminals → separate BigCapital tenant ──────────────
+  // customerId: 1 because FedEx Ground is customer #1 in every tenant
+  '307033': { terminal: 'Springfield',      code: 'SPR', entity: 'KCT-2', customerId: 1, terminalNo: '658' }, // KCT Logistics Inc
+  // TODO: add CSA entries for terminal 672 and 633 once CSA numbers are confirmed with FedEx
 };
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -468,12 +486,14 @@ async function main() {
 
   // ── Load env & init clients ─────────────────────────────────────────────────
   const env = loadEnv(ENV_FILE);
-  const supabaseKey = env.SUPABASE_SERVICE_KEY;
-  const apiKey      = env.BIGCAPITAL_API_KEY;
-  const bcUrl       = (env.BIGCAPITAL_URL || 'http://localhost').replace(/\/$/, '');
+  const supabaseKey       = env.SUPABASE_SERVICE_KEY;
+  const apiKey            = env.BIGCAPITAL_API_KEY;            // King Capital Transport tenant
+  const apiKeyKctLogistics = env.BIGCAPITAL_API_KEY_KCT_LOGISTICS; // KCT Logistics Inc tenant
+  const bcUrl             = (env.BIGCAPITAL_URL || 'http://localhost').replace(/\/$/, '');
 
-  if (!supabaseKey) throw new Error('SUPABASE_SERVICE_KEY not found in env');
-  if (!apiKey)      throw new Error('BIGCAPITAL_API_KEY not found in env');
+  if (!supabaseKey)        throw new Error('SUPABASE_SERVICE_KEY not found in env');
+  if (!apiKey)             throw new Error('BIGCAPITAL_API_KEY not found in env');
+  if (!apiKeyKctLogistics) throw new Error('BIGCAPITAL_API_KEY_KCT_LOGISTICS not found in env');
 
   const sb = createClient(SUPABASE_URL, supabaseKey);
 
@@ -495,7 +515,13 @@ async function main() {
     const referenceNo = csa;
 
     console.log(`\n┌─ ${meta.terminal} (CSA ${csa})`);
-    console.log(`│  Invoice: ${invoiceNo}  Customer: ${meta.customerId}  Entity: ${meta.entity}`);
+    // Route to correct BigCapital tenant based on entity
+    // KCT-2 terminals (658, 672, 633) → KCT Logistics Inc tenant
+    // KCT-1 terminals (all others)    → King Capital Transport tenant
+    const tenantApiKey = meta.entity === 'KCT-2' ? apiKeyKctLogistics : apiKey;
+    const tenantId     = meta.entity === 'KCT-2' ? TENANT_KCT_LOGISTICS : TENANT_KCT;
+
+    console.log(`│  Invoice: ${invoiceNo}  Customer: ${meta.customerId}  Entity: ${meta.entity}  Tenant: ${tenantId}`);
 
     // Fetch weekly totals
     const wt = await fetchWeeklyTotals(sb, csa, weekStartStr, weekEndStr);
@@ -548,7 +574,7 @@ async function main() {
 
     // Check for existing invoice
     if (!force) {
-      const existingId = await findExistingInvoice(bcUrl, apiKey, invoiceNo);
+      const existingId = await findExistingInvoice(bcUrl, tenantApiKey, invoiceNo);
       if (existingId) {
         console.log(`│  ⚠  Invoice ${invoiceNo} already exists (ID ${existingId}) — use --force to recreate`);
         results.push({ csa, invoiceNo, status: 'exists', invoiceId: existingId });
@@ -556,8 +582,8 @@ async function main() {
       }
     }
 
-    // POST invoice
-    const res = await createInvoice(bcUrl, apiKey, payload);
+    // POST invoice to the correct tenant
+    const res = await createInvoice(bcUrl, tenantApiKey, payload);
 
     if (res.status === 200 || res.status === 201) {
       const invoiceId = res.body?.id;
