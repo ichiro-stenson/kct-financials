@@ -24,5 +24,6 @@ export interface GeneralFormValues {
   timezone: string;
   taxNumber?: string;
   vendorNumber?: string;
+  naicsCode?: string;
   address: GeneralFormAddress;
 }

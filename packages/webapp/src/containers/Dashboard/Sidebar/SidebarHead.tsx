@@ -30,6 +30,7 @@ const DashboardOrganizationMenu = styled(Menu)`
   min-width: 280px;
   max-height: 500px;
   overflow-y: auto;
+  background-color: var(--color-dark-gray1) !important;
 
   .org-workspace-item {
     padding: 8px 10px;
@@ -122,15 +123,16 @@ function SidebarHeadJSX({
                   />
                 ) : (
                   <x.div
-                    h={'60px'}
-                    w={'60px'}
-                    lineHeight="60px"
-                    borderRadius={10}
-                    backgroundColor="#CB22E5"
+                    h={'36px'}
+                    w={'36px'}
+                    lineHeight="36px"
+                    borderRadius={8}
+                    backgroundColor="#5c7c99"
                     textAlign="center"
-                    fontWeight={400}
-                    fontSize={16}
+                    fontWeight={500}
+                    fontSize={13}
                     color="#fff"
+                    flexShrink={0}
                   >
                     {firstLettersArgs(...(metadata?.name || '').split(' '))}
                   </x.div>

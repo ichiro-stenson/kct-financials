@@ -608,14 +608,9 @@ body.bp4-dark  {
   --color-content-tab-active-text: #1552c8;
   --color-content-tab-active-text: var(--color-light-gray1);
 
-  // Aside
-  --color-aside-background: #fff;
+  // Aside — removed duplicate dark overrides; dark mode handled by body.bp4-dark block
   --color-aside-background: var(--color-dark-gray1);
-
-  --color-aside-title-background: #fff;
   --color-aside-title-background: var(--color-dark-gray1);
-
-  --color-aside-divider: #E1E2E9;
   --color-aside-divider: var(--color-dark-gray5);
 
   // App shell

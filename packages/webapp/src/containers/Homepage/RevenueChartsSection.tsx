@@ -386,6 +386,574 @@ function YearRevenueChart() {
   );
 }
 
+// ─── Donut / Pie Chart ───────────────────────────────────────────────────────
+
+const DONUT_COLORS = [
+  '#1B3A6B',
+  '#E8A020',
+  '#2E86AB',
+  '#A23B72',
+  '#F18F01',
+  '#C73E1D',
+];
+
+function polarXY(
+  cx: number,
+  cy: number,
+  r: number,
+  angleDeg: number,
+): { x: number; y: number } {
+  const rad = ((angleDeg - 90) * Math.PI) / 180;
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+}
+
+function donutArcPath(
+  cx: number,
+  cy: number,
+  outerR: number,
+  innerR: number,
+  startDeg: number,
+  endDeg: number,
+): string {
+  const o1 = polarXY(cx, cy, outerR, startDeg);
+  const o2 = polarXY(cx, cy, outerR, endDeg);
+  const i1 = polarXY(cx, cy, innerR, endDeg);
+  const i2 = polarXY(cx, cy, innerR, startDeg);
+  const large = endDeg - startDeg > 180 ? 1 : 0;
+  return [
+    `M ${o1.x.toFixed(3)} ${o1.y.toFixed(3)}`,
+    `A ${outerR} ${outerR} 0 ${large} 1 ${o2.x.toFixed(3)} ${o2.y.toFixed(3)}`,
+    `L ${i1.x.toFixed(3)} ${i1.y.toFixed(3)}`,
+    `A ${innerR} ${innerR} 0 ${large} 0 ${i2.x.toFixed(3)} ${i2.y.toFixed(3)}`,
+    'Z',
+  ].join(' ');
+}
+
+interface DonutSlice {
+  label: string;
+  value: number;
+}
+
+interface TerminalStat extends DonutSlice {
+  dispatchCount: number;
+  totalRevenue: number;
+}
+
+function DonutChart({
+  data,
+  colors = DONUT_COLORS,
+  loading,
+  centerLabel,
+  centerText,
+  renderLegendRow,
+}: {
+  data: DonutSlice[];
+  colors?: string[];
+  loading?: boolean;
+  centerLabel?: string;
+  centerText?: string;
+  renderLegendRow?: (item: {
+    label: string;
+    value: number;
+    color: string;
+    pct: string;
+    original: DonutSlice;
+  }) => React.ReactNode;
+}) {
+  const SIZE = 180;
+  const cx = SIZE / 2;
+  const cy = SIZE / 2;
+  const outerR = SIZE / 2 - 6;
+  const innerR = Math.round(outerR * 0.55);
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 12,
+          width: '100%',
+        }}
+      >
+        <svg
+          viewBox={`0 0 ${SIZE} ${SIZE}`}
+          style={{ width: SIZE, height: SIZE, maxWidth: '100%' }}
+        >
+          <circle cx={cx} cy={cy} r={outerR} fill="#e0e6ef" opacity={0.45} />
+          <circle cx={cx} cy={cy} r={innerR} fill="#fff" />
+          <rect
+            x={cx - 28}
+            y={cy - 9}
+            width={56}
+            height={18}
+            rx={3}
+            fill="#e0e6ef"
+            opacity={0.5}
+          />
+        </svg>
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 7,
+          }}
+        >
+          {[80, 65, 50].map((w, i) => (
+            <div
+              key={i}
+              style={{ display: 'flex', gap: 8, alignItems: 'center' }}
+            >
+              <div
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: 2,
+                  background: '#e0e6ef',
+                  flexShrink: 0,
+                }}
+              />
+              <div
+                style={{
+                  width: `${w}%`,
+                  height: 10,
+                  borderRadius: 3,
+                  background: '#e0e6ef',
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const total = data.reduce((s, d) => s + d.value, 0);
+  if (!data.length || total === 0) return null;
+
+  let cumAngle = 0;
+  const slices = data.map((d, i) => {
+    const sweep = (d.value / total) * 360;
+    const start = cumAngle;
+    // Clamp to avoid degenerate arc when sweep ≈ 360 (single slice)
+    cumAngle += sweep;
+    return {
+      ...d,
+      start,
+      end: start + Math.min(sweep, 359.999),
+      color: colors[i % colors.length],
+    };
+  });
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 12,
+        width: '100%',
+      }}
+    >
+      <svg
+        viewBox={`0 0 ${SIZE} ${SIZE}`}
+        style={{ width: SIZE, height: SIZE, maxWidth: '100%', flexShrink: 0 }}
+      >
+        {slices.map((s, i) => (
+          <path
+            key={i}
+            d={donutArcPath(cx, cy, outerR, innerR, s.start, s.end)}
+            fill={s.color}
+          />
+        ))}
+        <text
+          x={cx}
+          y={cy - 5}
+          textAnchor="middle"
+          fontSize={10}
+          fill="#6b7a99"
+          fontWeight={400}
+        >
+          {centerLabel ?? 'Total'}
+        </text>
+        <text
+          x={cx}
+          y={cy + 12}
+          textAnchor="middle"
+          fontSize={15}
+          fill="#1A1A2E"
+          fontWeight={700}
+        >
+          {centerText ?? fmtMoney(total)}
+        </text>
+      </svg>
+
+      {/* Legend */}
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 5,
+        }}
+      >
+        {slices.map((s) => {
+          const pct = ((s.value / total) * 100).toFixed(1);
+          if (renderLegendRow) {
+            return (
+              <React.Fragment key={s.label}>
+                {renderLegendRow({
+                  label: s.label,
+                  value: s.value,
+                  color: s.color,
+                  pct,
+                  original: s,
+                })}
+              </React.Fragment>
+            );
+          }
+          return (
+            <div
+              key={s.label}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 7,
+                fontSize: 12,
+                color: '#6b7a99',
+              }}
+            >
+              <span
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: 2,
+                  backgroundColor: s.color,
+                  display: 'inline-block',
+                  flexShrink: 0,
+                }}
+              />
+              <span
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {s.label}
+              </span>
+              <strong style={{ color: '#1A1A2E', flexShrink: 0 }}>
+                {fmtMoney(s.value)}
+              </strong>
+              <span
+                style={{
+                  color: '#9aa5bc',
+                  flexShrink: 0,
+                  minWidth: 38,
+                  textAlign: 'right',
+                }}
+              >
+                {pct}%
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── Revenue by Terminal hook ─────────────────────────────────────────────────
+
+function useRevenueByTerminal() {
+  return useRequestQuery(
+    ['kct-revenue-by-terminal'],
+    { method: 'get', url: 'sale-invoices', params: { page_size: 1000 } },
+    {
+      select: (res: any): TerminalStat[] => {
+        const CSA_NAMES: Record<string, string> = {
+          '300665': 'Billings',
+          '300948': 'Bismarck',
+          '304830': 'Cody',
+          '308940': 'Milwaukee',
+          '309059': 'Madison',
+          '307033': 'Springfield',
+        };
+        const list = res?.data?.saleInvoices ?? res?.data ?? [];
+        const arr = Array.isArray(list) ? list : [];
+        const totals: Record<string, number> = {};
+        const counts: Record<string, number> = {};
+        arr.forEach((inv: any) => {
+          const ref = inv.referenceNo ?? '';
+          const parts = ref.split('-');
+          const csa = parts[1] ?? '';
+          const name = CSA_NAMES[csa] ?? 'Other';
+          totals[name] = (totals[name] ?? 0) + (inv.total ?? 0);
+          counts[name] = (counts[name] ?? 0) + 1;
+        });
+        return Object.entries(totals)
+          .map(([label, totalRevenue]) => {
+            const dispatchCount = counts[label] ?? 1;
+            return {
+              label,
+              value: totalRevenue / dispatchCount, // $/dispatch — drives pie slice size
+              dispatchCount,
+              totalRevenue,
+            };
+          })
+          .sort((a, b) => b.value - a.value);
+      },
+      defaultData: [],
+      staleTime: 5 * 60 * 1000,
+    },
+  );
+}
+
+// ─── Expenses by Category hook ────────────────────────────────────────────────
+
+function useExpensesByCategory() {
+  const year = new Date().getFullYear();
+  return useRequestQuery(
+    ['kct-expenses-by-category', year],
+    {
+      method: 'get',
+      url: 'reports/profit-loss',
+      params: { from_date: `${year}-01-01`, to_date: `${year}-12-31` },
+    },
+    {
+      select: (res: any) => {
+        const root = res?.data ?? res;
+
+        const parseAccounts = (accounts: any[]): DonutSlice[] =>
+          accounts
+            .map((a: any) => ({
+              label: a.name ?? a.accountName ?? '',
+              value: Math.abs(
+                a.total?.amount ?? a.total ?? a.balance ?? a.amount ?? 0,
+              ),
+            }))
+            .filter((a) => a.label && a.value > 0)
+            .sort((a, b) => b.value - a.value);
+
+        // Shape 1: root.expenses.accounts
+        const directAccounts =
+          root?.expenses?.accounts ??
+          root?.operatingExpenses?.accounts ??
+          root?.expense?.accounts;
+        if (Array.isArray(directAccounts) && directAccounts.length > 0) {
+          const result = parseAccounts(directAccounts);
+          if (result.length) return result;
+        }
+
+        // Shape 2: root.sections[] with a name containing "expense"
+        const sections = root?.sections ?? root?.data?.sections ?? [];
+        if (Array.isArray(sections)) {
+          for (const sec of sections) {
+            const name = (sec.name ?? sec.label ?? '').toLowerCase();
+            if (name.includes('expense') || name.includes('cost')) {
+              const items = sec.children ?? sec.accounts ?? sec.items ?? [];
+              if (Array.isArray(items) && items.length > 0) {
+                const result = parseAccounts(items);
+                if (result.length) return result;
+              }
+            }
+          }
+        }
+
+        return [];
+      },
+      defaultData: [],
+      retry: 1,
+      staleTime: 5 * 60 * 1000,
+    },
+  );
+}
+
+// ─── Revenue by Terminal chart ────────────────────────────────────────────────
+
+function RevenueByTerminalChart() {
+  const { data = [], isLoading } = useRevenueByTerminal();
+  const stats = data as TerminalStat[];
+  const hasData = !isLoading && stats.length > 0;
+
+  const totalDispatches = stats.reduce((s, t) => s + t.dispatchCount, 0);
+  const totalRevenue = stats.reduce((s, t) => s + t.totalRevenue, 0);
+  const avgPerDispatch =
+    totalDispatches > 0 ? totalRevenue / totalDispatches : 0;
+
+  return (
+    <ChartCard title="Revenue per Dispatch by Terminal">
+      {isLoading ? (
+        <DonutChart data={[]} loading />
+      ) : !hasData ? (
+        <div
+          style={{
+            color: '#9aa5bc',
+            fontSize: 13,
+            padding: '36px 0',
+            textAlign: 'center',
+          }}
+        >
+          No invoice data found
+        </div>
+      ) : (
+        <>
+          <DonutChart
+            data={stats}
+            colors={DONUT_COLORS}
+            centerLabel="Avg/dispatch"
+            centerText={fmtMoney(avgPerDispatch)}
+            renderLegendRow={({ label, value, color }) => {
+              const stat = stats.find((s) => s.label === label)!;
+              return (
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 7,
+                    fontSize: 12,
+                    color: '#6b7a99',
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: 2,
+                      backgroundColor: color,
+                      display: 'inline-block',
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span
+                    style={{
+                      flex: 1,
+                      minWidth: 0,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {label}
+                  </span>
+                  <strong style={{ color: '#1A1A2E', flexShrink: 0 }}>
+                    {fmtMoney(value)}/dispatch
+                  </strong>
+                  <span
+                    style={{
+                      color: '#9aa5bc',
+                      flexShrink: 0,
+                      fontSize: 11,
+                      marginLeft: 2,
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    ({stat?.dispatchCount ?? 0} disp.)
+                  </span>
+                </div>
+              );
+            }}
+          />
+          {/* ── Summary stat row ── */}
+          <div
+            style={{
+              display: 'flex',
+              marginTop: 14,
+              paddingTop: 10,
+              borderTop: '1px solid #e0e6ef',
+            }}
+          >
+            <div style={{ flex: 1, textAlign: 'center' }}>
+              <div
+                style={{
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: '#1A1A2E',
+                  lineHeight: 1,
+                }}
+              >
+                {totalDispatches}
+              </div>
+              <div style={{ fontSize: 11, color: '#6b7a99', marginTop: 3 }}>
+                Total dispatches
+              </div>
+            </div>
+            <div style={{ width: 1, background: '#e0e6ef', flexShrink: 0 }} />
+            <div style={{ flex: 1, textAlign: 'center' }}>
+              <div
+                style={{
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: '#1A1A2E',
+                  lineHeight: 1,
+                }}
+              >
+                {fmtMoney(avgPerDispatch)}
+              </div>
+              <div style={{ fontSize: 11, color: '#6b7a99', marginTop: 3 }}>
+                Avg revenue / dispatch
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </ChartCard>
+  );
+}
+
+// ─── Expenses by Category chart ───────────────────────────────────────────────
+
+function ExpensesByCategoryChart() {
+  const { data = [], isLoading } = useExpensesByCategory();
+  const hasData = !isLoading && (data as DonutSlice[]).length > 0;
+
+  return (
+    <ChartCard title="Expenses by Category">
+      {isLoading ? (
+        <DonutChart data={[]} loading />
+      ) : !hasData ? (
+        <div
+          style={{
+            color: '#9aa5bc',
+            fontSize: 13,
+            padding: '36px 0',
+            textAlign: 'center',
+            lineHeight: 1.6,
+          }}
+        >
+          Categorize your bank transactions
+          <br />
+          to see expenses
+        </div>
+      ) : (
+        <DonutChart data={data as DonutSlice[]} colors={DONUT_COLORS} />
+      )}
+    </ChartCard>
+  );
+}
+
+// ─── DispatchChartsSection ────────────────────────────────────────────────────
+
+export function DispatchChartsSection() {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        gap: 18,
+        margin: '18px 32px 0',
+        flexWrap: 'wrap',
+      }}
+    >
+      <RevenueByTerminalChart />
+      <ExpensesByCategoryChart />
+    </div>
+  );
+}
+
 // ─── Section ──────────────────────────────────────────────────────────────────
 
 export function RevenueChartsSection() {

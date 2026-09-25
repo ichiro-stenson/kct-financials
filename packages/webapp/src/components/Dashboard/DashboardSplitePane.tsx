@@ -30,9 +30,10 @@ function DashboardSplitPane({
 }: DashboardSplitPaneProps) {
   const initialSize = 220;
 
-  const [defaultSize, setDefaultSize] = useState(
-    parseInt(localStorage.getItem('dashboard-size') || '', 10) || initialSize,
-  );
+  const [defaultSize, setDefaultSize] = useState(() => {
+    const stored = parseInt(localStorage.getItem('dashboard-size') || '', 10);
+    return stored >= 180 ? stored : initialSize;
+  });
   const debounceSaveSize = useRef(
     debounce((size: number) => {
       localStorage.setItem('dashboard-size', String(size));

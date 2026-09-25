@@ -85,6 +85,16 @@ export const SidebarMenu: SidebarMenuItem[] = [
   },
 
   // ---------------
+  // # Fleet Assets
+  // Vehicle and equipment tracking with amortization schedules.
+  // ---------------
+  {
+    text: '🚛 Fleet',
+    type: ISidebarMenuItemType.Link,
+    href: '/fleet',
+  },
+
+  // ---------------
   // # Vendors
   // Direct link to vendor list — no submenu.
   // ---------------

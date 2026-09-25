@@ -74,7 +74,7 @@ const CSA_MAP = {
   '304830': { terminal: 'Cody',             code: 'COD', entity: 'KCT-1', customerId: 1, terminalNo: '824' },
   '308940': { terminal: 'Milwaukee',        code: 'MIL', entity: 'KCT-1', customerId: 1, terminalNo: '532' },
   '309059': { terminal: 'Madison',          code: 'MAD', entity: 'KCT-1', customerId: 1, terminalNo: '537' },
-  '308765': { terminal: 'Unknown-308765',   code: 'UNK', entity: 'KCT-1', customerId: 1, terminalNo: null  },
+  '308765': { terminal: 'North St Louis',    code: 'NSL', entity: 'KCT-1', customerId: 1, terminalNo: '633' },
   // ── KCT Logistics Inc terminals → separate BigCapital tenant ──────────────
   // customerId: 1 because FedEx Ground is customer #1 in every tenant
   '307033': { terminal: 'Springfield',      code: 'SPR', entity: 'KCT-2', customerId: 1, terminalNo: '658' }, // KCT Logistics Inc

@@ -1,7 +1,7 @@
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createBrowserHistory, History } from 'history';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import '@/style/App.scss';
 import { SplashScreen, DashboardThemeProvider } from '../components';
@@ -83,6 +83,13 @@ function AppInsider({ history }: { history: History }) {
  * Core application.
  */
 export default function App() {
+  // Force light mode — KCT Financials is light-mode only.
+  // Prevents macOS dark mode and accidental shift+h toggle from bleeding in.
+  useEffect(() => {
+    document.body.classList.remove('bp4-dark');
+    document.documentElement.classList.remove('bp4-dark');
+  }, []);
+
   // Browser history.
   const history = createBrowserHistory();
 

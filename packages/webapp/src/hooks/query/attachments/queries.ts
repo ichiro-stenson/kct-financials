@@ -1,6 +1,7 @@
 import {
   deleteAttachment,
   fetchAttachmentPresignedUrl,
+  linkAttachment,
   uploadAttachment,
 } from '@bigcapital/sdk-ts';
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
@@ -51,5 +52,22 @@ export function useGetPresignedUrlAttachment(
   return useMutation({
     ...props,
     mutationFn: (key: string) => fetchAttachmentPresignedUrl(fetcher, key),
+  });
+}
+
+export interface LinkAttachmentVars {
+  key: string;
+  modelRef: string;
+  modelId: number;
+}
+
+export function useLinkAttachment(
+  props?: UseMutationOptions<void, Error, LinkAttachmentVars>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
+    ...props,
+    mutationFn: ({ key, modelRef, modelId }: LinkAttachmentVars) =>
+      linkAttachment(fetcher, key, modelRef, modelId),
   });
 }

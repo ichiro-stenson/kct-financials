@@ -15,16 +15,7 @@ interface GlobalHotkeyRoute {
   hotkey?: string;
 }
 
-// Toggle dark/light mode by toggling 'bp4-dark' class on body
-const handleToggleDarkMode = () => {
-  const body = document.body;
-
-  if (body.classList.contains('bp4-dark')) {
-    body.classList.remove('bp4-dark');
-  } else {
-    body.classList.add('bp4-dark');
-  }
-};
+// Dark mode toggle disabled — KCT Financials is light-mode only
 
 type GlobalHotkeysProps = Pick<
   WithDashboardActionsProps,
@@ -79,9 +70,7 @@ function GlobalHotkeys({
       openGlobalSearch();
     }, 0);
   });
-  useHotkeys('shift+h', () => {
-    handleToggleDarkMode();
-  });
+  // shift+h dark mode toggle removed
 
   return <div></div>;
 }

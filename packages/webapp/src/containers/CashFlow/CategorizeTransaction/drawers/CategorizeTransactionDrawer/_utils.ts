@@ -14,6 +14,8 @@ export interface CategorizeTransactionFormValues {
   referenceNo: string;
   description: string;
   branchId: string | number | null;
+  /** Keys of files uploaded to S3; linked to the transaction on save. */
+  attachmentKeys: string[];
 }
 
 // Default initial form values.
@@ -27,6 +29,7 @@ export const defaultInitialValues: CategorizeTransactionFormValues = {
   referenceNo: '',
   description: '',
   branchId: '',
+  attachmentKeys: [],
 };
 
 export const transformToCategorizeForm = (
