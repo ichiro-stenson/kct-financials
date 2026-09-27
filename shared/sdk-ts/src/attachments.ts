@@ -5,6 +5,7 @@ export const ATTACHMENTS_ROUTES = {
   LIST: '/api/attachments',
   BY_ID: '/api/attachments/{id}',
   PRESIGNED_URL: '/api/attachments/{id}/presigned-url',
+  LINK: '/api/attachments/{id}/link',
 } as const satisfies Record<string, keyof paths>;
 
 /** Response shape from POST /api/attachments (upload). Schema may not define it; server returns { data }. */
@@ -43,6 +44,25 @@ export async function uploadAttachment(
 export async function deleteAttachment(fetcher: ApiFetcher, id: string): Promise<void> {
   const del = fetcher.path(ATTACHMENTS_ROUTES.BY_ID).method('delete').create();
   await del({ id });
+}
+
+/**
+ * Link an uploaded attachment to a model instance.
+ * @param fetcher - API fetcher
+ * @param id - The attachment file key returned by uploadAttachment
+ * @param modelRef - The model class name (e.g. "UncategorizedBankTransaction")
+ * @param modelId - The model instance id
+ */
+export async function linkAttachment(
+  fetcher: ApiFetcher,
+  id: string,
+  modelRef: string,
+  modelId: number,
+): Promise<void> {
+  const post = fetcher.path(ATTACHMENTS_ROUTES.LINK).method('post').create();
+  // LinkAttachmentDto is typed as Record<string,never> in the generated schema,
+  // so the merged call-arg type is unsatisfiable; both args must be cast away.
+  await post({ id } as never, { modelRef, modelId } as never);
 }
 
 export async function fetchAttachmentPresignedUrl(

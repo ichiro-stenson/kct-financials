@@ -255,12 +255,100 @@ html[lang^='ar'] {
 
 .bp4-drawer {
   border-left: 1px solid var(--color-drawer-border-left);
+  // Force light background regardless of prefers-color-scheme or bp4-dark
+  background-color: #fff !important;
+  color: #182026 !important;
+}
+
+// Override dark-mode media query for all drawer internals
+.bp4-drawer .bp4-drawer-body,
+.bp4-drawer .bp4-drawer-header,
+.bp4-drawer .bp4-drawer-footer,
+.bp4-drawer .drawer__insider,
+.bp4-drawer .bp4-tab-panel,
+.bp4-drawer .bp4-tabs,
+.bp4-drawer [class*='tab-panel'],
+.bp4-drawer [class*='DrawerBody'],
+.bp4-drawer [class*='drawer-body'] {
+  background-color: #fff !important;
+  color: #182026 !important;
+}
+
+// Also cover any nested cards/sections inside invoice/expense drawers
+.bp4-drawer [class*='InvoiceDetail'],
+.bp4-drawer [class*='invoice-detail'],
+.bp4-drawer [class*='DrawerContent'],
+.bp4-drawer [class*='drawer-content'] {
+  background-color: #fff !important;
+  color: #182026 !important;
 }
 
 .drawer-portal {
   .bp4-overlay-backdrop {
     background: rgba(0, 10, 30, 0.05);
   }
+}
+
+// Force light mode in all drawers/portals regardless of macOS dark mode or bp4-dark class.
+// Covers: @media (prefers-color-scheme: dark) from Blueprint, .bp4-dark on body, and
+// styled-component runtime injections using ".bp4-dark &" patterns.
+@media (prefers-color-scheme: dark) {
+  .bp4-drawer,
+  .bp4-portal .bp4-drawer,
+  .bp4-overlay-content .bp4-drawer {
+    background-color: #fff !important;
+    color: #182026 !important;
+  }
+
+  .bp4-drawer .bp4-drawer-body,
+  .bp4-drawer .bp4-drawer-header,
+  .bp4-drawer .bp4-drawer-footer,
+  .bp4-drawer .drawer__insider,
+  .bp4-drawer .bp4-tab-panel,
+  .bp4-drawer .bp4-tabs,
+  .bp4-drawer .bp4-tab-list,
+  .bp4-drawer .bp4-card,
+  .bp4-portal .bp4-drawer-body,
+  .bp4-portal .bp4-drawer-header {
+    background-color: #fff !important;
+    color: #182026 !important;
+    border-color: #e0e6ef !important;
+  }
+
+  // Blueprint table/datatable inside dark drawers
+  .bp4-drawer .bp4-html-table,
+  .bp4-drawer table,
+  .bp4-drawer .bigcapital-datatable,
+  .bp4-drawer [class*='table'] {
+    background-color: #fff !important;
+    color: #182026 !important;
+  }
+
+  .bp4-drawer .bp4-html-table td,
+  .bp4-drawer .bp4-html-table th {
+    background-color: #fff !important;
+    color: #182026 !important;
+    border-color: #e0e6ef !important;
+  }
+}
+
+// Also cover .bp4-dark class on body (keyboard shortcut or Blueprint context)
+.bp4-dark .bp4-drawer,
+.bp4-dark .bp4-portal .bp4-drawer {
+  background-color: #fff !important;
+  color: #182026 !important;
+}
+
+.bp4-dark .bp4-drawer .bp4-drawer-body,
+.bp4-dark .bp4-drawer .bp4-drawer-header,
+.bp4-dark .bp4-drawer .bp4-drawer-footer,
+.bp4-dark .bp4-drawer .drawer__insider,
+.bp4-dark .bp4-drawer .bp4-tab-panel,
+.bp4-dark .bp4-drawer .bp4-tabs,
+.bp4-dark .bp4-drawer .bp4-card {
+  background-color: #fff !important;
+  color: #182026 !important;
+  border-color: #e0e6ef !important;
 }
 
 .big-number {

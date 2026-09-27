@@ -79,6 +79,42 @@ export function PreferencesGeneralForm({
         <FInputGroup medium={true} name={'taxNumber'} fastField={true} />
       </FFormGroup>
 
+      {/* ---------- NAICS Code ----------  */}
+      <FFormGroup
+        name={'naicsCode'}
+        label={'NAICS Code'}
+        inline={true}
+        helperText={
+          'Industry classification code (default: 492110 — Courier services)'
+        }
+        fastField={true}
+      >
+        <FInputGroup
+          medium={true}
+          name={'naicsCode'}
+          placeholder={'492110'}
+          fastField={true}
+        />
+      </FFormGroup>
+
+      {/* ---------- FedEx V Number ----------  */}
+      <FFormGroup
+        name={'vendorNumber'}
+        label={'FedEx V Number'}
+        inline={true}
+        helperText={
+          'FedEx-assigned vendor number for this entity (e.g. V12345)'
+        }
+        fastField={true}
+      >
+        <FInputGroup
+          medium={true}
+          name={'vendorNumber'}
+          placeholder={'V12345'}
+          fastField={true}
+        />
+      </FFormGroup>
+
       {/* ---------- Industry ----------  */}
       <FFormGroup
         name={'industry'}

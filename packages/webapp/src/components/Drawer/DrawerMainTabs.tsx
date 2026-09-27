@@ -22,10 +22,6 @@ const DrawerMainTabsRoot = styled.div`
     --x-tab-list-border: #e1e2e8;
     --x-tab-item-text: #7f8596;
 
-    --x-tab-list-background: transparent;
-    --x-tab-list-border: rgba(255, 255, 255, 0.2);
-    --x-tab-item-text: var(--color-light-gray1);
-
     --x-tab-item-height: 36px;
 
     .bp4-tab-list {

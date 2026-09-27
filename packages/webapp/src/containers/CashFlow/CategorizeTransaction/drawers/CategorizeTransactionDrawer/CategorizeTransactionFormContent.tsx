@@ -3,6 +3,7 @@ import { useFormikContext } from 'formik';
 import React, { lazy } from 'react';
 import styled from 'styled-components';
 import { useCategorizeTransactionBoot } from './CategorizeTransactionBoot';
+import { TransactionAttachmentUpload } from './TransactionAttachmentUpload';
 import type { CategorizeTransactionFormValues } from './_utils';
 import { Box, FFormGroup, FSelect } from '@/components';
 import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
@@ -44,6 +45,7 @@ export function CategorizeTransactionFormContent() {
       </FFormGroup>
 
       <CategorizeTransactionFormSubContent />
+      <TransactionAttachmentUpload />
     </Box>
   );
 }

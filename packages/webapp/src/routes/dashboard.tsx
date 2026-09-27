@@ -1331,6 +1331,18 @@ export const getDashboardRoutes = () => [
     breadcrumb: 'Bank Rules',
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
+  // Fleet Asset Management
+  {
+    path: `/fleet`,
+    component: lazy(() =>
+      import('@/containers/Fleet/FleetPage').then((m) => ({
+        default: m.FleetPage,
+      })),
+    ),
+    breadcrumb: 'Fleet',
+    pageTitle: 'Fleet Assets',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // Homepage
   {
     path: `/`,

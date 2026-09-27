@@ -71,6 +71,7 @@ export enum ISidebarMenuOverlayIds {
   Cashflow = 'Cashflow',
   Expenses = 'Expenses',
   Projects = 'Projects',
+  Preferences = 'Preferences',
 }
 
 export enum ISidebarSubscriptionAbility {

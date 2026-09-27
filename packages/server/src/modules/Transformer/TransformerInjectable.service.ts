@@ -20,14 +20,14 @@ export class TransformerInjectable {
    * @returns {TransformerContext}
    */
   async getApplicationContext(): Promise<TransformerContext> {
-    const tenant = await this.tenancyContext.getTenant(true);
-    const organization = tenant.metadata;
-
-    return {
-      organization,
-      i18n: this.i18n,
-      exportAls: {},
-    };
+    try {
+      const tenant = await this.tenancyContext.getTenant(true);
+      const organization = tenant.metadata;
+      return { organization, i18n: this.i18n, exportAls: {} };
+    } catch (_e) {
+      // Tenant-agnostic routes have no org context — return safe defaults.
+      return { organization: null as any, i18n: this.i18n, exportAls: {} };
+    }
   }
 
   /**
@@ -35,8 +35,12 @@ export class TransformerInjectable {
    * @returns {string}
    */
   async getTenantDateFormat() {
-    const tenant = await this.tenancyContext.getTenant(true);
-    return tenant.metadata?.dateFormat;
+    try {
+      const tenant = await this.tenancyContext.getTenant(true);
+      return tenant.metadata?.dateFormat;
+    } catch (_e) {
+      return 'YYYY-MM-DD';
+    }
   }
 
   /**

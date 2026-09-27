@@ -17,6 +17,7 @@ import type { CategorizeTransactionBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
 import { withBankingActions } from '@/containers/CashFlow/withBankingActions';
+import { useLinkAttachment } from '@/hooks/query/attachments';
 import { useApiFetcher } from '@/hooks/useRequest';
 import { compose } from '@/utils';
 
@@ -39,6 +40,7 @@ function CategorizeTransactionFormRoot({
   >({
     mutationFn: (body) => categorizeTransactionsBulk(fetcher, body),
   });
+  const { mutateAsync: linkAttachment } = useLinkAttachment();
 
   // Form initial values in create and edit mode.
   const initialValues = useCategorizeTransactionFormInitialValues();
@@ -55,7 +57,22 @@ function CategorizeTransactionFormRoot({
 
     setSubmitting(true);
     categorizeBulk(_values)
-      .then(() => {
+      .then(async () => {
+        // Link any uploaded attachments to each uncategorized transaction.
+        if (values.attachmentKeys?.length) {
+          await Promise.allSettled(
+            values.attachmentKeys.flatMap((key) =>
+              uncategorizedTransactionIds.map((modelId) =>
+                linkAttachment({
+                  key,
+                  modelRef: 'UncategorizedBankTransaction',
+                  modelId,
+                }),
+              ),
+            ),
+          );
+        }
+
         setSubmitting(false);
 
         AppToaster.show({

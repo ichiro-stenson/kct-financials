@@ -43,9 +43,7 @@ function SidebarContainerJSX({
 
   return (
     <div
-      className={classNames('sidebar', {
-        'sidebar--mini-sidebar': !sidebarExpended,
-      })}
+      className={classNames('sidebar')}
       id="sidebar"
       onMouseLeave={handleSidebarMouseLeave}
     >

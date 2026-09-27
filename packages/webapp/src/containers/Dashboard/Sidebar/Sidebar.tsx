@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React from 'react';
+import { KCTLogo } from '@/components/Dashboard/KCTLogo';
 import { SidebarOverlayBinded } from '../SidebarOverlay';
 import { useMainSidebarMenu } from './hooks';
 import { SidebarContainer } from './SidebarContainer';
@@ -17,6 +18,7 @@ export function Sidebar() {
 
   return (
     <SidebarContainer>
+      <KCTLogo />
       <SidebarHead />
 
       <div className="sidebar__menu">

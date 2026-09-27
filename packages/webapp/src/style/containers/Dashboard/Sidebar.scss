@@ -36,8 +36,18 @@
     }
   }
 
+  &__logo {
+    display: flex;
+    align-items: center;
+    padding: 18px 20px 8px;
+
+    svg {
+      display: block;
+    }
+  }
+
   &__head {
-    padding: 20px 20px;
+    padding: 8px 20px 20px;
 
     &-logo {
       position: absolute;
@@ -298,6 +308,39 @@
       }
     }
   }
+
+// ─── Collapsed sidebar (has-mini-sidebar on body) ───────────────────────────
+// sidebar--mini-sidebar is never applied by the component; this body-class hook
+// (set in hooks.tsx → useObserveSidebarExpendedBodyclass) is the reliable signal.
+
+.has-mini-sidebar {
+  .sidebar {
+    overflow: hidden;
+    white-space: nowrap;
+
+    .sidebar__head {
+      &-logo {
+        transition: opacity 0.3s ease-in-out;
+        transition-delay: 0.15s;
+        opacity: 1;
+        visibility: visible;
+      }
+
+      &-organization {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        pointer-events: none;
+      }
+    }
+
+    .sidebar__menu,
+    .sidebar__version {
+      transition: opacity 0.3s ease-in-out;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+}
 
   .bp4-button.menu-item__add-btn {
     width: auto;

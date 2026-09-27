@@ -12,7 +12,7 @@ export default class SeedSettings extends TenantSeeder {
       .first();
 
     const sellAccount = await knex('accounts')
-      .where('slug', 'sales-of-product-income')
+      .where('slug', 'service-charge')
       .first();
 
     const inventoryAccount = await knex('accounts')

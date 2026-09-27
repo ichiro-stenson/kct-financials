@@ -78,21 +78,6 @@ function DashboardTopbar({
   return (
     <div className="dashboard__topbar" data-testId={'dashboard-topbar'}>
       <div className="dashboard__topbar-left">
-        <div className="dashboard__topbar-sidebar-toggle">
-          <Tooltip
-            content={
-              !sidebarExpended ? (
-                <T id={'open_sidebar'} />
-              ) : (
-                <T id={'close_sidebar'} />
-              )
-            }
-            position={Position.RIGHT}
-          >
-            <DashboardHamburgerButton onClick={handleSidebarToggleBtn} />
-          </Tooltip>
-        </div>
-
         <div className="dashboard__title">
           <h1>{pageTitle}</h1>
 

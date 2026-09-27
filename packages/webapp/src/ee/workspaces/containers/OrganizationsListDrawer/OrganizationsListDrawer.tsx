@@ -8,6 +8,10 @@ import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 
 const OrganizationsDrawer = styled(Drawer)`
+  &.bp4-drawer {
+    background-color: var(--color-dark-gray1);
+    color: rgba(255, 255, 255, 0.88);
+  }
   &.bp4-drawer.bp4-dark,
   .bp4-dark &.bp4-drawer {
     background-color: var(--color-dark-gray1);
