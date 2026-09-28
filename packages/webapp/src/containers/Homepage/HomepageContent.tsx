@@ -9,6 +9,7 @@ import {
   DispatchChartsSection,
 } from './RevenueChartsSection';
 import { DispatchEconomicsSection } from './DispatchEconomicsSection';
+import { RevenuePerRouteSection } from './RevenuePerRouteSection';
 import { ExpenseBenchmarkSection } from './ExpenseBenchmarkSection';
 import '@/style/pages/HomePage/HomePage.scss';
 
@@ -16,6 +17,7 @@ export function HomepageContent() {
   return (
     <div className="financial-reports">
       <DispatchEconomicsSection />
+      <RevenuePerRouteSection />
       <ExpenseBenchmarkSection />
       <RevenueChartsSection />
       <DispatchChartsSection />
