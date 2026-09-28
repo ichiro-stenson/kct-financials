@@ -10,6 +10,7 @@ import {
 } from './RevenueChartsSection';
 import { DispatchEconomicsSection } from './DispatchEconomicsSection';
 import { RevenuePerRouteSection } from './RevenuePerRouteSection';
+import { VehiclePaymentsSection } from './VehiclePaymentsSection';
 import { ExpenseBenchmarkSection } from './ExpenseBenchmarkSection';
 import '@/style/pages/HomePage/HomePage.scss';
 
@@ -18,6 +19,7 @@ export function HomepageContent() {
     <div className="financial-reports">
       <DispatchEconomicsSection />
       <RevenuePerRouteSection />
+      <VehiclePaymentsSection />
       <ExpenseBenchmarkSection />
       <RevenueChartsSection />
       <DispatchChartsSection />
