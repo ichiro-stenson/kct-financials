@@ -526,19 +526,24 @@ async function main() {
     // Fetch weekly totals
     const wt = await fetchWeeklyTotals(sb, csa, weekStartStr, weekEndStr);
     if (!wt) {
-      console.log(`│  ⚠  No weekly_totals data for ${weekStartStr}→${weekEndStr} — skipping`);
-      results.push({ csa, invoiceNo, status: 'no-data' });
-      continue;
+      console.log(`│  ℹ  No weekly_totals data for ${weekStartStr}→${weekEndStr} — checking CSV for OTHERS entries`);
+    } else {
+      console.log(`│  Weekly totals: ${wt.totalstops} stops  $${wt.totalamt.toFixed(2)} raw total`);
     }
-
-    console.log(`│  Weekly totals: ${wt.totalstops} stops  $${wt.totalamt.toFixed(2)} raw total`);
 
     // Fetch OTHERS — parsed directly from the downloaded GF CSV (no Supabase date-filter issues)
     const others = parseOthersFromCsv(GF_CSV_DIR, csa, weekEndStr);
     console.log(`│  Others: ${others.length} types from CSV (non-zero, summed by type)`);
 
+    // If no P&D data and no OTHERS, skip
+    if (!wt && others.length === 0) {
+      console.log(`│  ⚠  No data in weekly_totals or CSV OTHERS — skipping`);
+      results.push({ csa, invoiceNo, status: 'no-data' });
+      continue;
+    }
+
     // Build entries
-    const wtEntries     = buildWeeklyEntries(wt);
+    const wtEntries     = wt ? buildWeeklyEntries(wt) : [];
     const othersEntries = buildOthersEntries(others);
     const entries       = [...wtEntries, ...othersEntries];
 
